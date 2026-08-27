@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/Button";
-import { SearchBar } from "./SearchBar";
 import Image from "next/image";
+import { SearchBar, NavBarLiks } from "../layout";
 
 export const Nav = () => {
   return (
@@ -8,7 +8,7 @@ export const Nav = () => {
       <div className="">
         <Image src={"Logo.svg"} width={128} height={128} alt="Steam Logo" />
       </div>
-
+      <NavBarLiks></NavBarLiks>
       <div className="flex flex-1 justify-end items-center gap-4">
         <SearchBar></SearchBar>
         <Button className="bg-[#0A0A0A] text-[#EDEDED] border border-[#2E2E2E] hover:bg-[#2E2E2E]">
