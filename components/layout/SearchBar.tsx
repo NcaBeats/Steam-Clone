@@ -1,6 +1,6 @@
 export const SearchBar = () => {
   return (
-    <search className="flex-1 max-w-64 ">
+    <search className="sm:flex hidden flex-1 max-w-80 ">
       <input
         type="search"
         placeholder="Search"
