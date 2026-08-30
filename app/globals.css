@@ -11,10 +11,16 @@
   --font-sans: var(--inter);
 }
 
+@layer base {
+  *:focus-visible {
+    @apply outline-none ring-2 ring-[#EDEDED]  rounded-sm;
+  }
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #111111;
+    --foreground: #FAFAFA;
   }
 }
 
