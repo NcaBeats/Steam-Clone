@@ -9,7 +9,7 @@ export const Button = ({
   return (
     <button
       type={type}
-      className={`font-semibold text-center rounded-md px-4 py-1 cursor-pointer transition-colors duration-250 ease-out ${className}`}
+      className={`font-medium text-sm text-center rounded-md px-2.5 py-1.5 cursor-pointer transition-colors duration-250 ease-out ${className}`}
       {...props}
     >
       {children}

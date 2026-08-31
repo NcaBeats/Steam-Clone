@@ -9,7 +9,7 @@ export const Carousel = () => {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [Autoplay()]);
 
   return (
-    <div className="relative overflow-hidden rounded-lg">
+    <div className="relative overflow-hidden rounded-lg cursor-pointer">
       <div ref={emblaRef}>
         <div className="flex">
           <div className="min-w-full relative aspect-video">

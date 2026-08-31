@@ -8,8 +8,8 @@ export default function Home() {
      "
     >
       <Carousel />
-      <div className="flex flex-col gap-2">
-        <h2 className="text-xl text-[#EDEDED]">Discounts and Offers</h2>
+      <div className="flex flex-col">
+        <h2 className="text-xl text-[#EDEDED] ml-1">Discounts and Offers</h2>
         <CarouselItems />
       </div>
       <div className="flex flex-col gap-2">
