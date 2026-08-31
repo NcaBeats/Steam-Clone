@@ -29,3 +29,8 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans);
 }
+
+h2{
+  width: fit-content;
+  font-weight: 600;
+}
