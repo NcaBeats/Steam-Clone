@@ -2,8 +2,8 @@
 
 import { useActionState, useState } from "react";
 import { loginAction } from "@/app/actions/auth";
-import { EyeOff, Eye, LogIn as LogInIcon } from "lucide-react";
-import Image from "next/image";
+import { EyeOff, Eye, LogIn as LogInIcon, CornerUpLeft } from "lucide-react";
+import Link from "next/link";
 
 const LogIn = () => {
   const [state, formAction, pending] = useActionState(loginAction, null);
@@ -11,19 +11,15 @@ const LogIn = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen">
+      <Link className="absolute left-6 top-8 hover:bg-[#3a3a3a] p-2 rounded-lg transition-colors duration-200 ease-out" href={"/"}>
+        <CornerUpLeft/>
+      </Link>
       <form
         action={formAction}
         className="flex flex-col gap-4 w-100  p-6 rounded-lg"
       >
-        <Image
-          src={"Logo.svg"}
-          width={128}
-          height={128}
-          alt="Steam Logo"
-          className="w-auto h-15 mb-8"
-        />
-        <h1 className="text-sm text-[#EDEDED] font-medium text-center">
-          Please sign in to continue
+        <h1 className="text-3xl text-[#8D8C8D] font-bold text-center">
+          Hi, Welcome
         </h1>
         {state?.error && <p className="text-red-500 text-sm">{state.error}</p>}
         <input
@@ -31,7 +27,7 @@ const LogIn = () => {
           type="email"
           placeholder="Email"
           required
-          className="bg-[#1A1A1A] rounded-lg px-3 py-3 text-[#FAFAFA] font-medium text-sm"
+          className="bg-[#1A1A1A] rounded-lg px-3 py-3 text-[#FAFAFA] font-medium text-sm hover:bg-[#272727] transition-colors duration-200 ease-out"
         />
         <label
           htmlFor="password"
@@ -42,7 +38,7 @@ const LogIn = () => {
             type={isActive ? "text" : "password"}
             placeholder="Password"
             required
-            className="bg-[#1A1A1A] rounded-lg px-3 py-3 w-full"
+            className="bg-[#1A1A1A] rounded-lg px-3 py-3 w-full hover:bg-[#272727] transition-colors duration-200 ease-out"
           />
           <button
             type="button"
@@ -56,10 +52,17 @@ const LogIn = () => {
         <button
           type="submit"
           disabled={pending}
-          className="flex items-center gap-1 justify-center bg-[#007AFF] hover:bg-[#1ea4ff] text-[#FAFAFA] rounded-md py-2 font-bold disabled:opacity-50 cursor-pointer transition-colors duration-200 ease-in-out"
+          className="flex items-center gap-1 justify-center bg-[#007AFF] hover:bg-[#1ea4ff] text-[#FAFAFA] rounded-md py-2 font-semibold disabled:opacity-50 cursor-pointer transition-colors duration-200 ease-in-out"
         >
           {pending ? "Cargando..." : "Log In"}
         </button>
+
+        <p className="text-[#8A8A8A] flex justify-center text-sm items-center-safe gap-2 font-medium">
+          Don't have an account?
+          <span>
+            <Link className="text-white  hover:text-[#007AFF] hover:underline active:underline :active:text-[#007AFF]" href={"/sign-up"}>Sign up</Link>
+          </span>
+        </p>
       </form>
     </div>
   );
