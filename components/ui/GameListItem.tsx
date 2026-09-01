@@ -3,13 +3,13 @@ import { Gamepad2, Trophy, BadgeCheck } from "lucide-react";
 import { Category } from "@/types";
 import { formatPrice } from "@/lib";
 
-type Props = {
+type Props = Readonly<{
   name: string;
   price: number;
   imageUrl: string;
   categories: Category[];
   launchDate: string;
-};
+}>;
 
 export const GameListItem = ({
   name,

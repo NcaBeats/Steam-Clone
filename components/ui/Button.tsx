@@ -1,4 +1,4 @@
-type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
+type ButtonProps = Readonly<React.ButtonHTMLAttributes<HTMLButtonElement>>;
 
 export const Button = ({
   className = "",

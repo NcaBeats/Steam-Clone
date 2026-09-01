@@ -11,5 +11,6 @@ export type Game = {
   launchDate: string;
   categories: Category[];
   imageUrl: string;
+  bannerUrl: string | null;
   createdAt: string;
 };

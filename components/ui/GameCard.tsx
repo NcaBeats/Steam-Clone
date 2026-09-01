@@ -2,9 +2,11 @@ import { Game } from "@/types";
 import Image from "next/image";
 import { formatPrice } from "@/lib";
 
-type Props = Pick<
-  Game,
-  "name" | "price" | "originalPrice" | "discountPercent" | "imageUrl"
+type Props = Readonly<
+  Pick<
+    Game,
+    "name" | "price" | "originalPrice" | "discountPercent" | "imageUrl"
+  >
 >;
 
 export const GameCard = ({

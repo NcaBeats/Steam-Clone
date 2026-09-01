@@ -1,4 +1,4 @@
-import { GameCard } from "../ui";
+import { GameCard } from "@/components/ui";
 import { getDiscountedGames } from "@/lib/api";
 
 export const CarouselItems = async () => {

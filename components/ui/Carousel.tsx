@@ -4,41 +4,31 @@ import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import type { Game } from "@/types";
 
-export const Carousel = () => {
+interface CarouselProps {
+  readonly games: Game[];
+}
+
+export const Carousel = ({ games }: CarouselProps) => {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [Autoplay()]);
+
+  if (games.length === 0) return null;
 
   return (
     <div className="relative overflow-hidden rounded-lg cursor-pointer">
       <div ref={emblaRef}>
         <div className="flex">
-          <div className="min-w-full relative aspect-video">
-            <Image src="/images/RL.webp" alt="" fill className="object-cover" />
-          </div>
-          <div className="min-w-full relative aspect-video">
-            <Image
-              src="/images/Spiderman.avif"
-              alt=""
-              fill
-              className="object-cover"
-            />
-          </div>
-          <div className="min-w-full relative aspect-video">
-            <Image
-              src="/images/gta5.webp"
-              alt=""
-              fill
-              className="object-cover"
-            />
-          </div>
-          <div className="min-w-full relative aspect-video">
-            <Image
-              src="/images/bf1.webp"
-              alt=""
-              fill
-              className="object-cover"
-            />
-          </div>
+          {games.map((game) => (
+            <div className="min-w-full relative aspect-video" key={game.id}>
+              <Image
+                src={game.bannerUrl!}
+                alt={game.name}
+                fill
+                className="object-cover"
+              />
+            </div>
+          ))}
         </div>
       </div>
       <button

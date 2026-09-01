@@ -1,29 +1,63 @@
 import { cookies } from "next/headers";
 
-const API_BASE = "http://localhost:8080/api/v1";
-const TOKEN =
-  "eyJraWQiOiI4RVhqOHFTdUhYTmczWjROVDg2SU5iUWJFQTFiRUVPZEhWMXpodXUyXzM0IiwidHlwIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJzdWIiOiIxIiwidmVyIjowLCJyb2xlIjoiQURNSU4iLCJpc3MiOiJwcm95ZWN0by1qdWVnb3MiLCJuYW1lIjoicGxheWVyMSIsImV4cCI6MTc4ODE5OTA2MiwidHlwZSI6ImFjY2VzcyIsImlhdCI6MTc4ODE5NTQ2Mn0.0ZBZSBQY-DEj6UNWFzq3O2HEjceDxhg2LEaVs4QNIys";
+const API_BASE = process.env.API_BASE_URL ?? "http://localhost:8080/api/v1";
+
+const COOKIE_CONFIG = {
+  name: "token",
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "lax" as const,
+  maxAge: 3600,
+  path: "/",
+};
 
 export async function fetchAPI<T>(
   endpoint: string,
-  options: { revalidate?: number; auth?: boolean } = {},
+  options: {
+    revalidate?: number;
+    auth?: boolean;
+    method?: "GET" | "POST" | "PUT" | "DELETE";
+    body?: unknown;
+  } = {},
 ): Promise<T> {
-  const { revalidate = 60, auth = false } = options;
+  const { revalidate = 60, auth = false, method = "GET", body } = options;
 
   const reqHeaders: Record<string, string> = {};
+
   if (auth) {
-    reqHeaders.Authorization = `Bearer ${TOKEN}`;
+    const cookieStore = await cookies();
+    const token = cookieStore.get(COOKIE_CONFIG.name)?.value;
+    if (token) {
+      reqHeaders.Authorization = `Bearer ${token}`;
+    }
+  }
+
+  if (body) {
+    reqHeaders["Content-Type"] = "application/json";
   }
 
   const res = await fetch(`${API_BASE}${endpoint}`, {
+    method,
     headers: reqHeaders,
+    body: body ? JSON.stringify(body) : undefined,
     next: { revalidate, tags: [endpoint] },
   });
 
   if (!res.ok) {
-    throw new Error(`API error ${res.status} en ${endpoint}`);
+    const text = await res.text().catch(() => "Unknown error");
+    throw new Error(`API error ${res.status} en ${endpoint}: ${text}`);
   }
 
   const data = await res.json();
   return data.content ?? data;
+}
+
+export async function setTokenCookie(token: string) {
+  const cookieStore = await cookies();
+  cookieStore.set(COOKIE_CONFIG.name, token, COOKIE_CONFIG);
+}
+
+export async function deleteTokenCookie() {
+  const cookieStore = await cookies();
+  cookieStore.delete(COOKIE_CONFIG.name);
 }
