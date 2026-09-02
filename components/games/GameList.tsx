@@ -1,4 +1,4 @@
-import { GameListItem } from "@/components/ui";
+import { GameListItem } from "@/components/games";
 import { getGames } from "@/lib/api";
 
 export const GameList = async () => {

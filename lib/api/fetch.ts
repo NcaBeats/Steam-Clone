@@ -1,15 +1,6 @@
 import { cookies } from "next/headers";
 
-const API_BASE = process.env.API_BASE_URL ?? "http://localhost:9090/api/v1";
-
-const COOKIE_CONFIG = {
-  name: "token",
-  httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
-  sameSite: "lax" as const,
-  maxAge: 3600,
-  path: "/",
-};
+const API_BASE = process.env.API_BASE_URL ?? "http://localhost:8080/api/v1";
 
 export async function fetchAPI<T>(
   endpoint: string,
@@ -26,7 +17,7 @@ export async function fetchAPI<T>(
 
   if (auth) {
     const cookieStore = await cookies();
-    const token = cookieStore.get(COOKIE_CONFIG.name)?.value;
+    const token = cookieStore.get("token")?.value;
     if (token) {
       reqHeaders.Authorization = `Bearer ${token}`;
     }
@@ -50,14 +41,4 @@ export async function fetchAPI<T>(
 
   const data = await res.json();
   return data.content ?? data;
-}
-
-export async function setTokenCookie(token: string) {
-  const cookieStore = await cookies();
-  cookieStore.set(COOKIE_CONFIG.name, token, COOKIE_CONFIG);
-}
-
-export async function deleteTokenCookie() {
-  const cookieStore = await cookies();
-  cookieStore.delete(COOKIE_CONFIG.name);
 }

@@ -1,4 +1,4 @@
-import { fetchAPI } from "./client";
+import { fetchAPI } from "./fetch";
 import type { Game } from "@/types";
 
 export const getGames = (): Promise<Game[]> => fetchAPI("/games");

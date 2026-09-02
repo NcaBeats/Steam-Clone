@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
 import { NavBarLinks, SearchBar, BurgerMenu } from "@/components/layout";
-import { logoutAction } from "@/app/actions/auth";
+import { logoutAction } from "@/actions/logout";
 
 export const Nav = async () => {
   const cookieStore = await cookies();

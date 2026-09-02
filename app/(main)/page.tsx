@@ -1,5 +1,5 @@
-import { Carousel, CarouselItems, GameList } from "@/components/ui";
-import { getBannerGames } from "@/lib/api";
+import { Carousel, CarouselItems, GameList } from "@/components/games";
+import { getBannerGames } from "@/lib/api/games";
 
 export default async function Home() {
   const bannerGames = await getBannerGames();
