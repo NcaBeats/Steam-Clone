@@ -6,6 +6,7 @@ interface PasswordInputProps {
   readonly show: boolean;
   readonly onToggle: () => void;
   readonly defaultValue?: string;
+  readonly className?: string;
 }
 
 export const PasswordInput = ({
@@ -14,11 +15,12 @@ export const PasswordInput = ({
   show,
   onToggle,
   defaultValue,
+  className,
 }: PasswordInputProps) => {
   return (
     <label
       htmlFor={name}
-      className="flex relative items-center font-medium text-sm"
+      className={`flex relative items-center font-medium text-sm ${className}`}
     >
       <input
         name={name}

@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 
-const API_BASE = process.env.API_BASE_URL ?? "http://localhost:8080/api/v1";
+const API_BASE = process.env.API_BASE_URL ?? "http://localhost:9090/api/v1";
 
 export async function fetchAPI<T>(
   endpoint: string,

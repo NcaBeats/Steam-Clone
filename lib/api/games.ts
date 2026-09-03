@@ -3,6 +3,9 @@ import type { Game } from "@/types";
 
 export const getGames = (): Promise<Game[]> => fetchAPI("/games");
 
+export const getGameById = (id: number): Promise<Game> =>
+  fetchAPI(`/games/${id}`, { revalidate: 60 });
+
 export const getDiscountedGames = (): Promise<Game[]> =>
   fetchAPI("/games/discounted", { revalidate: 30 });
 

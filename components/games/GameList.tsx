@@ -9,6 +9,7 @@ export const GameList = async () => {
       {games.map((game) => (
         <GameListItem
           key={game.id}
+          id={game.id}
           name={game.name}
           price={game.price}
           categories={game.categories}

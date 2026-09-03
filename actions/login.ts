@@ -6,6 +6,7 @@ import { fetchAPI } from "@/lib/api/fetch";
 import type { Auth } from "@/types";
 import { LoginSchema } from "@/schemas/auth/login.schema";
 import { COOKIE_OPTIONS } from "./cookiesOptions";
+import * as z from "zod";
 
 const COOKIE_NAME = "token";
 
@@ -32,7 +33,7 @@ function validateLogin(formData: FormData) {
     return {
       success: false as const,
       fields: rawFields as Record<string, string>,
-      errors: result.error.flatten().fieldErrors,
+      errors: z.flattenError(result.error).fieldErrors,
     };
   }
 

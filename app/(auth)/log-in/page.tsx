@@ -14,11 +14,13 @@ const LogIn = () => {
       <h1 className="text-3xl text-[#8D8C8D] font-bold text-center">
         Hi, Welcome
       </h1>
-      {state?.errors?.global && (
-        <p className="text-red-500 text-sm text-center italic">
-          {state.errors.global[0]}
-        </p>
-      )}
+      <div className="min-h-[24px]">
+        {state?.errors?.global && (
+          <p className="text-red-500 text-sm text-center italic">
+            {state.errors.global[0]}
+          </p>
+        )}
+      </div>
       <div>
         <input
           name="email"
@@ -28,11 +30,13 @@ const LogIn = () => {
           defaultValue={state?.fields?.email}
           className="bg-[#1A1A1A] rounded-lg px-3 py-3 text-[#FAFAFA] font-medium text-sm hover:bg-[#272727] transition-colors duration-200 ease-out w-full"
         />
-        {state?.errors?.email && (
-          <p className="text-red-500 text-xs mt-1 italic">
-            {state.errors.email[0]}
-          </p>
-        )}
+        <div className="min-h-[20px]">
+          {state?.errors?.email && (
+            <p className="text-red-500 text-xs mt-1 italic">
+              {state.errors.email[0]}
+            </p>
+          )}
+        </div>
       </div>
       <div>
         <PasswordInput
@@ -42,11 +46,13 @@ const LogIn = () => {
           onToggle={() => setShowPassword(!showPassword)}
           defaultValue={state?.fields?.password}
         />
-        {state?.errors?.password && (
-          <p className="text-red-500 text-xs mt-1 italic">
-            {state.errors.password[0]}
-          </p>
-        )}
+        <div className="min-h-[20px]">
+          {state?.errors?.password && (
+            <p className="text-red-500 text-xs mt-1 italic">
+              {state.errors.password[0]}
+            </p>
+          )}
+        </div>
       </div>
       <button
         type="submit"

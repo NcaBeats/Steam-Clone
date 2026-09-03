@@ -1,15 +1,17 @@
 import { Game } from "@/types";
 import Image from "next/image";
+import Link from "next/link";
 import { formatPrice } from "@/lib";
 
 type Props = Readonly<
   Pick<
     Game,
-    "name" | "price" | "originalPrice" | "discountPercent" | "imageUrl"
+    "id" | "name" | "price" | "originalPrice" | "discountPercent" | "imageUrl"
   >
 >;
 
 export const GameCard = ({
+  id,
   name,
   price,
   originalPrice,
@@ -17,11 +19,12 @@ export const GameCard = ({
   imageUrl,
 }: Props) => {
   return (
-    <div
+    <Link
+      href={`/games/${id}`}
       className="select-none cursor-pointer shadow-md shadow-[#00000089] group
         transition-all hover:scale-104 active:scale-104
       bg-[#161617] flex flex-col relative shrink-0
-      active:bg-[#EDEDED] hover:bg-[#EDEDED] 
+      active:bg-[#EDEDED] hover:bg-[#EDEDED]
       active:text-black hover:text-black duration-200 ease-in rounded-lg overflow-hidden w-full"
     >
       <div className="relative aspect-3/4 ">
@@ -29,7 +32,7 @@ export const GameCard = ({
           src={imageUrl}
           alt=""
           fill
-          className=" snap-start
+          className="snap-start
           object-cover object-center block transition-all duration-300 ease-out
            "
         />
@@ -57,6 +60,6 @@ export const GameCard = ({
           </span>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };

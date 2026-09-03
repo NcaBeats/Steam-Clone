@@ -1,5 +1,6 @@
 import * as z from "zod";
 import { validate, clean } from "rut.js";
+import type { RegionData } from "@/types";
 
 const domains = new Set(["duoc.cl", "profesor.duoc.cl", "gmail.com"]);
 
@@ -44,12 +45,41 @@ const birthdate = z
   })
   .max(new Date(), {
     error: "La fecha de nacimiento no puede ser en el futuro",
-  }).optional;
+  })
+  .optional();
 
-export const SignUpSchema = z.object({
-  run: run,
-  name: name,
-  lastName: lastName,
-  email: email,
-  birthdate: birthdate,
-});
+const region = z.string().min(1, "Selecciona una región");
+
+const comuna = z.string().min(1, "Select a municipality");
+
+const direccion = z
+  .string()
+  .min(1, "La dirección es requerida")
+  .max(300, "La dirección no puede superar los 300 caracteres");
+
+export const createSignUpSchema = (regiones: RegionData[]) => {
+  return z
+    .object({
+      run: run,
+      name: name,
+      lastName: lastName,
+      email: email,
+      birthdate: birthdate,
+      region: region.refine((val) => regiones.some((r) => r.nombre === val), {
+        message: "Región inválida",
+      }),
+      comuna: comuna,
+      direccion: direccion,
+    })
+    .refine(
+      (data) => {
+        const regionData = regiones.find((r) => r.nombre === data.region);
+        if (!regionData) return false;
+        return regionData.comunas.includes(data.comuna);
+      },
+      {
+        message: "Invalid municipality for the selected region",
+        path: ["comuna"],
+      },
+    );
+};

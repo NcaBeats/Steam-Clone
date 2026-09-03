@@ -1,22 +1,43 @@
-import { GameCard } from "@/components/games";
-import { getDiscountedGames } from "@/lib/api";
+"use client";
 
-export const CarouselItems = async () => {
-  const games = await getDiscountedGames();
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import { GameCard } from "@/components/games/GameCard";
+import type { Game } from "@/types";
+
+interface DiscountCarouselProps {
+  readonly games: Game[];
+}
+
+export const DiscountCarousel = ({ games }: DiscountCarouselProps) => {
+  if (games.length === 0) return null;
 
   return (
-    <ul className="overflow-x-auto scrollbar-none flex px-1 py-2 gap-2 snap-x snap-mandatory [&>li]:shrink-0 [&>li]:w-42.5 [&_li]:snap-proximity">
-      {games.map((game) => (
-        <li className="flex flex-col py-2" key={game.id}>
-          <GameCard
-            name={game.name}
-            price={game.price}
-            originalPrice={game.originalPrice}
-            discountPercent={game.discountPercent}
-            imageUrl={game.imageUrl}
-          />
-        </li>
-      ))}
-    </ul>
+    <Carousel opts={{ dragFree: true }} className="w-full">
+      <CarouselContent className="touch-manipulation">
+        {games.map((game) => (
+          <CarouselItem
+            key={game.id}
+            className="sm:basis-1/6 basis-1/2 py-2 px-1 pl-4"
+          >
+            <GameCard
+              id={game.id}
+              name={game.name}
+              price={game.price}
+              originalPrice={game.originalPrice}
+              discountPercent={game.discountPercent}
+              imageUrl={game.imageUrl}
+            />
+          </CarouselItem>
+        ))}
+      </CarouselContent>
+      <CarouselPrevious className="left-2" />
+      <CarouselNext className="right-2" />
+    </Carousel>
   );
 };

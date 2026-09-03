@@ -1,26 +1,33 @@
 "use client";
 
-import useEmblaCarousel from "embla-carousel-react";
-import Autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import Autoplay from "embla-carousel-autoplay";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import type { Game } from "@/types";
 
-interface CarouselProps {
+interface BannerCarouselProps {
   readonly games: Game[];
 }
 
-export const Carousel = ({ games }: CarouselProps) => {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [Autoplay()]);
-
+export const BannerCarousel = ({ games }: BannerCarouselProps) => {
   if (games.length === 0) return null;
 
   return (
-    <div className="relative overflow-hidden rounded-lg cursor-pointer">
-      <div ref={emblaRef}>
-        <div className="flex">
-          {games.map((game) => (
-            <div className="min-w-full relative aspect-video" key={game.id}>
+    <Carousel
+      opts={{ loop: true }}
+      plugins={[Autoplay({ delay: 5000 })]}
+      className="w-full"
+    >
+      <CarouselContent>
+        {games.map((game) => (
+          <CarouselItem key={game.id}>
+            <div className="relative aspect-video overflow-hidden rounded-lg">
               <Image
                 src={game.bannerUrl!}
                 alt={game.name}
@@ -28,23 +35,11 @@ export const Carousel = ({ games }: CarouselProps) => {
                 className="object-cover"
               />
             </div>
-          ))}
-        </div>
-      </div>
-      <button
-        type="button"
-        onClick={() => emblaApi?.scrollPrev()}
-        className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 rounded-full p-2 text-white cursor-pointer transition-colors"
-      >
-        <ChevronLeft size={24} />
-      </button>
-      <button
-        type="button"
-        onClick={() => emblaApi?.scrollNext()}
-        className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 rounded-full p-2 text-white cursor-pointer transition-colors"
-      >
-        <ChevronRight size={24} />
-      </button>
-    </div>
+          </CarouselItem>
+        ))}
+      </CarouselContent>
+      <CarouselPrevious className="left-2 bg-black/50 hover:bg-black/70 text-white border-none rounded-full size-10" />
+      <CarouselNext className="right-2 bg-black/50 hover:bg-black/70 text-white border-none rounded-full size-10" />
+    </Carousel>
   );
 };

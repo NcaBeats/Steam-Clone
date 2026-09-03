@@ -1,8 +1,11 @@
-import { Carousel, CarouselItems, GameList } from "@/components/games";
-import { getBannerGames } from "@/lib/api/games";
+import { BannerCarousel, DiscountCarousel, GameList } from "@/components/games";
+import { getBannerGames, getDiscountedGames } from "@/lib/api/games";
 
 export default async function Home() {
-  const bannerGames = await getBannerGames();
+  const [bannerGames, discountedGames] = await Promise.all([
+    getBannerGames(),
+    getDiscountedGames(),
+  ]);
 
   return (
     <div
@@ -10,10 +13,10 @@ export default async function Home() {
      bg-[#18181C] bg-[radial-gradient(circle_at_50%_30%,#1e5ac84d_0%,transparent_60%)]
      "
     >
-      <Carousel games={bannerGames} />
+      <BannerCarousel games={bannerGames} />
       <div className="flex flex-col">
         <h2 className="text-xl text-[#EDEDED] ml-1">Discounts and Offers</h2>
-        <CarouselItems />
+        <DiscountCarousel games={discountedGames} />
       </div>
       <div className="flex flex-col gap-2">
         <h2 className="text-xl">The Most Played</h2>
