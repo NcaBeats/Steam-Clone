@@ -7,19 +7,26 @@ import {
   Gamepad2,
   LogIn,
   ClipboardPenLine,
+  LogOut,
 } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { logoutAction } from "@/actions/logout";
 
-export const BurgerMenu = () => {
+interface BurgerMenuProps {
+  readonly isLoggedIn: boolean;
+}
+
+export const BurgerMenu = ({ isLoggedIn }: BurgerMenuProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
     }
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [isOpen]);
 
   return (
@@ -39,13 +46,13 @@ export const BurgerMenu = () => {
       />
       <nav
         className={`
-    p-1.5 overflow-hidden rounded-tl-xl z-50 fixed top-18 right-0 bottom-0 bg-[#161617] border-solid border-l border-t border-l-[#2D2D2D] border-t-[#2D2D2D] w-2/3
-    transition-transform duration-300 ease-in-out 
+    p-1.5 overflow-hidden rounded-tl-xl z-50 fixed top-18 right-0 bottom-0 bg-[#0A0A0A] border-solid border-l border-t border-l-[#2D2D2D] border-t-[#2D2D2D] w-2/3
+    transition-transform duration-300 ease-in-out
     ${isOpen ? "translate-x-0 pointer-events-auto" : "translate-x-full pointer-events-none"}
 `}
       >
         <ul
-          className="flex flex-col text-[#FAFAFA] [&_li]:rounded-lg
+          className="[&_a]:items-center [&_button]:items-center flex flex-col text-[#FAFAFA] [&_li]:rounded-lg
         [&_a]:flex [&_a]:gap-2 [&_a]:py-4 [&_li]:px-4 [&_a]:hover:text-[#007AFF] [&_a]:active:text-[#007AFF]
         [&_a]:hover:underline [&_a]:active:underline [&_li]:hover:bg-[#111111] [&_li]:active:bg-[#111111]"
         >
@@ -61,18 +68,36 @@ export const BurgerMenu = () => {
               Library
             </Link>
           </li>
-          <li>
-            <Link onClick={() => setIsOpen(!isOpen)} href="/sign-up">
-              <ClipboardPenLine />
-              Sign up
-            </Link>
-          </li>
-          <li>
-            <Link onClick={() => setIsOpen(!isOpen)} href="/log-in">
-              <LogIn />
-              Log in
-            </Link>
-          </li>
+          {isLoggedIn ? (
+            <li>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsOpen(!isOpen);
+                  logoutAction();
+                }}
+                className="flex gap-2 py-4 w-full hover:text-[#007AFF] active:text-[#007AFF] hover:underline active:underline"
+              >
+                <LogOut />
+                Log out
+              </button>
+            </li>
+          ) : (
+            <>
+              <li>
+                <Link onClick={() => setIsOpen(!isOpen)} href="/sign-up">
+                  <ClipboardPenLine />
+                  Sign up
+                </Link>
+              </li>
+              <li>
+                <Link onClick={() => setIsOpen(!isOpen)} href="/log-in">
+                  <LogIn />
+                  Log in
+                </Link>
+              </li>
+            </>
+          )}
         </ul>
       </nav>
     </div>

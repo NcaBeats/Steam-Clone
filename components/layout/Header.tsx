@@ -1,11 +1,9 @@
-interface Props {
-  children: React.ReactNode;
+interface ReadonlyProps {
+  readonly children: React.ReactNode;
 }
 
-export const Header = ({ children }: Props) => {
+export const Header = ({ children }: ReadonlyProps) => {
   return (
-    <header className=" sticky top-0 border-b-2 z-50 border-none bg-[#0A0A0A] h-16">
-      {children}
-    </header>
+    <header className="sticky top-0 z-50 bg-[#0A0A0A] h-16">{children}</header>
   );
 };

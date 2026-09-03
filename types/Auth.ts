@@ -1,4 +1,4 @@
 export type Auth = {
-  token: string;
-  expiresIn: number;
+  readonly token: string;
+  readonly expiresIn: number;
 };

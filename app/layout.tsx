@@ -1,6 +1,8 @@
 import "./globals.css";
-import { Inter } from "next/font/google";
-import { Nav, Header } from "@/components/layout";
+import { Inter, Geist } from "next/font/google";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
 const inter = Inter({
   variable: "--inter",
@@ -9,14 +11,18 @@ const inter = Inter({
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="es" className={`${inter.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col">
-        <Header>
-          <Nav></Nav>
-        </Header>
-        {children}
-        <footer>Footer</footer>
-      </body>
+    <html
+      lang="es"
+      className={cn(
+        "h-full",
+        "antialiased",
+        "dark",
+        inter.variable,
+        "font-sans",
+        geist.variable,
+      )}
+    >
+      <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
 }
