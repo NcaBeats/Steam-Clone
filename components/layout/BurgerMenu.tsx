@@ -8,6 +8,8 @@ import {
   LogIn,
   ClipboardPenLine,
   LogOut,
+  ShoppingCart,
+  LayoutGrid,
 } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
@@ -63,9 +65,23 @@ export const BurgerMenu = ({ isLoggedIn }: BurgerMenuProps) => {
             </Link>
           </li>
           <li>
-            <Link onClick={() => setIsOpen(!isOpen)} href="/library">
-              <Gamepad2 />
-              Library
+            <Link onClick={() => setIsOpen(!isOpen)} href="/catalog">
+              <LayoutGrid />
+              Catalog
+            </Link>
+          </li>
+          {isLoggedIn && (
+            <li>
+              <Link onClick={() => setIsOpen(!isOpen)} href="/library">
+                <Gamepad2 />
+                Library
+              </Link>
+            </li>
+          )}
+          <li>
+            <Link onClick={() => setIsOpen(!isOpen)} href="/cart">
+              <ShoppingCart />
+              Cart
             </Link>
           </li>
           {isLoggedIn ? (

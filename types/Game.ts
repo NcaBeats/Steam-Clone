@@ -12,5 +12,7 @@ export type Game = {
   categories: Category[];
   imageUrl: string;
   bannerUrl: string | null;
+  minimumSpecs: string | null;
+  recommendedSpecs: string | null;
   createdAt: string;
 };

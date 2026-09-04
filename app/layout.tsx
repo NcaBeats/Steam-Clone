@@ -1,6 +1,7 @@
 import "./globals.css";
 import { Inter, Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
+import { AlertProvider } from "@/components/ui";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -22,7 +23,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         geist.variable,
       )}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col bg-[#18181C]">
+        <AlertProvider>{children}</AlertProvider>
+      </body>
     </html>
   );
 }

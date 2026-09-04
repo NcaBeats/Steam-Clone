@@ -8,7 +8,9 @@ export default function MainLayout({
   return (
     <>
       <Header>
-        <Nav />
+        <div className="max-w-7xl mx-auto w-full h-full">
+          <Nav />
+        </div>
       </Header>
       {children}
       <footer>Footer</footer>

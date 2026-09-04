@@ -9,11 +9,17 @@ export async function fetchAPI<T>(
     auth?: boolean;
     method?: "GET" | "POST" | "PUT" | "DELETE";
     body?: unknown;
+    headers?: Record<string, string>;
   } = {},
 ): Promise<T> {
-  const { revalidate = 60, auth = false, method = "GET", body } = options;
-
-  const reqHeaders: Record<string, string> = {};
+  const {
+    revalidate = 60,
+    auth = false,
+    method = "GET",
+    body,
+    headers: customHeaders,
+  } = options;
+  const reqHeaders: Record<string, string> = { ...customHeaders };
 
   if (auth) {
     const cookieStore = await cookies();
@@ -27,11 +33,12 @@ export async function fetchAPI<T>(
     reqHeaders["Content-Type"] = "application/json";
   }
 
+  const isRead = method === "GET";
   const res = await fetch(`${API_BASE}${endpoint}`, {
     method,
     headers: reqHeaders,
     body: body ? JSON.stringify(body) : undefined,
-    next: { revalidate, tags: [endpoint] },
+    ...(isRead ? { next: { revalidate, tags: [endpoint] } } : {}),
   });
 
   if (!res.ok) {

@@ -1,26 +1,109 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { formatPrice } from "@/lib";
-import { addToCart } from "@/lib/cart";
+import { addToCart, isInCart } from "@/lib/cart";
+import { useAlert } from "@/components/ui";
 import type { Game } from "@/types";
 
 type Props = Readonly<{ game: Game }>;
 
+const SPEC_LABELS: Record<string, string> = {
+  os: "OS",
+  processor: "Processor",
+  memory: "Memory",
+  graphics: "Graphics",
+  storage: "Storage",
+  directX: "DirectX",
+  additional: "Additional",
+  sound: "Sound",
+  rayTracing: "Ray Tracing",
+};
+
+function parseSpecs(specsString: string | null): Record<string, string> | null {
+  if (!specsString) return null;
+  try {
+    const parsed: unknown = JSON.parse(specsString);
+    if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+      return parsed as Record<string, string>;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+function formatKey(key: string): string {
+  const lower = key.toLowerCase();
+  if (SPEC_LABELS[lower]) return SPEC_LABELS[lower];
+  return key.charAt(0).toUpperCase() + key.slice(1);
+}
+
+type SpecColumnProps = Readonly<{
+  title: string;
+  specs: Record<string, string>;
+}>;
+
+const SpecColumn = ({ title, specs }: SpecColumnProps) => (
+  <div className="flex flex-col gap-2">
+    <h3 className="text-xs uppercase font-bold text-[#FAFAFA] border-b border-[#2A2A2A] pb-2">
+      {title}
+    </h3>
+    {Object.entries(specs).map(([key, value]) => (
+      <div key={key} className="flex justify-between gap-4 text-xs">
+        <span className="text-[#8A8A8A] shrink-0">{formatKey(key)}:</span>
+        <span className="text-[#EDEDED] text-right">{value}</span>
+      </div>
+    ))}
+  </div>
+);
+
 export const GameDetail = ({ game }: Props) => {
-  const router = useRouter();
+  const { showAlert } = useAlert();
+  const [alreadyInCart, setAlreadyInCart] = useState(false);
+
+  useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect */
+    setAlreadyInCart(isInCart(game.id));
+    /* eslint-enable react-hooks/set-state-in-effect */
+  }, [game.id]);
 
   const handleAddToCart = () => {
-    addToCart({
+    const result = addToCart({
       id: game.id,
       name: game.name,
       price: game.price,
       imageUrl: game.imageUrl,
       discountPercent: game.discountPercent,
     });
-    router.push("/cart");
+    if (result.ok) {
+      setAlreadyInCart(true);
+      showAlert({
+        variant: "default",
+        title: "Added to cart",
+        description: `${game.name} was added to your cart.`,
+      });
+      return;
+    }
+    if (result.reason === "duplicate") {
+      showAlert({
+        variant: "destructive",
+        title: "Already in cart",
+        description: result.error,
+      });
+      return;
+    }
+    showAlert({
+      variant: "destructive",
+      title: "Could not add to cart",
+      description: result.error,
+    });
   };
+
+  const minSpecs = parseSpecs(game.minimumSpecs);
+  const recSpecs = parseSpecs(game.recommendedSpecs);
+  const hasSpecs = minSpecs !== null || recSpecs !== null;
 
   return (
     <div className="flex flex-col gap-6 w-full max-w-5xl mx-auto p-4">
@@ -89,12 +172,35 @@ export const GameDetail = ({ game }: Props) => {
           <button
             type="button"
             onClick={handleAddToCart}
-            className="bg-[#007AFF] hover:bg-[#1ea4ff] text-white font-semibold py-3 rounded-lg transition-colors cursor-pointer"
+            disabled={alreadyInCart}
+            className="bg-[#007AFF] hover:bg-[#1ea4ff] text-white font-semibold py-3 rounded-lg transition-colors cursor-pointer disabled:bg-[#3A3A3A] disabled:cursor-not-allowed disabled:hover:bg-[#3A3A3A]"
           >
-            Add to Cart
+            {alreadyInCart ? "Already in cart" : "Add to Cart"}
           </button>
         </div>
       </div>
+
+      {hasSpecs && (
+        <div className="bg-[#1A1A1A] rounded-lg p-6 flex flex-col gap-4">
+          <h2 className="text-base font-bold text-[#FAFAFA]">
+            System Requirements
+          </h2>
+          <div
+            className={`grid gap-6 ${
+              minSpecs !== null && recSpecs !== null
+                ? "grid-cols-1 md:grid-cols-2"
+                : "grid-cols-1"
+            }`}
+          >
+            {minSpecs !== null && (
+              <SpecColumn title="Minimum" specs={minSpecs} />
+            )}
+            {recSpecs !== null && (
+              <SpecColumn title="Recommended" specs={recSpecs} />
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

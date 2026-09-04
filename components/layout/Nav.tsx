@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
+import { ShoppingCart } from "lucide-react";
 import { NavBarLinks, SearchBar, BurgerMenu } from "@/components/layout";
 import { logoutAction } from "@/actions/logout";
 
@@ -21,9 +22,16 @@ export const Nav = async () => {
           />
         </Link>
       </div>
-      <NavBarLinks />
+      <NavBarLinks isLoggedIn={isLoggedIn} />
       <SearchBar />
       <div className="sm:flex hidden justify-end items-center gap-4 ml-auto">
+        <Link
+          href="/cart"
+          className="hover:bg-[#111111] active:bg-[#111111] rounded-md p-1.5"
+          aria-label="Cart"
+        >
+          <ShoppingCart size={20} />
+        </Link>
         {isLoggedIn ? (
           <form action={logoutAction}>
             <button
