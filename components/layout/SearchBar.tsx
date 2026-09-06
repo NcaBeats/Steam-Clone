@@ -103,7 +103,7 @@ export const SearchBar = () => {
             <Search className="-translate-y-1/2 absolute top-1/2 left-3 size-5 text-muted-foreground" />
             <Input
               ref={inputRef}
-              className="h-12 pl-10 text-base bg-[#1A1A1A] border-[#2A2A2A] hover:bg-[#272727] focus-visible:bg-[#272727] focus-visible:border-[#2A2A2A] text-[#FAFAFA] placeholder:text-[#5A5A5A]"
+              className="h-12 pl-10 text-base"
               placeholder="Search for games..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}

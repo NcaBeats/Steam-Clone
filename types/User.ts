@@ -1,8 +1,6 @@
-export type UserRole = "USER" | "ADMIN";
-
 export type User = {
   id: number;
   email: string;
-  role: UserRole;
+  role: "ADMIN" | "VENDEDOR" | "CLIENTE";
   createdAt: string;
 };

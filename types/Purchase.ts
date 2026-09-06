@@ -1,4 +1,4 @@
-export type PurchaseStatus = "PENDING" | "COMPLETED" | "CANCELLED";
+export type PurchaseStatus = "PENDING" | "COMPLETED" | "CANCELLED" | "REFUNDED";
 
 export type PurchaseItem = {
   id: number;
@@ -12,6 +12,7 @@ export type PurchaseItem = {
 export type Purchase = {
   id: number;
   userId: number;
+  buyerEmail: string;
   totalAmount: number;
   status: PurchaseStatus;
   purchasedAt: string;

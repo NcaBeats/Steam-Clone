@@ -4,6 +4,7 @@ import { useActionState, useState } from "react";
 import { loginAction } from "@/actions/login";
 import { AuthLayout } from "@/app/(auth)/AuthLayout";
 import { PasswordInput, AuthSwitchLink } from "@/components/auth";
+import { Input } from "@/components/ui";
 
 const LogIn = () => {
   const [state, formAction, pending] = useActionState(loginAction, null);
@@ -22,13 +23,12 @@ const LogIn = () => {
         )}
       </div>
       <div>
-        <input
+        <Input
           name="email"
           type="email"
           placeholder="Email"
           required
           defaultValue={state?.fields?.email}
-          className="bg-[#1A1A1A] rounded-lg px-3 py-3 text-[#FAFAFA] font-medium text-sm hover:bg-[#272727] transition-colors duration-200 ease-out w-full"
         />
         <div className="min-h-[20px]">
           {state?.errors?.email && (

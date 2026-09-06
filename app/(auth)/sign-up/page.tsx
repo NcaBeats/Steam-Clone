@@ -4,6 +4,7 @@ import { useActionState, useState } from "react";
 import { signUpAction } from "@/actions/sign-up";
 import { AuthLayout } from "@/app/(auth)/AuthLayout";
 import { PasswordInput, AuthSwitchLink, RegionSelect } from "@/components/auth";
+import { Input } from "@/components/ui";
 import regiones from "@/data/regiones.json";
 
 const SignUp = () => {
@@ -24,13 +25,12 @@ const SignUp = () => {
         )}
       </div>
       <div>
-        <input
+        <Input
           name="run"
           type="text"
           placeholder="RUT"
           required
           defaultValue={state?.fields?.run}
-          className="bg-[#1A1A1A] rounded-lg px-3 py-3 text-[#FAFAFA] font-medium text-sm hover:bg-[#272727] transition-colors duration-200 ease-out w-full"
         />
         <div className="min-h-5">
           {state?.errors?.run && (
@@ -41,13 +41,12 @@ const SignUp = () => {
         </div>
       </div>
       <div>
-        <input
+        <Input
           name="email"
           type="email"
           placeholder="Email"
           required
           defaultValue={state?.fields?.email}
-          className="bg-[#1A1A1A] rounded-lg px-3 py-3 text-[#FAFAFA] font-medium text-sm hover:bg-[#272727] transition-colors duration-200 ease-out w-full"
         />
         <div className="min-h-5">
           {state?.errors?.email && (
@@ -92,13 +91,12 @@ const SignUp = () => {
       </div>
       <div className="flex gap-4">
         <div className="flex-1">
-          <input
+          <Input
             name="name"
             type="text"
             placeholder="First name"
             required
             defaultValue={state?.fields?.name}
-            className="bg-[#1A1A1A] rounded-lg px-3 py-3 text-[#FAFAFA] font-medium text-sm hover:bg-[#272727] transition-colors duration-200 ease-out w-full"
           />
           <div className="min-h-5">
             {state?.errors?.name && (
@@ -109,13 +107,12 @@ const SignUp = () => {
           </div>
         </div>
         <div className="flex-1">
-          <input
+          <Input
             name="lastName"
             type="text"
             placeholder="Last name"
             required
             defaultValue={state?.fields?.lastName}
-            className="bg-[#1A1A1A] rounded-lg px-3 py-3 text-[#FAFAFA] font-medium text-sm hover:bg-[#272727] transition-colors duration-200 ease-out w-full"
           />
           <div className="min-h-5">
             {state?.errors?.lastName && (
@@ -130,12 +127,11 @@ const SignUp = () => {
         <label htmlFor="birthdate" className="text-[#8A8A8A] text-xs">
           Optional
         </label>
-        <input
+        <Input
           id="birthdate"
           name="birthdate"
           type="date"
           defaultValue={state?.fields?.birthdate}
-          className="bg-[#1A1A1A] rounded-lg pl-3 pr-5 py-3 text-[#FAFAFA] font-medium text-sm hover:bg-[#272727] transition-colors duration-200 ease-out w-full"
         />
         <div className="min-h-5">
           {state?.errors?.birthdate && (
@@ -152,14 +148,13 @@ const SignUp = () => {
         comunaError={state?.errors?.comuna}
       />
       <div>
-        <input
+        <Input
           name="direccion"
           type="text"
           placeholder="Address"
           required
           maxLength={300}
           defaultValue={state?.fields?.direccion}
-          className="bg-[#1A1A1A] rounded-lg px-3 py-3 text-[#FAFAFA] font-medium text-sm hover:bg-[#272727] transition-colors duration-200 ease-out w-full"
         />
         <div className="min-h-5">
           {state?.errors?.direccion && (

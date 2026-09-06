@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
+import { Select } from "@/components/ui";
 import type { RegionData } from "@/types";
 
 interface RegionSelectProps {
@@ -36,12 +37,12 @@ export const RegionSelect = ({
   const regionSelect = (
     <div className={layout === "inline" ? "flex-1" : ""}>
       <div className="relative">
-        <select
+        <Select
           name="region"
           value={region}
           onChange={handleRegionChange}
           required
-          className="appearance-none bg-[#1A1A1A] rounded-lg px-3 py-3 pr-10 text-[#FAFAFA] font-medium text-sm hover:bg-[#272727] transition-colors duration-200 ease-out w-full"
+          className="appearance-none pr-10"
         >
           <option value="">Select a region</option>
           {regiones.map((r) => (
@@ -49,7 +50,7 @@ export const RegionSelect = ({
               {r.nombre}
             </option>
           ))}
-        </select>
+        </Select>
         <ChevronDown
           size={16}
           className="absolute right-3 top-1/2 -translate-y-1/2 text-[#8A8A8A] pointer-events-none"
@@ -66,13 +67,13 @@ export const RegionSelect = ({
   const comunaSelect = (
     <div className={layout === "inline" ? "flex-1" : ""}>
       <div className="relative">
-        <select
+        <Select
           name="comuna"
           value={comuna}
           onChange={(e) => setComuna(e.target.value)}
           required
           disabled={!region}
-          className="appearance-none bg-[#1A1A1A] rounded-lg px-3 py-3 pr-10 text-[#FAFAFA] font-medium text-sm hover:bg-[#272727] transition-colors duration-200 ease-out w-full disabled:opacity-50 disabled:cursor-not-allowed"
+          className="appearance-none pr-10 disabled:opacity-50 disabled:hover:bg-[#1A1A1A]"
         >
           <option value="">
             {region ? "Select a municipality" : "Select a region first"}
@@ -82,7 +83,7 @@ export const RegionSelect = ({
               {c}
             </option>
           ))}
-        </select>
+        </Select>
         <ChevronDown
           size={16}
           className="absolute right-3 top-1/2 -translate-y-1/2 text-[#8A8A8A] pointer-events-none"

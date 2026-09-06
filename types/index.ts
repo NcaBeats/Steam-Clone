@@ -1,4 +1,7 @@
 export * from "./Auth";
+export * from "./AdminGame";
+export * from "./AdminUser";
+export * from "./Blog";
 export * from "./Category";
 export * from "./Game";
 export * from "./Library";

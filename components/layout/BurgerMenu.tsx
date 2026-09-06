@@ -10,16 +10,54 @@ import {
   LogOut,
   ShoppingCart,
   LayoutGrid,
+  Info,
+  Mail,
+  Newspaper,
+  LayoutDashboard,
+  ShoppingBag,
+  Users,
+  type LucideIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { useState, useEffect } from "react";
-import { logoutAction } from "@/actions/logout";
+import { useState, useEffect, type ReactNode } from "react";
+
+const ICONS: Record<string, LucideIcon> = {
+  house: House,
+  gamepad2: Gamepad2,
+  logIn: LogIn,
+  clipboardPenLine: ClipboardPenLine,
+  logOut: LogOut,
+  shoppingCart: ShoppingCart,
+  layoutGrid: LayoutGrid,
+  info: Info,
+  mail: Mail,
+  newspaper: Newspaper,
+  layoutDashboard: LayoutDashboard,
+  shoppingBag: ShoppingBag,
+  users: Users,
+};
+
+export type BurgerMenuItem = Readonly<{
+  href?: string;
+  label: string;
+  icon: LucideIcon | string;
+  action?: () => void;
+}>;
 
 interface BurgerMenuProps {
-  readonly isLoggedIn: boolean;
+  readonly items: ReadonlyArray<BurgerMenuItem>;
+  readonly side?: "left" | "right";
+  readonly activePath?: string;
 }
 
-export const BurgerMenu = ({ isLoggedIn }: BurgerMenuProps) => {
+const resolveIcon = (icon: BurgerMenuItem["icon"]): LucideIcon =>
+  typeof icon === "string" ? (ICONS[icon] ?? House) : icon;
+
+export const BurgerMenu = ({
+  items,
+  side = "right",
+  activePath,
+}: BurgerMenuProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -31,8 +69,52 @@ export const BurgerMenu = ({ isLoggedIn }: BurgerMenuProps) => {
     };
   }, [isOpen]);
 
+  const close = () => setIsOpen(false);
+
+  const sideClasses =
+    side === "left"
+      ? "left-0 rounded-tr-xl border-r border-t border-r-[#2D2D2D] border-t-[#2D2D2D]"
+      : "right-0 rounded-tl-xl border-l border-t border-l-[#2D2D2D] border-t-[#2D2D2D]";
+
+  const hiddenClass =
+    side === "left" ? "-translate-x-full" : "translate-x-full";
+
+  const renderItem = (item: BurgerMenuItem): ReactNode => {
+    const Icon = resolveIcon(item.icon);
+    if (item.action) {
+      return (
+        <button
+          type="button"
+          onClick={() => {
+            close();
+            item.action?.();
+          }}
+          className="flex gap-2 py-4 w-full hover:text-[#007AFF] active:text-[#007AFF] hover:underline active:underline"
+        >
+          <Icon />
+          {item.label}
+        </button>
+      );
+    }
+    const isActive = !!item.href && item.href === activePath;
+    return (
+      <Link
+        onClick={close}
+        href={item.href ?? "#"}
+        className={isActive ? "text-[#007AFF] underline" : undefined}
+      >
+        <Icon />
+        {item.label}
+      </Link>
+    );
+  };
+
   return (
-    <div className="sm:hidden flex items-center ml-auto">
+    <div
+      className={`sm:hidden flex items-center ${
+        side === "left" ? "mr-auto" : "ml-auto"
+      }`}
+    >
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
@@ -48,9 +130,9 @@ export const BurgerMenu = ({ isLoggedIn }: BurgerMenuProps) => {
       />
       <nav
         className={`
-    p-1.5 overflow-hidden rounded-tl-xl z-50 fixed top-18 right-0 bottom-0 bg-[#0A0A0A] border-solid border-l border-t border-l-[#2D2D2D] border-t-[#2D2D2D] w-2/3
+    p-1.5 overflow-hidden z-50 fixed top-18 bottom-0 bg-[#0A0A0A] border-solid w-2/3 ${sideClasses}
     transition-transform duration-300 ease-in-out
-    ${isOpen ? "translate-x-0 pointer-events-auto" : "translate-x-full pointer-events-none"}
+    ${isOpen ? "translate-x-0 pointer-events-auto" : `${hiddenClass} pointer-events-none`}
 `}
       >
         <ul
@@ -58,62 +140,11 @@ export const BurgerMenu = ({ isLoggedIn }: BurgerMenuProps) => {
         [&_a]:flex [&_a]:gap-2 [&_a]:py-4 [&_li]:px-4 [&_a]:hover:text-[#007AFF] [&_a]:active:text-[#007AFF]
         [&_a]:hover:underline [&_a]:active:underline [&_li]:hover:bg-[#111111] [&_li]:active:bg-[#111111]"
         >
-          <li>
-            <Link onClick={() => setIsOpen(!isOpen)} href="/">
-              <House />
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link onClick={() => setIsOpen(!isOpen)} href="/catalog">
-              <LayoutGrid />
-              Catalog
-            </Link>
-          </li>
-          {isLoggedIn && (
-            <li>
-              <Link onClick={() => setIsOpen(!isOpen)} href="/library">
-                <Gamepad2 />
-                Library
-              </Link>
+          {items.map((item) => (
+            <li key={`${item.label}-${item.href ?? item.action?.name ?? ""}`}>
+              {renderItem(item)}
             </li>
-          )}
-          <li>
-            <Link onClick={() => setIsOpen(!isOpen)} href="/cart">
-              <ShoppingCart />
-              Cart
-            </Link>
-          </li>
-          {isLoggedIn ? (
-            <li>
-              <button
-                type="button"
-                onClick={() => {
-                  setIsOpen(!isOpen);
-                  logoutAction();
-                }}
-                className="flex gap-2 py-4 w-full hover:text-[#007AFF] active:text-[#007AFF] hover:underline active:underline"
-              >
-                <LogOut />
-                Log out
-              </button>
-            </li>
-          ) : (
-            <>
-              <li>
-                <Link onClick={() => setIsOpen(!isOpen)} href="/sign-up">
-                  <ClipboardPenLine />
-                  Sign up
-                </Link>
-              </li>
-              <li>
-                <Link onClick={() => setIsOpen(!isOpen)} href="/log-in">
-                  <LogIn />
-                  Log in
-                </Link>
-              </li>
-            </>
-          )}
+          ))}
         </ul>
       </nav>
     </div>

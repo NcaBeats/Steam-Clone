@@ -2,12 +2,49 @@ import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
 import { ShoppingCart } from "lucide-react";
-import { NavBarLinks, SearchBar, BurgerMenu } from "@/components/layout";
+import {
+  NavBarLinks,
+  SearchBar,
+  BurgerMenu,
+  type BurgerMenuItem,
+} from "@/components/layout";
 import { logoutAction } from "@/actions/logout";
+import { getCurrentUserAction } from "@/actions/admin/auth";
 
 export const Nav = async () => {
   const cookieStore = await cookies();
   const isLoggedIn = !!cookieStore.get("token")?.value;
+  const user = isLoggedIn ? await getCurrentUserAction() : null;
+  const isStaff = user?.role === "ADMIN" || user?.role === "VENDEDOR";
+  const staffHref = user?.role === "ADMIN" ? "/admin" : "/studio/games";
+
+  const menuItems: BurgerMenuItem[] = [
+    { href: "/", label: "Home", icon: "house" },
+    { href: "/catalog", label: "Catalog", icon: "layoutGrid" },
+    { href: "/about", label: "About", icon: "info" },
+    { href: "/contact", label: "Contact", icon: "mail" },
+    { href: "/blog", label: "Blog", icon: "newspaper" },
+    ...(isLoggedIn
+      ? [{ href: "/library", label: "Library", icon: "gamepad2" }]
+      : []),
+    ...(isStaff
+      ? [{ href: staffHref, label: "Panel", icon: "layoutDashboard" }]
+      : []),
+    { href: "/cart", label: "Cart", icon: "shoppingCart" },
+    ...(isLoggedIn
+      ? [
+          {
+            href: "/",
+            label: "Log out",
+            icon: "logOut",
+            action: logoutAction,
+          },
+        ]
+      : [
+          { href: "/sign-up", label: "Sign up", icon: "clipboardPenLine" },
+          { href: "/log-in", label: "Log in", icon: "logIn" },
+        ]),
+  ];
 
   return (
     <nav className="text-sm flex items-center h-full px-4 gap-6 ">
@@ -22,7 +59,11 @@ export const Nav = async () => {
           />
         </Link>
       </div>
-      <NavBarLinks isLoggedIn={isLoggedIn} />
+      <NavBarLinks
+        isLoggedIn={isLoggedIn}
+        isStaff={isStaff}
+        staffHref={staffHref}
+      />
       <SearchBar />
       <div className="sm:flex hidden justify-end items-center gap-4 ml-auto">
         <Link
@@ -60,7 +101,7 @@ export const Nav = async () => {
           </>
         )}
       </div>
-      <BurgerMenu isLoggedIn={isLoggedIn} />
+      <BurgerMenu items={menuItems} />
     </nav>
   );
 };

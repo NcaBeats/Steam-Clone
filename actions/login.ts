@@ -3,7 +3,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { fetchAPI } from "@/lib/api/fetch";
-import type { Auth } from "@/types";
+import type { Auth, User } from "@/types";
 import { LoginSchema } from "@/schemas/auth/login.schema";
 import { COOKIE_OPTIONS } from "./cookiesOptions";
 import * as z from "zod";
@@ -59,15 +59,21 @@ export async function loginAction(
   // Si tiene éxito, extraemos el email y el password sanitizados
   const { email, password } = validation.data;
 
+  let role: User["role"];
+
   try {
     const data = await fetchAPI<Auth>("/auth/login", {
       method: "POST",
       body: { email, password },
-      auth: true,
     });
 
     const cookieStore = await cookies();
     cookieStore.set(COOKIE_NAME, data.token, COOKIE_OPTIONS);
+
+    const me = await fetchAPI<User>("/users/me", {
+      headers: { Authorization: `Bearer ${data.token}` },
+    });
+    role = me.role;
   } catch {
     return {
       success: false,
@@ -75,5 +81,7 @@ export async function loginAction(
     };
   }
 
-  redirect("/");
+  redirect(
+    role === "ADMIN" ? "/admin" : role === "VENDEDOR" ? "/studio/games" : "/",
+  );
 }

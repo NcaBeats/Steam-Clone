@@ -1,27 +1,43 @@
 import { CatalogList } from "@/components/games";
-import { getGames } from "@/lib/api/games";
-import { getBannerGames } from "@/lib/api/games";
+import { Pagination } from "@/components/ui";
+import { getGamesPaginated, getBannerGames } from "@/lib/api/games";
 import Image from "next/image";
 import Link from "next/link";
 import { formatPrice } from "@/lib";
 
-const CatalogPage = async () => {
-  const [games, bannerGames] = await Promise.all([
-    getGames(),
+const PAGE_SIZE = 10;
+
+type Props = Readonly<{
+  searchParams: Promise<{ page?: string }>;
+}>;
+
+const CatalogPage = async ({ searchParams }: Props) => {
+  const { page: pageParam } = await searchParams;
+  const page = Math.max(0, Number(pageParam ?? 0));
+
+  const [data, bannerGames] = await Promise.all([
+    getGamesPaginated(page, PAGE_SIZE),
     getBannerGames(),
   ]);
 
+  const { content: games, page: pageInfo } = data;
+  const totalElements = pageInfo.totalElements;
   const featured = bannerGames[0] ?? games[0];
 
   return (
     <div className="flex flex-col p-2 gap-4 w-full max-w-7xl mx-auto min-h-screen">
       <h1 className="text-2xl font-bold text-[#FAFAFA] ml-1">Catalog</h1>
       <p className="text-sm text-[#8A8A8A] ml-1">
-        {games.length} game{games.length !== 1 ? "s" : ""}
+        {totalElements} game{totalElements !== 1 ? "s" : ""}
       </p>
       <div className="flex flex-col xl:flex-row gap-6">
         <div className="flex flex-col gap-2 flex-1 min-w-0">
-          <CatalogList />
+          <CatalogList games={games} />
+          <Pagination
+            page={page}
+            totalPages={pageInfo.totalPages}
+            basePath="/catalog"
+          />
         </div>
         {featured && (
           <aside className="hidden xl:flex flex-col w-80 shrink-0 self-start sticky top-20 gap-3">

@@ -1,4 +1,5 @@
 import { Eye, EyeOff } from "lucide-react";
+import { Input } from "@/components/ui";
 
 interface PasswordInputProps {
   readonly name: string;
@@ -22,13 +23,13 @@ export const PasswordInput = ({
       htmlFor={name}
       className={`flex relative items-center font-medium text-sm ${className}`}
     >
-      <input
+      <Input
         name={name}
         type={show ? "text" : "password"}
         placeholder={placeholder}
         required
         defaultValue={defaultValue}
-        className="bg-[#1A1A1A] rounded-lg px-3 py-3 w-full hover:bg-[#272727] transition-colors duration-200 ease-out"
+        className="pr-10"
       />
       <button
         type="button"

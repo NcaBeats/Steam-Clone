@@ -7,9 +7,11 @@ export async function fetchAPI<T>(
   options: {
     revalidate?: number;
     auth?: boolean;
-    method?: "GET" | "POST" | "PUT" | "DELETE";
+    method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
     body?: unknown;
     headers?: Record<string, string>;
+    noStore?: boolean;
+    paginated?: boolean;
   } = {},
 ): Promise<T> {
   const {
@@ -18,6 +20,8 @@ export async function fetchAPI<T>(
     method = "GET",
     body,
     headers: customHeaders,
+    noStore = false,
+    paginated = false,
   } = options;
   const reqHeaders: Record<string, string> = { ...customHeaders };
 
@@ -38,7 +42,11 @@ export async function fetchAPI<T>(
     method,
     headers: reqHeaders,
     body: body ? JSON.stringify(body) : undefined,
-    ...(isRead ? { next: { revalidate, tags: [endpoint] } } : {}),
+    ...(noStore
+      ? { cache: "no-store" as const }
+      : isRead
+        ? { next: { revalidate, tags: [endpoint] } }
+        : {}),
   });
 
   if (!res.ok) {
@@ -47,5 +55,22 @@ export async function fetchAPI<T>(
   }
 
   const data = await res.json();
-  return data.content ?? data;
+  if (
+    paginated &&
+    data &&
+    typeof data === "object" &&
+    "content" in data &&
+    Array.isArray(data.content)
+  ) {
+    return data as T;
+  }
+  if (
+    data &&
+    typeof data === "object" &&
+    "content" in data &&
+    Array.isArray(data.content)
+  ) {
+    return data.content as T;
+  }
+  return data as T;
 }

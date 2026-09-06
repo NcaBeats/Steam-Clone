@@ -1,5 +1,7 @@
 import { Category } from "./Category";
 
+export type GameState = "AVAILABLE" | "COMING_SOON" | "DISCONTINUED";
+
 export type Game = {
   id: number;
   name: string;
@@ -7,7 +9,7 @@ export type Game = {
   price: number;
   discountPercent: number;
   description: string;
-  state: string;
+  state: GameState;
   launchDate: string;
   categories: Category[];
   imageUrl: string;
@@ -15,4 +17,19 @@ export type Game = {
   minimumSpecs: string | null;
   recommendedSpecs: string | null;
   createdAt: string;
+};
+
+export type GameCreateInput = {
+  name: string;
+  originalPrice: number;
+  discountPercent: number;
+  description: string;
+  state: GameState;
+  launchDate: string;
+  categoryNames: string[];
+};
+
+export type UserCreateInput = {
+  email: string;
+  password: string;
 };
