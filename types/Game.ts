@@ -14,6 +14,9 @@ export type Game = {
   categories: Category[];
   imageUrl: string;
   bannerUrl: string | null;
+  videoUrl: string | null;
+  galleryUrls: string[];
+  sellerId: number | null;
   minimumSpecs: string | null;
   recommendedSpecs: string | null;
   createdAt: string;

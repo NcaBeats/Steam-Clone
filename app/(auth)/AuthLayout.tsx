@@ -10,7 +10,7 @@ interface AuthLayoutProps {
 
 export const AuthLayout = ({ formAction, children }: AuthLayoutProps) => {
   return (
-    <div className="flex justify-center items-center min-h-screen px-4">
+    <div className="bg-[#160F08] flex justify-center items-center min-h-screen px-4">
       <Link
         className="md:fixed absolute left-4 top-4 hover:bg-[#3a3a3a] p-2 rounded-lg transition-colors duration-200 ease-out"
         href="/"

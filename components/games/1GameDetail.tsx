@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
@@ -191,7 +191,7 @@ export const GameDetail = ({ game }: Props) => {
   return (
     <div className="flex flex-col gap-6 w-full max-w-6xl mx-auto p-4">
       <div className="flex flex-col lg:flex-row gap-6">
-        {/* COLUMNA IZQUIERDA: Video + DescripciÃ³n + Specs */}
+        {/* COLUMNA IZQUIERDA: Video + Descripción + Specs */}
         <div className="flex flex-col gap-2 flex-1">
           {game.videoUrl ? (
             <GameVideo
@@ -218,7 +218,7 @@ export const GameDetail = ({ game }: Props) => {
                   <CarouselItem key={url} className="basis-1/2 md:basis-1/3">
                     <button
                       type="button"
-                      className="relative w-full aspect-video rounded-lg overflow-hidden bg-[#1A1A1A] cursor-pointer group"
+                      className="relative w-full aspect-video rounded-3xl overflow-hidden bg-[#1A1A1A] cursor-pointer group"
                       onClick={() => setActiveIndex(i)}
                     >
                       <Image
@@ -264,13 +264,20 @@ export const GameDetail = ({ game }: Props) => {
           )}
         </div>
 
-        {/* COLUMNA DERECHA: CategorÃ­as, Precios y Juego Destacado */}
-        <div className="flex flex-col lg:w-96 shrink-0">
-          {/* CATEGORÃAS */}
-          <div className="bg-[#1A1A1A] rounded-lg p-6 flex flex-col">
-            <h3 className="text-xs uppercase font-bold text-[#FAFAFA] border-b border-[#2A2A2A] pb-2">
-              CategorÃ­as
-            </h3>
+        {/* COLUMNA DERECHA: Categorías, Precios y Juego Destacado */}
+        <div className="flex flex-col lg:w-96 shrink-0 gap-2">
+          <div className="relative w-full aspect-video rounded-4xl overflow-hidden">
+            <Image
+              src={game.bannerUrl ?? game.imageUrl}
+              alt={game.name}
+              fill
+              className="object-cover"
+            />
+          </div>
+
+          {/* CATEGORÍAS */}
+          <div className="bg-[#1A1A1A] rounded-lg p-4 flex gap-2 flex-col">
+            <h3 className="text-xl font-bold text-[#FAFAFA] ">{game.name}</h3>
             <div className="flex flex-wrap gap-2">
               {game.categories.map((cat) => (
                 <span
@@ -281,36 +288,48 @@ export const GameDetail = ({ game }: Props) => {
                 </span>
               ))}
             </div>
-          </div>
+            <p className="text-[#8A8A8A] font-medium text-sm">{`Launch date: ${game.launchDate}`}</p>
 
-          {/* PRECIO, DESCUENTO Y BOTÃ“N EN FLEX ROW */}
-          <div className="mt-4 flex items-end gap-2">
-            {game.discountPercent > 0 && (
-              <div className="flex items-center gap-2">
-                <span className="bg-[#A1CD44] text-black text-sm font-bold px-2 py-1 rounded">
-                  -{game.discountPercent}%
-                </span>
+            {/* PRECIO, DESCUENTO Y BOTÓN EN FLEX ROW */}
+            <div className="flex justify-between items-end gap-2">
+              <div className="flex flex-col gap-2">
+                {game.discountPercent > 0 && (
+                  <div className="flex items-center gap-4">
+                    <span className="bg-[#A1CD44] text-black text-sm font-semibold px-2 py-1 rounded-md">
+                      -{game.discountPercent}%
+                    </span>
+                  </div>
+                )}
+                <div className="flex gap-2 items-center">
+                  <span className="text-2xl font-bold text-[#FAFAFA]">
+                    {formatPrice(game.price)}
+                  </span>
+                  <s className="text-sm text-[#8A8A8A] text-decoration-line-through">
+                    {formatPrice(game.originalPrice)}
+                  </s>
+                </div>
               </div>
-            )}
-            <div className="flex flex-col gap-2 w-full">
-              <s className="text-sm text-[#8A8A8A] text-decoration-line-through">
-                {formatPrice(game.originalPrice)}
-              </s>
-              <span className="text-2xl font-bold text-[#FAFAFA]">
-                {formatPrice(game.price)}
-              </span>
+
+              <button
+                type="button"
+                onClick={handleAddToCart}
+                disabled={alreadyInCart}
+                className="bg-[#007AFF] hover:bg-[#1ea4ff] text-white font-semibold py-3 px-5 rounded-lg transition-colors cursor-pointer disabled:bg-[#3A3A3A] disabled:cursor-not-allowed disabled:hover:bg-[#3A3A3A]"
+              >
+                {alreadyInCart ? "Already in cart" : "Add to Cart"}
+              </button>
             </div>
-            <button
-              type="button"
-              onClick={handleAddToCart}
-              disabled={alreadyInCart}
-              className="mt-2 bg-[#007AFF] hover:bg-[#1ea4ff] text-white font-semibold py-3 rounded-lg transition-colors cursor-pointer disabled:bg-[#3A3A3A] disabled:cursor-not-allowed disabled:hover:bg-[#3A3A3A]"
-            >
-              {alreadyInCart ? "Already in cart" : "Add to Cart"}
-            </button>
           </div>
         </div>
       </div>
+      {activeIndex !== null && (
+        <GalleryLightbox
+          images={gallery}
+          index={activeIndex}
+          onClose={() => setActiveIndex(null)}
+          onNavigate={setActiveIndex}
+        />
+      )}
     </div>
   );
 };

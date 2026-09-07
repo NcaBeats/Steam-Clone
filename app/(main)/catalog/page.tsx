@@ -25,7 +25,7 @@ const CatalogPage = async ({ searchParams }: Props) => {
   const featured = bannerGames[0] ?? games[0];
 
   return (
-    <div className="flex flex-col p-2 gap-4 w-full max-w-7xl mx-auto min-h-screen">
+    <div className="flex flex-col p-2 gap-4 w-full max-w-6xl mx-auto min-h-screen">
       <h1 className="text-2xl font-bold text-[#FAFAFA] ml-1">Catalog</h1>
       <p className="text-sm text-[#8A8A8A] ml-1">
         {totalElements} game{totalElements !== 1 ? "s" : ""}

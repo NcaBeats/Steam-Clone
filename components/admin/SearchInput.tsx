@@ -34,6 +34,7 @@ export function SearchInput({
     } else {
       params.delete(paramName);
     }
+    params.delete("page");
     startTransition(() => {
       router.push(`${pathname}?${params.toString()}`);
     });

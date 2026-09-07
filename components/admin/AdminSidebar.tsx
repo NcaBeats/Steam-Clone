@@ -28,14 +28,14 @@ export const AdminSidebar = () => {
   const pathname = usePathname();
 
   return (
-    <aside className="hidden sm:flex w-56 bg-[#0A0A0A] border-r border-[#2A2A2A] min-h-screen flex-col p-4 gap-1">
+    <aside className="hidden sm:flex w-56 bg-[#0A0A0A] border-r border-[#2A2A2A] h-screen sticky top-0 flex-col p-4 gap-1">
       <div className="mb-4 flex items-center gap-2 px-2">
         <div className="size-8 bg-[#007AFF] rounded-lg flex items-center justify-center text-white font-bold text-sm">
           D
         </div>
         <span className="font-semibold text-[#FAFAFA]">Dashboard</span>
       </div>
-      <nav className="flex flex-col gap-0.5">
+      <nav className="flex flex-col gap-0.5 overflow-y-auto">
         {items.map((item) => {
           const Icon = item.icon;
           const isActive =
