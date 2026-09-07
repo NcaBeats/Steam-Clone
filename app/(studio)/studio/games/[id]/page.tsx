@@ -61,6 +61,12 @@ const StudioGameDetailPage = async ({
               {game.state}
             </span>
             <span>#{game.id}</span>
+            <Link
+              href={`/studio/games/${game.id}/edit`}
+              className="text-[#007AFF] hover:text-[#1ea4ff] text-sm font-medium"
+            >
+              Edit
+            </Link>
           </div>
         </div>
       </header>

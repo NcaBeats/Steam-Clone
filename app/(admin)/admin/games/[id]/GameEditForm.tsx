@@ -2,16 +2,27 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAlert, Input, Select, Textarea } from "@/components/ui";
-import { updateGameAction } from "@/actions/admin";
+import {
+  useAlert,
+  Input,
+  Select,
+  Textarea,
+  FileDropzone,
+} from "@/components/ui";
+import { updateGameWithMediaAction } from "@/actions/admin";
 import type { Category, Game, GameState } from "@/types";
 
 type Props = Readonly<{
   game: Game;
   categories: Category[];
+  redirectTo?: string;
 }>;
 
-export function GameEditForm({ game, categories }: Props) {
+export function GameEditForm({
+  game,
+  categories,
+  redirectTo = "/admin/games",
+}: Props) {
   const router = useRouter();
   const { showAlert } = useAlert();
   const [saving, setSaving] = useState(false);
@@ -27,6 +38,11 @@ export function GameEditForm({ game, categories }: Props) {
   const [selectedCategories, setSelectedCategories] = useState<string[]>(
     game.categories.map((c) => c.name),
   );
+
+  const [image, setImage] = useState<File | null>(null);
+  const [banner, setBanner] = useState<File | null>(null);
+  const [video, setVideo] = useState<File | null>(null);
+  const [gallery, setGallery] = useState<File[]>([]);
 
   // Clamped numeric discount for calculation/submission
   const discountValue = Math.max(
@@ -69,15 +85,22 @@ export function GameEditForm({ game, categories }: Props) {
     }
     setSaving(true);
     try {
-      const result = await updateGameAction(game.id, {
-        name,
-        originalPrice,
-        discountPercent: discountValue,
-        description,
-        state,
-        launchDate,
-        categoryNames: selectedCategories,
-      });
+      const formData = new FormData();
+      formData.set("name", name);
+      formData.set("originalPrice", String(originalPrice));
+      formData.set("discountPercent", String(discountValue));
+      formData.set("description", description);
+      formData.set("state", state);
+      formData.set("launchDate", launchDate);
+      for (const c of selectedCategories) formData.append("categories", c);
+      if (image) formData.set("image", image);
+      if (banner) formData.set("banner", banner);
+      if (video) formData.set("video", video);
+      if (gallery.length > 0) {
+        formData.delete("gallery");
+        for (const g of gallery) formData.append("gallery", g);
+      }
+      const result = await updateGameWithMediaAction(game.id, formData);
       if (!result.ok) {
         showAlert({
           variant: "destructive",
@@ -92,7 +115,7 @@ export function GameEditForm({ game, categories }: Props) {
         title: "Producto actualizado",
         description: `${name} se actualizó correctamente`,
       });
-      router.push("/admin/games");
+      router.push(redirectTo);
       router.refresh();
     } catch (e) {
       showAlert({
@@ -224,6 +247,40 @@ export function GameEditForm({ game, categories }: Props) {
             </label>
           ))}
         </div>
+      </div>
+
+      <div className="flex flex-col gap-4 border-t border-[#2A2A2A] pt-4">
+        <p className="text-xs text-[#5A5A5A]">
+          Sube archivos para reemplazar el recurso actual. Deja los campos
+          vacíos para conservar lo existente. La galería se reemplaza por
+          completo si eliges nuevas imágenes.
+        </p>
+        <FileDropzone
+          kind="image"
+          value={image}
+          onChange={(v) => setImage(Array.isArray(v) ? (v[0] ?? null) : v)}
+          existingUrl={game.imageUrl}
+        />
+        <FileDropzone
+          kind="banner"
+          value={banner}
+          onChange={(v) => setBanner(Array.isArray(v) ? (v[0] ?? null) : v)}
+          existingUrl={game.bannerUrl}
+        />
+        <FileDropzone
+          kind="video"
+          value={video}
+          onChange={(v) => setVideo(Array.isArray(v) ? (v[0] ?? null) : v)}
+          existingUrl={game.videoUrl}
+          existingPreview={game.videoUrl}
+        />
+        <FileDropzone
+          kind="gallery"
+          value={gallery}
+          onChange={(v) => setGallery(Array.isArray(v) ? v : v ? [v] : [])}
+          maxFiles={10}
+          existingUrl={game.galleryUrls[0] ?? null}
+        />
       </div>
 
       <div className="flex items-center gap-2 mt-2">

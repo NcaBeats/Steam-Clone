@@ -35,14 +35,22 @@ const StudioGamesPage = async ({
 
       <div className="flex flex-wrap items-center justify-between gap-4">
         <SearchInput placeholder="Buscar por nombre..." paramName="q" />
-        {searchName && (
+        <div className="flex items-center gap-3">
+          {searchName && (
+            <Link
+              href="/studio/games"
+              className="text-sm text-[#8A8A8A] hover:text-white whitespace-nowrap"
+            >
+              Limpiar filtro
+            </Link>
+          )}
           <Link
-            href="/studio/games"
-            className="text-sm text-[#8A8A8A] hover:text-white whitespace-nowrap"
+            href="/studio/games/new"
+            className="bg-[#007AFF] hover:bg-[#1ea4ff] text-white text-sm font-semibold px-4 py-2 rounded-md transition-colors whitespace-nowrap"
           >
-            Limpiar filtro
+            + Nuevo producto
           </Link>
-        )}
+        </div>
       </div>
 
       <div className="bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg overflow-x-auto">
@@ -122,6 +130,13 @@ const StudioGamesPage = async ({
                       className="text-[#007AFF] hover:text-[#1ea4ff] text-sm font-medium"
                     >
                       View
+                    </Link>
+                    <span className="mx-2 text-[#2A2A2A]">·</span>
+                    <Link
+                      href={`/studio/games/${g.id}/edit`}
+                      className="text-[#8A8A8A] hover:text-white text-sm font-medium"
+                    >
+                      Edit
                     </Link>
                   </td>
                 </tr>

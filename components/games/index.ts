@@ -6,7 +6,7 @@ export * from "./CategoryChips";
 export * from "./ComingSoonSection";
 export * from "./FreeToPlaySection";
 export * from "./GameCard";
-export * from "./1GameDetail.tsx";
+export * from "./GameDetail";
 export * from "./GameListItem";
 export * from "./LibraryCard";
 export * from "./SearchGameCard";

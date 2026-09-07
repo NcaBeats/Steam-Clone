@@ -173,6 +173,105 @@ export async function createGameFromFormAction(
   return { ok: result.ok, error: result.error };
 }
 
+type MediaMetadata = GameCreateInput;
+
+function readMetadata(formData: FormData): MediaMetadata {
+  return {
+    name: formData.get("name")?.toString() ?? "",
+    originalPrice: Number(formData.get("originalPrice") ?? 0),
+    discountPercent: Number(formData.get("discountPercent") ?? 0),
+    description: formData.get("description")?.toString() ?? "",
+    state: (formData.get("state")?.toString() ??
+      "AVAILABLE") as GameCreateInput["state"],
+    launchDate: formData.get("launchDate")?.toString() ?? "",
+    categoryNames: formData.getAll("categories").map(String),
+  };
+}
+
+function toFile(value: FormDataEntryValue | null): File | null {
+  return value instanceof File && value.size > 0 ? value : null;
+}
+
+function toFileList(formData: FormData): File[] {
+  return formData
+    .getAll("gallery")
+    .filter((f): f is File => f instanceof File && f.size > 0);
+}
+
+function toMetadataPart(metadata: MediaMetadata): Blob {
+  return new Blob([JSON.stringify(metadata)], { type: "application/json" });
+}
+
+export async function createGameWithMediaAction(
+  formData: FormData,
+): Promise<{ ok: boolean; error?: string }> {
+  const metadata = readMetadata(formData);
+  const image = toFile(formData.get("image"));
+  if (!image) {
+    return { ok: false, error: "La imagen principal es obligatoria" };
+  }
+  const backend = new FormData();
+  backend.append("metadata", toMetadataPart(metadata));
+  backend.append("image", image);
+  const banner = toFile(formData.get("banner"));
+  if (banner) backend.append("banner", banner);
+  const video = toFile(formData.get("video"));
+  if (video) backend.append("video", video);
+  for (const g of toFileList(formData)) {
+    backend.append("gallery", g);
+  }
+  try {
+    await fetchAPI<Game>("/games", {
+      method: "POST",
+      body: backend,
+      auth: true,
+      noStore: true,
+    });
+    revalidatePath("/admin/games");
+    revalidatePath("/studio/games");
+    revalidatePath("/admin");
+    revalidatePath("/studio");
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: errorMessage(e) };
+  }
+}
+
+export async function updateGameWithMediaAction(
+  id: number,
+  formData: FormData,
+): Promise<{ ok: boolean; error?: string }> {
+  const metadata = readMetadata(formData);
+  const backend = new FormData();
+  backend.append("metadata", toMetadataPart(metadata));
+  const image = toFile(formData.get("image"));
+  if (image) backend.append("image", image);
+  const banner = toFile(formData.get("banner"));
+  if (banner) backend.append("banner", banner);
+  const video = toFile(formData.get("video"));
+  if (video) backend.append("video", video);
+  for (const g of toFileList(formData)) {
+    backend.append("gallery", g);
+  }
+  try {
+    await fetchAPI<Game>(`/games/${id}`, {
+      method: "PUT",
+      body: backend,
+      auth: true,
+      noStore: true,
+    });
+    revalidatePath("/admin/games");
+    revalidatePath(`/admin/games/${id}`);
+    revalidatePath("/studio/games");
+    revalidatePath(`/studio/games/${id}`);
+    revalidatePath("/admin");
+    revalidatePath("/studio");
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: errorMessage(e) };
+  }
+}
+
 export async function updateUserAction(
   id: number,
   input: AdminUserUpdateInput,

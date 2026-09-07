@@ -33,7 +33,9 @@ export async function fetchAPI<T>(
     }
   }
 
-  if (body) {
+  if (body instanceof FormData) {
+    // Do not set Content-Type: browser adds it with the multipart boundary
+  } else if (body) {
     reqHeaders["Content-Type"] = "application/json";
   }
 
@@ -41,7 +43,8 @@ export async function fetchAPI<T>(
   const res = await fetch(`${API_BASE}${endpoint}`, {
     method,
     headers: reqHeaders,
-    body: body ? JSON.stringify(body) : undefined,
+    body:
+      body instanceof FormData ? body : body ? JSON.stringify(body) : undefined,
     ...(noStore
       ? { cache: "no-store" as const }
       : isRead
