@@ -31,11 +31,11 @@ export const ContactForm = () => {
   return (
     <form
       action={formAction}
-      className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg p-6 flex flex-col gap-4"
+      className="bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg p-6 flex flex-col gap-4 text-[#FAFAFA]"
       noValidate
     >
       <div className="flex flex-col gap-1">
-        <label htmlFor="name" className="text-xs text-[#8A8A8A] font-medium">
+        <label htmlFor="name" className="text-xs font-medium">
           Name
         </label>
         <Input
@@ -55,7 +55,7 @@ export const ContactForm = () => {
       </div>
 
       <div className="flex flex-col gap-1">
-        <label htmlFor="email" className="text-xs text-[#8A8A8A] font-medium">
+        <label htmlFor="email" className="text-xs font-medium">
           Email
         </label>
         <Input
@@ -75,7 +75,7 @@ export const ContactForm = () => {
       </div>
 
       <div className="flex flex-col gap-1">
-        <label htmlFor="comment" className="text-xs text-[#8A8A8A] font-medium">
+        <label htmlFor="comment" className="text-xs font-medium">
           Message
         </label>
         <Textarea

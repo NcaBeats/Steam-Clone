@@ -23,7 +23,7 @@ const ContactPage = () => {
         </div>
 
         <aside className="flex flex-col gap-4">
-          <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg p-5 flex flex-col gap-3">
+          <div className="bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg p-5 flex flex-col gap-3">
             <h3 className="text-lg font-semibold text-[#FAFAFA]">
               Contact info
             </h3>
@@ -54,7 +54,7 @@ const ContactPage = () => {
             </div>
           </div>
 
-          <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg p-5 flex flex-col gap-2">
+          <div className="bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg p-5 flex flex-col gap-2">
             <h3 className="text-lg font-semibold text-[#FAFAFA]">
               Business hours
             </h3>
