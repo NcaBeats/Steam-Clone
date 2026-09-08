@@ -5,10 +5,10 @@ import { getManageOrders } from "@/lib/api/games";
 const PAGE_SIZE = 10;
 
 const statusClasses: Record<string, string> = {
-  COMPLETED: "bg-[#A1CD44] text-black",
-  PENDING: "bg-[#2A2A2A] text-[#FAFAFA]",
-  CANCELLED: "bg-[#FF6B6B] text-white",
-  REFUNDED: "bg-[#2A2A2A] text-[#FAFAFA]",
+  COMPLETED: "bg-[#28282C] text-[#FAFAFA]",
+  PENDING: "bg-[#101014] text-[#8A8A8A]",
+  CANCELLED: "bg-[#2A1A1A] border border-[#5C2A2A] text-[#FF6B6B]",
+  REFUNDED: "bg-[#101014] text-[#8A8A8A]",
 };
 
 const OrdersPage = async ({
@@ -28,18 +28,23 @@ const OrdersPage = async ({
 
   return (
     <div className="flex flex-col gap-6">
-      <header>
-        <h1 className="text-2xl font-bold text-[#FAFAFA]">Órdenes</h1>
+      <header className="flex flex-col gap-1">
+        <p className="text-xs font-bold uppercase tracking-[0.5px] text-[#8A8A8A]">
+          Orders
+        </p>
+        <h1 className="text-xl font-bold tracking-[0.4px] text-[#FAFAFA]">
+          Órdenes
+        </h1>
         <p className="text-sm text-[#8A8A8A]">
           {pageInfo.totalElements} order
           {pageInfo.totalElements !== 1 ? "s" : ""} in your catalog
         </p>
       </header>
 
-      <div className="bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg overflow-x-auto">
+      <div className="bg-[#202024] border border-white/[0.06] rounded-lg overflow-x-auto">
         <table className="w-full text-sm table-fixed">
           <thead>
-            <tr className="bg-[#1A1A1A] text-left text-[#8A8A8A] text-xs uppercase tracking-wide">
+            <tr className="bg-[#18181C] text-left text-[#8A8A8A] text-xs font-bold uppercase tracking-[0.5px]">
               <th className="px-3 py-3 w-20 hidden sm:table-cell">ID</th>
               <th className="px-3 py-3">Buyer</th>
               <th className="px-3 py-3 text-right w-24">Date</th>
@@ -62,7 +67,7 @@ const OrdersPage = async ({
               orders.map((o) => (
                 <tr
                   key={o.id}
-                  className="border-t border-[#2A2A2A] hover:bg-[#1A1A1A] transition-colors"
+                  className="border-t border-white/[0.06] hover:bg-[#28282C] transition-colors"
                 >
                   <td className="px-3 py-3 text-[#8A8A8A] hidden sm:table-cell">
                     #{o.id}
@@ -84,10 +89,10 @@ const OrdersPage = async ({
                   <td className="px-3 py-3 text-[#FAFAFA] text-right whitespace-nowrap">
                     ${o.totalAmount.toFixed(2)}
                   </td>
-                  <td className="px-3 py-3 hidden md:table-cell">
+                  <td className="px-3 py-3 hidden md:table-cell whitespace-nowrap">
                     <span
-                      className={`px-2 py-0.5 rounded text-xs font-semibold ${
-                        statusClasses[o.status] ?? "bg-[#2A2A2A] text-[#8A8A8A]"
+                      className={`px-2.5 py-1 rounded text-xs font-semibold inline-block ${
+                        statusClasses[o.status] ?? "bg-[#101014] text-[#8A8A8A]"
                       }`}
                     >
                       {o.status}
@@ -110,10 +115,10 @@ const OrdersPage = async ({
               <Link
                 key={i}
                 href={`/admin/orders?page=${i}`}
-                className={`size-8 flex items-center justify-center rounded text-sm ${
+                className={`size-8 flex items-center justify-center rounded-md text-sm ${
                   i === page
-                    ? "bg-[#007AFF] text-white"
-                    : "text-[#8A8A8A] hover:bg-[#1A1A1A] hover:text-white"
+                    ? "bg-[#28282C] text-white"
+                    : "text-[#8A8A8A] hover:bg-[#28282C] hover:text-white"
                 }`}
               >
                 {i + 1}

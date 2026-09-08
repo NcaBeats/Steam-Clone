@@ -21,17 +21,13 @@ const CatalogPage = async ({ searchParams }: Props) => {
   ]);
 
   const { content: games, page: pageInfo } = data;
-  const totalElements = pageInfo.totalElements;
   const featured = bannerGames[0] ?? games[0];
 
   return (
     <div className="flex flex-col p-2 gap-4 w-full max-w-6xl mx-auto min-h-screen">
-      <h1 className="text-2xl font-bold text-[#FAFAFA] ml-1">Catalog</h1>
-      <p className="text-sm text-[#8A8A8A] ml-1">
-        {totalElements} game{totalElements !== 1 ? "s" : ""}
-      </p>
+      <h1 className="text-4xl font-bold text-[#FAFAFA] ml-1 mt-8">Catalog</h1>
       <div className="flex flex-col xl:flex-row gap-6">
-        <div className="flex flex-col gap-2 flex-1 min-w-0">
+        <div className="flex flex-col gap-2 flex-1 min-w-0 ">
           <CatalogList games={games} />
           <Pagination
             page={page}

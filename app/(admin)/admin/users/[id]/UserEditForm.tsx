@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAlert, Input, Select, Textarea } from "@/components/ui";
+import { PasswordInput } from "@/components/auth";
 import {
   ComunaSelect,
   RegionSelect,
@@ -23,6 +24,7 @@ export function UserEditForm({ user }: Props) {
   const [email, setEmail] = useState(user.email);
   const [role, setRole] = useState<UserRole>(user.role);
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [nickname, setNickname] = useState(user.profile.nickname);
   const [bio, setBio] = useState(user.profile.bio ?? "");
   const [visibility, setVisibility] = useState<"PUBLIC" | "PRIVATE">(
@@ -140,15 +142,16 @@ export function UserEditForm({ user }: Props) {
           <label htmlFor="password" className={labelCls}>
             Nueva contraseña (opcional, dejar vacío para mantener la actual)
           </label>
-          <Input
-            id="password"
+          <PasswordInput
             name="password"
-            type="password"
+            required={false}
             minLength={4}
             maxLength={10}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="••••••"
+            show={showPassword}
+            onToggle={() => setShowPassword(!showPassword)}
           />
         </div>
       </fieldset>

@@ -38,7 +38,7 @@ export default async function Home() {
     ]);
 
   return (
-    <div className="flex flex-col p-2 gap-8 w-full max-w-7xl mx-auto min-h-screen">
+    <div className="flex flex-col p-2 gap-8 w-full max-w-6xl mx-auto min-h-screen">
       <BannerCarousel games={bannerGames} />
       <CategoryChips categories={categories} />
       <div className="flex flex-col">

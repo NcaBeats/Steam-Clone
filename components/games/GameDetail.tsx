@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import { X } from "lucide-react";
 import {
   Carousel,
   CarouselContent,
@@ -15,8 +15,6 @@ import { addToCart, isInCart } from "@/lib/cart";
 import { useAlert } from "@/components/ui";
 import { GameVideo } from "@/components/games/GameVideo";
 import type { Game } from "@/types";
-import { CatalogList } from "@/components/games";
-import { Pagination } from "@/components/ui";
 
 type Props = Readonly<{ game: Game }>;
 
@@ -103,7 +101,7 @@ function GalleryLightbox({
         className="absolute top-4 right-4 text-white text-3xl leading-none px-2 py-1 hover:bg-white/10 rounded cursor-pointer z-10"
         onClick={onClose}
       >
-        &times;
+        <X />
       </button>
       <button
         type="button"
@@ -192,7 +190,7 @@ export const GameDetail = ({ game }: Props) => {
     <div className="flex flex-col gap-6 w-full max-w-6xl mx-auto p-4">
       <div className="flex flex-col lg:flex-row gap-6">
         {/* COLUMNA IZQUIERDA: Video + Descripción + Specs */}
-        <div className="flex flex-col gap-2 flex-1">
+        <div className="flex flex-col gap-2 flex-1 order-2 lg:order-1">
           {game.videoUrl ? (
             <GameVideo
               src={game.videoUrl}
@@ -265,7 +263,7 @@ export const GameDetail = ({ game }: Props) => {
         </div>
 
         {/* COLUMNA DERECHA: Categorías, Precios y Juego Destacado */}
-        <div className="flex flex-col lg:w-96 shrink-0 gap-2">
+        <div className="flex flex-col lg:w-96 shrink-0 gap-2 order-1 lg:order-2">
           <div className="relative w-full aspect-video rounded-4xl overflow-hidden">
             <Image
               src={game.bannerUrl ?? game.imageUrl}

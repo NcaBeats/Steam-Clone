@@ -5,10 +5,10 @@ import { requireRole } from "@/actions/admin/guard";
 import { getManageOrder } from "@/lib/api/games";
 
 const statusClasses: Record<string, string> = {
-  COMPLETED: "bg-[#A1CD44] text-black",
-  PENDING: "bg-[#2A2A2A] text-[#FAFAFA]",
-  CANCELLED: "bg-[#FF6B6B] text-white",
-  REFUNDED: "bg-[#2A2A2A] text-[#FAFAFA]",
+  COMPLETED: "bg-[#28282C] text-[#FAFAFA]",
+  PENDING: "bg-[#101014] text-[#8A8A8A]",
+  CANCELLED: "bg-[#2A1A1A] border border-[#5C2A2A] text-[#FF6B6B]",
+  REFUNDED: "bg-[#101014] text-[#8A8A8A]",
 };
 
 const StudioOrderDetailPage = async ({
@@ -37,13 +37,15 @@ const StudioOrderDetailPage = async ({
       </Link>
 
       <header className="flex items-center gap-2">
-        <Receipt size={20} className="text-[#007AFF]" />
+        <Receipt size={20} className="text-[#8A8A8A]" />
         <div className="flex flex-col">
-          <h1 className="text-2xl font-bold text-[#FAFAFA]">Order #{id}</h1>
+          <h1 className="text-xl font-bold tracking-[0.4px] text-[#FAFAFA]">
+            Order #{id}
+          </h1>
           <div className="flex items-center gap-2 text-sm text-[#8A8A8A]">
             <span
-              className={`px-2 py-0.5 rounded text-xs font-semibold ${
-                statusClasses[order.status] ?? "bg-[#2A2A2A] text-[#8A8A8A]"
+              className={`px-2.5 py-1 rounded text-xs font-semibold inline-block ${
+                statusClasses[order.status] ?? "bg-[#101014] text-[#8A8A8A]"
               }`}
             >
               {order.status}
@@ -56,7 +58,7 @@ const StudioOrderDetailPage = async ({
         </div>
       </header>
 
-      <section className="bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg p-4 flex items-center gap-3">
+      <section className="bg-[#202024] border border-white/[0.06] rounded-lg p-4 flex items-center gap-3">
         <Mail size={18} className="text-[#8A8A8A]" />
         <div>
           <p className="text-xs text-[#8A8A8A]">Buyer</p>
@@ -64,10 +66,10 @@ const StudioOrderDetailPage = async ({
         </div>
       </section>
 
-      <section className="bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg overflow-x-auto">
+      <section className="bg-[#202024] border border-white/[0.06] rounded-lg overflow-x-auto">
         <table className="w-full text-sm table-fixed">
           <thead>
-            <tr className="bg-[#1A1A1A] text-left text-[#8A8A8A] text-xs uppercase tracking-wide">
+            <tr className="bg-[#18181C] text-left text-[#8A8A8A] text-xs font-bold uppercase tracking-[0.5px]">
               <th className="px-3 py-3">Game</th>
               <th className="px-3 py-3 w-16 hidden sm:table-cell">Qty</th>
               <th className="px-3 py-3 w-32 hidden sm:table-cell text-right">
@@ -80,7 +82,7 @@ const StudioOrderDetailPage = async ({
             {order.items.map((item) => (
               <tr
                 key={item.id}
-                className="border-t border-[#2A2A2A] hover:bg-[#1A1A1A] transition-colors"
+                className="border-t border-white/[0.06] hover:bg-[#28282C] transition-colors"
               >
                 <td className="px-3 py-3 text-[#FAFAFA]">{item.gameName}</td>
                 <td className="px-3 py-3 text-[#8A8A8A] hidden sm:table-cell">
@@ -98,7 +100,7 @@ const StudioOrderDetailPage = async ({
         </table>
       </section>
 
-      <section className="bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg p-4 flex flex-col gap-1.5 text-sm">
+      <section className="bg-[#202024] border border-white/[0.06] rounded-lg p-4 flex flex-col gap-1.5 text-sm">
         <div className="flex justify-between text-[#8A8A8A]">
           <span>Items</span>
           <span>{itemCount}</span>

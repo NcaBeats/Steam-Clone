@@ -35,7 +35,7 @@ export const AdminSidebar = () => {
         </div>
         <span className="font-semibold text-[#FAFAFA]">Dashboard</span>
       </div>
-      <nav className="flex flex-col gap-0.5 overflow-y-auto">
+      <nav className="flex flex-col gap-2 overflow-y-auto">
         {items.map((item) => {
           const Icon = item.icon;
           const isActive =

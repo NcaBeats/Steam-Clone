@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import Autoplay from "embla-carousel-autoplay";
 import {
   Carousel,
@@ -28,12 +29,14 @@ export const BannerCarousel = ({ games }: BannerCarouselProps) => {
         {games.map((game) => (
           <CarouselItem key={game.id}>
             <div className="relative aspect-video overflow-hidden rounded-lg">
-              <Image
-                src={game.bannerUrl!}
-                alt={game.name}
-                fill
-                className="object-cover"
-              />
+              <Link href={`/games/${game.id}`}>
+                <Image
+                  src={game.bannerUrl!}
+                  alt={game.name}
+                  fill
+                  className="object-cover"
+                />
+              </Link>
             </div>
           </CarouselItem>
         ))}

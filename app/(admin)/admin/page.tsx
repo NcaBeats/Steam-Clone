@@ -21,35 +21,38 @@ const AdminHomePage = async () => {
       label: "Total Users",
       value: totalUsers.toString(),
       icon: Users,
-      color: "text-[#007AFF]",
+      color: "text-[#8A8A8A]",
     },
     {
       label: "Total Games",
       value: totalGames.toString(),
       icon: ShoppingBag,
-      color: "text-[#A1CD44]",
+      color: "text-[#8A8A8A]",
     },
     {
       label: "Active Games",
       value: activeGames.toString(),
       icon: LayoutDashboard,
-      color: "text-[#FF6B6B]",
+      color: "text-[#8A8A8A]",
     },
     {
       label: "Catalog Value",
       value: `$${totalRevenue.toFixed(2)}`,
       icon: DollarSign,
-      color: "text-[#FFD700]",
+      color: "text-[#8A8A8A]",
     },
   ];
 
   return (
     <div className="flex flex-col gap-8">
-      <header className="flex flex-col gap-2">
-        <h1 className="text-3xl font-bold text-[#FAFAFA]">
+      <header className="flex flex-col gap-1">
+        <p className="text-xs font-bold uppercase tracking-[0.5px] text-[#8A8A8A]">
+          Dashboard
+        </p>
+        <h1 className="text-xl font-bold tracking-[0.4px] text-[#FAFAFA]">
           ¡HOLA Administrador!
         </h1>
-        <p className="text-[#8A8A8A]">
+        <p className="text-sm text-[#8A8A8A]">
           Welcome to your dashboard. Here is a quick overview of your store.
         </p>
       </header>
@@ -60,15 +63,21 @@ const AdminHomePage = async () => {
           return (
             <div
               key={stat.label}
-              className="bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg p-5 flex flex-col gap-2"
+              className="bg-[#202024] border border-white/[0.06] rounded-lg p-5 flex flex-col gap-2"
             >
               <div className="flex items-center justify-between">
-                <span className="text-xs text-[#8A8A8A] uppercase tracking-wide">
+                <span className="text-xs font-bold uppercase tracking-[0.5px] text-[#8A8A8A]">
                   {stat.label}
                 </span>
                 <Icon size={16} className={stat.color} />
               </div>
-              <span className="text-2xl font-bold text-[#FAFAFA]">
+              <span
+                className={`text-xl font-bold tracking-[0.4px] ${
+                  stat.label === "Catalog Value"
+                    ? "text-[#26BBFF]"
+                    : "text-[#FAFAFA]"
+                }`}
+              >
                 {stat.value}
               </span>
             </div>
@@ -76,8 +85,10 @@ const AdminHomePage = async () => {
         })}
       </section>
 
-      <section className="bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg p-5 flex flex-col gap-3">
-        <h2 className="text-lg font-semibold text-[#FAFAFA]">Quick actions</h2>
+      <section className="bg-[#202024] border border-white/[0.06] rounded-lg p-5 flex flex-col gap-3">
+        <h2 className="text-base font-bold tracking-[0.32px] text-[#FAFAFA]">
+          Quick actions
+        </h2>
         <div className="flex flex-col gap-2">
           <Link
             href="/admin/users/new"

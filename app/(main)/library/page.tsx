@@ -20,7 +20,9 @@ const Library = async () => {
 
   return (
     <div className="flex flex-col p-2 gap-6 w-full max-w-7xl mx-auto min-h-screen">
-      <h1 className="text-2xl font-bold text-[#FAFAFA] ml-1">Your Library</h1>
+      <h1 className="text-4xl font-bold text-[#FAFAFA] ml-1 mt-4">
+        Your Library
+      </h1>
       {ownedGames.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 gap-4">
           <p className="text-[#8A8A8A] text-lg">Your library is empty</p>

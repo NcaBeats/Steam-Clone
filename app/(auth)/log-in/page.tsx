@@ -6,15 +6,22 @@ import { AuthLayout } from "@/app/(auth)/AuthLayout";
 import { PasswordInput, AuthSwitchLink } from "@/components/auth";
 import { Input } from "@/components/ui";
 
+const inputCls = "bg-[#28282C] hover:bg-[#303036] placeholder:text-white/55";
+
 const LogIn = () => {
   const [state, formAction, pending] = useActionState(loginAction, null);
   const [showPassword, setShowPassword] = useState(false);
 
   return (
     <AuthLayout formAction={formAction}>
-      <h1 className="text-3xl text-[#8D8C8D] font-bold text-center">
-        Hi, Welcome
-      </h1>
+      <div className="flex flex-col items-center gap-1">
+        <p className="text-xs font-bold uppercase tracking-[0.5px] text-[#8A8A8A]">
+          Sign in
+        </p>
+        <h1 className="text-xl font-bold tracking-[0.4px] text-[#FAFAFA]">
+          Hi, Welcome
+        </h1>
+      </div>
       <div className="min-h-[24px]">
         {state?.errors?.global && (
           <p className="text-red-500 text-sm text-center italic">
@@ -29,6 +36,7 @@ const LogIn = () => {
           placeholder="Email"
           required
           defaultValue={state?.fields?.email}
+          className={inputCls}
         />
         <div className="min-h-[20px]">
           {state?.errors?.email && (
@@ -45,6 +53,7 @@ const LogIn = () => {
           show={showPassword}
           onToggle={() => setShowPassword(!showPassword)}
           defaultValue={state?.fields?.password}
+          inputClassName={inputCls}
         />
         <div className="min-h-[20px]">
           {state?.errors?.password && (
@@ -57,7 +66,7 @@ const LogIn = () => {
       <button
         type="submit"
         disabled={pending}
-        className={`flex items-center gap-1 justify-center bg-[#007AFF] hover:bg-[#1ea4ff] text-[#FAFAFA] rounded-md py-2 font-semibold disabled:opacity-50 ${pending ? "cursor-deafult" : "cursor-pointer"} transition-colors duration-200 ease-in-out`}
+        className="flex items-center gap-1 justify-center bg-[#26bbff] hover:bg-[#78d3ff] text-black rounded-full py-3 font-semibold disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-colors duration-200 ease-in-out focus-visible:ring-[#26BBFF]"
       >
         {pending ? "Cargando..." : "Log In"}
       </button>

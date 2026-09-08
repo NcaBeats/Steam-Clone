@@ -1,123 +1,148 @@
 import Link from "next/link";
-import { Gamepad2, Sparkles, Users, Target, Heart, Zap } from "lucide-react";
+import Image from "next/image";
+import {
+  FoldText,
+  Marquee,
+  MarqueeContent,
+  MarqueeFade,
+  MarqueeItem,
+  TextType,
+} from "@/components/ui";
+
+const cardCls = "font-semibold text-center rounded-lg";
+
+const eyebrowCls =
+  "text-xs font-bold uppercase tracking-[0.5px] text-[#8A8A8A]";
+
+const titleCls = "text-5xl font-extrabold tracking-[0.4px] text-[#FAFAFA]";
 
 const AboutPage = () => {
   return (
-    <div className="flex flex-col gap-16 w-full max-w-5xl mx-auto py-12 px-4">
+    <div className="flex flex-col gap-16 w-full max-w-5xl mx-auto py-16 px-4">
       {/* Hero */}
-      <section className="flex flex-col items-center text-center gap-4">
-        <Gamepad2 className="size-16 text-[#007AFF]" />
-        <h1 className="text-4xl sm:text-5xl font-bold text-[#FAFAFA]">
-          About Us
-        </h1>
-        <p className="text-base sm:text-lg text-[#8A8A8A] max-w-2xl">
-          We are a passionate team of gamers building the best place to
-          discover, buy, and play your favorite games.
-        </p>
-      </section>
-
-      {/* Mission & Vision */}
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg p-6 flex flex-col gap-3">
-          <Target className="size-8 text-[#A1CD44]" />
-          <h2 className="text-2xl font-bold text-[#FAFAFA]">Our Mission</h2>
-          <p className="text-sm text-[#C0C0C0] leading-relaxed">
-            To connect gamers with the best titles at fair prices, while
-            supporting developers and fostering a community where everyone can
-            find their next favorite game.
-          </p>
-        </div>
-        <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg p-6 flex flex-col gap-3">
-          <Sparkles className="size-8 text-[#007AFF]" />
-          <h2 className="text-2xl font-bold text-[#FAFAFA]">Our Vision</h2>
-          <p className="text-sm text-[#C0C0C0] leading-relaxed">
-            To become the go-to platform for game discovery worldwide, where
-            every player can find, buy, and enjoy games seamlessly across any
-            device.
-          </p>
+      <section className="flex flex-col items-center text-center gap-10">
+        <div className="flex flex-col items-center text-center gap-1">
+          <TextType
+            as="h2"
+            text={["For the customer,", "The best experience."]}
+            className={`${titleCls} text-8xl`}
+            typingSpeed={45}
+            pauseDuration={2200}
+            startOnVisible
+          />
         </div>
       </section>
 
-      {/* Stats */}
-      <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {[
-          { icon: Gamepad2, label: "Games", value: "500+" },
-          { icon: Users, label: "Users", value: "10K+" },
-          { icon: Heart, label: "Reviews", value: "25K+" },
-          { icon: Zap, label: "Countries", value: "50+" },
-        ].map((stat) => {
-          const Icon = stat.icon;
-          return (
-            <div
-              key={stat.label}
-              className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg p-4 flex flex-col items-center gap-1 text-center"
-            >
-              <Icon className="size-6 text-[#007AFF]" />
-              <p className="text-2xl font-bold text-[#FAFAFA]">{stat.value}</p>
-              <p className="text-xs text-[#8A8A8A] uppercase tracking-wide">
-                {stat.label}
-              </p>
-            </div>
-          );
-        })}
-      </section>
-
-      {/* Values */}
+      {/* What this is */}
       <section className="flex flex-col gap-6">
-        <h2 className="text-2xl sm:text-3xl font-bold text-[#FAFAFA] text-center">
-          What We Stand For
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {[
-            {
-              title: "Community First",
-              description:
-                "Gamers are at the heart of everything we do. We listen, adapt, and grow with our community.",
-            },
-            {
-              title: "Fair Pricing",
-              description:
-                "Transparent deals, frequent discounts, and no hidden fees. Just great games at honest prices.",
-            },
-            {
-              title: "Developer Support",
-              description:
-                "We work closely with studios of all sizes to make sure great games get the audience they deserve.",
-            },
-          ].map((value) => (
-            <div
-              key={value.title}
-              className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg p-5 flex flex-col gap-2"
-            >
-              <h3 className="text-lg font-semibold text-[#FAFAFA]">
-                {value.title}
-              </h3>
-              <p className="text-sm text-[#C0C0C0] leading-relaxed">
-                {value.description}
-              </p>
-            </div>
-          ))}
+        <div
+          className={`${cardCls} p-6 flex flex-col gap-40 text-center items-center`}
+        >
+          <FoldText
+            text="We are a store specializing in digital PC games. We deliver your code instantly, with no waiting or physical shipping. We work with the largest catalogs on the market to offer you the best prices and the widest selection."
+            splitBy="word"
+            hinge="top"
+            trigger="scroll"
+            duration={0.65}
+            stagger={0.045}
+            ease="power3.out"
+            perspective={700}
+            creaseShading={0.55}
+            fontSize="2rem"
+            fontWeight={600}
+            color="#8A8A8A"
+            className="max-w-2xl"
+          />
+          <FoldText
+            text={`To keep a clean, honest storefront where every title is added by hand and every purchase is straightforward. We prefer a small, curated catalog over filling the shelf with noise.
+
+To become the digital meeting point where any player, regardless of location or budget, can access the world of gaming immediately and securely.`}
+            splitBy="word"
+            hinge="top"
+            trigger="scroll"
+            duration={0.65}
+            stagger={0.045}
+            ease="power3.out"
+            perspective={700}
+            creaseShading={0.55}
+            fontSize="2.25rem"
+            fontWeight={400}
+            color="#EDEDED"
+          />
+        </div>
+      </section>
+
+      {/* Publisher logos */}
+      <section className="flex flex-col gap-6">
+        <div className="flex flex-col items-center text-center gap-1">
+          <h2 className={titleCls}>We work with the best studios</h2>
+          <p className="text-sm text-[#8A8A8A]">
+            To offer you 100% original and secure codes.
+          </p>
+        </div>
+        <div className="py-5">
+          <Marquee>
+            <MarqueeFade side="left" className="from-[#18181C]" />
+            <MarqueeContent speed={40} pauseOnHover>
+              {[
+                "Activision.svg",
+                "CD_PROJEKT.png",
+                "EA.svg",
+                "Konami_4th_logo_1.svg",
+                "Rockstar.svg",
+                "Ubisoft_logo.svg",
+                "Valve_logo.svg",
+              ].map((file) => (
+                <MarqueeItem
+                  key={file}
+                  className="mx-20 w-28 h-auto flex items-center justify-center opacity-60 hover:opacity-100 transition-opacity duration-200"
+                >
+                  <Image
+                    src={`/Logos/${file}`}
+                    alt={file.replace(/\.[^.]+$/, "").replace(/_/g, " ")}
+                    width={348}
+                    height={96}
+                    className="h-20 w-auto object-contain brightness-0 invert"
+                  />
+                </MarqueeItem>
+              ))}
+            </MarqueeContent>
+            <MarqueeFade side="right" className="from-[#18181C]" />
+          </Marquee>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg p-8 flex flex-col items-center text-center gap-4">
-        <h2 className="text-2xl sm:text-3xl font-bold text-[#FAFAFA]">
-          Ready to start playing?
-        </h2>
-        <p className="text-sm sm:text-base text-[#8A8A8A] max-w-xl">
-          Browse our catalog of hundreds of games and find your next favorite.
-        </p>
+      <section
+        className={`${cardCls} p-8 flex flex-col items-center text-center gap-4`}
+      >
+        <p className={eyebrowCls}>Get started</p>
+        <h2 className={titleCls}>Take a look around</h2>
+        <FoldText
+          text="Browse the catalog, open a game page, and let us know what you think."
+          splitBy="line"
+          hinge="top"
+          trigger="scroll"
+          duration={0.65}
+          stagger={0.045}
+          ease="power3.out"
+          perspective={700}
+          creaseShading={0.55}
+          fontSize="0.875rem"
+          fontWeight={400}
+          color="#8A8A8A"
+          className="max-w-xl"
+        />
         <div className="flex flex-col sm:flex-row gap-3 mt-2">
           <Link
             href="/catalog"
-            className="bg-[#007AFF] hover:bg-[#1ea4ff] active:bg-[#1ea4ff] text-white font-semibold px-6 py-2.5 rounded-md transition-colors duration-150 ease-out"
+            className="bg-[#28282C] hover:bg-[#404044] text-[#FAFAFA] font-semibold px-6 py-2.5 rounded-full transition-colors duration-150 ease-out"
           >
             Browse the catalog
           </Link>
           <Link
             href="/"
-            className="bg-[#0A0A0A] text-[#EDEDED] border border-[#2E2E2E] hover:bg-[#2E2E2E] px-6 py-2.5 font-semibold rounded-md transition-colors duration-150 ease-out"
+            className="bg-[#101014] text-[#EDEDED] border border-[#404044] hover:bg-[#28282C] px-6 py-2.5 font-semibold rounded-full transition-colors duration-150 ease-out"
           >
             Back to home
           </Link>

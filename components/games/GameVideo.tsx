@@ -3,7 +3,6 @@
 import "@videojs/react/video/skin.css";
 
 import { Video, VideoPlayer, VideoSkin } from "@videojs/react/video";
-import type { CSSProperties } from "react";
 
 type Props = Readonly<{
   src: string;
@@ -21,7 +20,6 @@ function resolveVideoUrl(src: string): string {
 }
 
 export function GameVideo({ src, poster, title }: Props) {
-  const heroStyle = { "--media-object-fit": "cover" } as CSSProperties;
   const absoluteSrc = resolveVideoUrl(src);
 
   return (

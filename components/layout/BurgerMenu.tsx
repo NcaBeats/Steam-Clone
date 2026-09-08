@@ -89,7 +89,7 @@ export const BurgerMenu = ({
             close();
             item.action?.();
           }}
-          className="flex gap-2 py-4 w-full hover:text-[#007AFF] active:text-[#007AFF] hover:underline active:underline"
+          className="flex gap-2 py-4 w-full hover:text-white active:text-white hover:underline active:underline"
         >
           <Icon />
           {item.label}
@@ -101,7 +101,7 @@ export const BurgerMenu = ({
       <Link
         onClick={close}
         href={item.href ?? "#"}
-        className={isActive ? "text-[#007AFF] underline" : undefined}
+        className={isActive ? "text-white underline" : undefined}
       >
         <Icon />
         {item.label}
@@ -120,25 +120,25 @@ export const BurgerMenu = ({
         onClick={() => setIsOpen(!isOpen)}
         aria-label={isOpen ? "Cerrar Menú" : "Abrir Menú"}
         aria-expanded={isOpen}
-        className="hover:bg-[#111111] active:bg-[#111111] rounded-md p-1"
+        className="hover:bg-[#28282C] active:bg-[#28282C] rounded-md p-1"
       >
         {isOpen ? <X size={24} /> : <Menu size={24} />}
       </button>
       <div
-        className={`inset-0 fixed bg-black/50 top-16 z-40  transition-opacity duration-300 ease-in-out
+        className={`inset-0 fixed bg-black/50 top-[72px] z-40  transition-opacity duration-300 ease-in-out
       ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
       />
       <nav
         className={`
-    p-1.5 overflow-hidden z-50 fixed top-18 bottom-0 bg-[#0A0A0A] border-solid w-2/3 ${sideClasses}
+    p-1.5 overflow-hidden z-50 fixed top-[72px] bottom-0 bg-[#101014] border-solid w-2/3 ${sideClasses}
     transition-transform duration-300 ease-in-out
     ${isOpen ? "translate-x-0 pointer-events-auto" : `${hiddenClass} pointer-events-none`}
 `}
       >
         <ul
-          className="[&_a]:items-center [&_button]:items-center flex flex-col text-[#FAFAFA] [&_li]:rounded-lg
-        [&_a]:flex [&_a]:gap-2 [&_a]:py-4 [&_li]:px-4 [&_a]:hover:text-[#007AFF] [&_a]:active:text-[#007AFF]
-        [&_a]:hover:underline [&_a]:active:underline [&_li]:hover:bg-[#111111] [&_li]:active:bg-[#111111]"
+          className="[&_a]:items-center [&_button]:items-center flex flex-col text-[#FAFAFA] [&_li]:rounded-md
+        [&_a]:flex [&_a]:gap-2 [&_a]:py-4 [&_li]:px-4 [&_a]:hover:text-white [&_a]:active:text-white
+        [&_a]:hover:underline [&_a]:active:underline [&_li]:hover:bg-[#28282C] [&_li]:active:bg-[#28282C]"
         >
           {items.map((item) => (
             <li key={`${item.label}-${item.href ?? item.action?.name ?? ""}`}>

@@ -17,7 +17,6 @@ type FileDropzoneProps = {
   existingUrl?: string | null;
   existingPreview?: string | null; // for videos: any mp4/webm URL
   className?: string;
-  placeholder?: string;
 };
 
 const KIND_CONFIG = {
@@ -72,10 +71,8 @@ export function FileDropzone({
   existingUrl = null,
   existingPreview,
   className,
-  placeholder,
 }: FileDropzoneProps) {
   const cfg = KIND_CONFIG[kind];
-  const Icon = cfg.icon;
   const [error, setError] = useState<string | null>(null);
 
   const files = Array.isArray(value) ? value : value ? [value] : [];
@@ -187,6 +184,7 @@ export function FileDropzone({
               key={i}
               className="relative w-20 h-20 rounded-lg border border-[#2A2A2A] overflow-hidden group"
             >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={URL.createObjectURL(file)}
                 alt={file.name}

@@ -25,8 +25,13 @@ const StudioGamesPage = async ({
 
   return (
     <div className="flex flex-col gap-6">
-      <header>
-        <h1 className="text-2xl font-bold text-[#FAFAFA]">Productos</h1>
+      <header className="flex flex-col gap-1">
+        <p className="text-xs font-bold uppercase tracking-[0.5px] text-[#8A8A8A]">
+          Products
+        </p>
+        <h1 className="text-xl font-bold tracking-[0.4px] text-[#FAFAFA]">
+          Productos
+        </h1>
         <p className="text-sm text-[#8A8A8A]">
           {pageInfo.totalElements} game
           {pageInfo.totalElements !== 1 ? "s" : ""} in your catalog
@@ -46,30 +51,31 @@ const StudioGamesPage = async ({
           )}
           <Link
             href="/studio/games/new"
-            className="bg-[#007AFF] hover:bg-[#1ea4ff] text-white text-sm font-semibold px-4 py-2 rounded-md transition-colors whitespace-nowrap"
+            className="bg-[#28282C] hover:bg-[#404044] text-[#FAFAFA] text-sm font-semibold px-4 py-2 rounded-full transition-colors whitespace-nowrap"
           >
             + Nuevo producto
           </Link>
         </div>
       </div>
 
-      <div className="bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg overflow-x-auto">
+      <div className="bg-[#202024] border border-white/[0.06] rounded-lg overflow-x-auto">
         <table className="w-full text-sm table-fixed">
           <thead>
-            <tr className="bg-[#1A1A1A] text-left text-[#8A8A8A] text-xs uppercase tracking-wide">
+            <tr className="bg-[#18181C] text-left text-[#8A8A8A] text-xs font-bold uppercase tracking-[0.5px]">
               <th className="px-3 py-3 w-16 hidden md:table-cell">ID</th>
               <th className="px-3 py-3 w-12 hidden sm:table-cell">Cover</th>
               <th className="px-3 py-3">Name</th>
-              <th className="px-3 py-3 w-20 hidden sm:table-cell">State</th>
-              <th className="px-3 py-3 w-20">Price</th>
-              <th className="px-3 py-3 w-28 text-right">Actions</th>
+              <th className="px-3 py-3 w-24 hidden sm:table-cell">State</th>
+              <th className="px-3 py-3 w-24">Price</th>
+              <th className="px-3 py-3 w-20 hidden sm:table-cell">Discount</th>
+              <th className="px-3 py-3 w-36 text-right">Actions</th>
             </tr>
           </thead>
           <tbody>
             {games.length === 0 ? (
               <tr>
                 <td
-                  colSpan={6}
+                  colSpan={7}
                   className="px-3 py-8 text-center text-[#8A8A8A]"
                 >
                   {searchName
@@ -81,7 +87,7 @@ const StudioGamesPage = async ({
               games.map((g) => (
                 <tr
                   key={g.id}
-                  className="border-t border-[#2A2A2A] hover:bg-[#1A1A1A] transition-colors"
+                  className="border-t border-white/[0.06] hover:bg-[#28282C] transition-colors"
                 >
                   <td className="px-3 py-3 text-[#8A8A8A] hidden md:table-cell">
                     #{g.id}
@@ -100,17 +106,17 @@ const StudioGamesPage = async ({
                   <td className="px-3 py-3">
                     <Link
                       href={`/studio/games/${g.id}`}
-                      className="text-[#007AFF] hover:underline truncate block"
+                      className="text-[#FAFAFA] hover:underline truncate block"
                     >
                       {g.name}
                     </Link>
                   </td>
-                  <td className="px-3 py-3 hidden sm:table-cell">
+                  <td className="px-3 py-3 hidden sm:table-cell whitespace-nowrap">
                     <span
-                      className={`px-2 py-0.5 rounded text-xs font-semibold ${
+                      className={`px-2.5 py-1 rounded text-xs font-semibold inline-block ${
                         g.state === "AVAILABLE"
-                          ? "bg-[#A1CD44] text-black"
-                          : "bg-[#2A2A2A] text-[#FAFAFA]"
+                          ? "bg-[#28282C] text-[#FAFAFA]"
+                          : "bg-[#101014] text-[#8A8A8A]"
                       }`}
                     >
                       {g.state}
@@ -118,26 +124,33 @@ const StudioGamesPage = async ({
                   </td>
                   <td className="px-3 py-3 text-[#FAFAFA] whitespace-nowrap">
                     ${g.price.toFixed(2)}
-                    {g.discountPercent > 0 && (
-                      <span className="ml-1 text-xs text-[#A1CD44]">
+                  </td>
+                  <td className="px-3 py-3 hidden sm:table-cell">
+                    {g.discountPercent > 0 ? (
+                      <span className="text-[#26BBFF] text-xs font-semibold whitespace-nowrap">
                         -{g.discountPercent}%
+                      </span>
+                    ) : (
+                      <span className="text-[#5A5A5A] text-xs whitespace-nowrap">
+                        —
                       </span>
                     )}
                   </td>
                   <td className="px-3 py-3 text-right whitespace-nowrap">
-                    <Link
-                      href={`/studio/games/${g.id}`}
-                      className="text-[#007AFF] hover:text-[#1ea4ff] text-sm font-medium"
-                    >
-                      View
-                    </Link>
-                    <span className="mx-2 text-[#2A2A2A]">·</span>
-                    <Link
-                      href={`/studio/games/${g.id}/edit`}
-                      className="text-[#8A8A8A] hover:text-white text-sm font-medium"
-                    >
-                      Edit
-                    </Link>
+                    <div className="flex items-center justify-end gap-3">
+                      <Link
+                        href={`/studio/games/${g.id}`}
+                        className="text-[#8A8A8A] hover:text-white text-sm font-medium"
+                      >
+                        View
+                      </Link>
+                      <Link
+                        href={`/studio/games/${g.id}/edit`}
+                        className="text-[#8A8A8A] hover:text-white text-sm font-medium"
+                      >
+                        Edit
+                      </Link>
+                    </div>
                   </td>
                 </tr>
               ))
@@ -160,10 +173,10 @@ const StudioGamesPage = async ({
                 <Link
                   key={i}
                   href={href}
-                  className={`size-8 flex items-center justify-center rounded text-sm ${
+                  className={`size-8 flex items-center justify-center rounded-md text-sm ${
                     i === page
-                      ? "bg-[#007AFF] text-white"
-                      : "text-[#8A8A8A] hover:bg-[#1A1A1A] hover:text-white"
+                      ? "bg-[#28282C] text-white"
+                      : "text-[#8A8A8A] hover:bg-[#28282C] hover:text-white"
                   }`}
                 >
                   {i + 1}

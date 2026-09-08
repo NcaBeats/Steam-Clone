@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   useAlert,
@@ -51,21 +51,10 @@ export function GameEditForm({
   );
 
   // Compute price from originalPrice and discountValue
-  const price = (() => {
-    if (originalPrice <= 0) return 0;
-    const finalPrice = originalPrice * (1 - discountValue / 100);
-    return Math.round(finalPrice * 100) / 100;
-  })();
-
-  // Initialize all categories by name once
-  useEffect(() => {
-    /* eslint-disable react-hooks/set-state-in-effect */
-    setSelectedCategories((prev) =>
-      prev.length > 0 ? prev : game.categories.map((c) => c.name),
-    );
-    /* eslint-enable react-hooks/set-state-in-effect */
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const price =
+    originalPrice > 0
+      ? Math.round(originalPrice * (1 - discountValue / 100) * 100) / 100
+      : 0;
 
   const toggleCategory = (cat: string) => {
     setSelectedCategories((prev) =>
@@ -75,56 +64,39 @@ export function GameEditForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (selectedCategories.length === 0) {
-      showAlert({
-        variant: "destructive",
-        title: "Sin categorías",
-        description: "Selecciona al menos una categoría",
-      });
-      return;
-    }
     setSaving(true);
-    try {
-      const formData = new FormData();
-      formData.set("name", name);
-      formData.set("originalPrice", String(originalPrice));
-      formData.set("discountPercent", String(discountValue));
-      formData.set("description", description);
-      formData.set("state", state);
-      formData.set("launchDate", launchDate);
-      for (const c of selectedCategories) formData.append("categories", c);
-      if (image) formData.set("image", image);
-      if (banner) formData.set("banner", banner);
-      if (video) formData.set("video", video);
-      if (gallery.length > 0) {
-        formData.delete("gallery");
-        for (const g of gallery) formData.append("gallery", g);
-      }
-      const result = await updateGameWithMediaAction(game.id, formData);
-      if (!result.ok) {
-        showAlert({
-          variant: "destructive",
-          title: "Error al guardar",
-          description: result.error ?? "No se pudo actualizar el producto",
-        });
-        setSaving(false);
-        return;
-      }
-      showAlert({
-        variant: "default",
-        title: "Producto actualizado",
-        description: `${name} se actualizó correctamente`,
-      });
-      router.push(redirectTo);
-      router.refresh();
-    } catch (e) {
+    const formData = new FormData();
+    formData.set("name", name);
+    formData.set("originalPrice", String(originalPrice));
+    formData.set("discountPercent", String(discountValue));
+    formData.set("description", description);
+    formData.set("state", state);
+    formData.set("launchDate", launchDate);
+    for (const c of selectedCategories) formData.append("categories", c);
+    if (image) formData.set("image", image);
+    if (banner) formData.set("banner", banner);
+    if (video) formData.set("video", video);
+    if (gallery.length > 0) {
+      formData.delete("gallery");
+      for (const g of gallery) formData.append("gallery", g);
+    }
+    const result = await updateGameWithMediaAction(game.id, formData);
+    if (!result.ok) {
       showAlert({
         variant: "destructive",
-        title: "Error",
-        description: e instanceof Error ? e.message : "Error desconocido",
+        title: "Error al guardar",
+        description: result.error ?? "No se pudo actualizar el producto",
       });
       setSaving(false);
+      return;
     }
+    showAlert({
+      variant: "default",
+      title: "Producto actualizado",
+      description: `${name} se actualizó correctamente`,
+    });
+    router.push(redirectTo);
+    router.refresh();
   };
 
   const labelCls = "text-xs text-[#8A8A8A] font-medium";

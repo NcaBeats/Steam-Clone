@@ -12,7 +12,7 @@ export const NavBarLinks = ({
   staffHref = "/admin",
 }: Props) => {
   return (
-    <ul className="sm:flex hidden text-[#8A8A8A] font-medium justify-around gap-6 [&_a]:hover:text-[#007AFF] [&_a]:active:text-[#007AFF]">
+    <ul className="sm:flex hidden transition-colors ease-in duration-200 text-[#EDEDED] font-medium justify-around gap-6 [&_a]:hover:text-[#a5a5a5] [&_a]:active:text-[#a5a5a5]">
       <li>
         <Link href={"/"}>Home</Link>
       </li>

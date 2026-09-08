@@ -28,8 +28,13 @@ const UsersPage = async ({
   return (
     <div className="flex flex-col gap-6">
       <header className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-bold text-[#FAFAFA]">Usuarios</h1>
+        <div className="flex flex-col gap-1">
+          <p className="text-xs font-bold uppercase tracking-[0.5px] text-[#8A8A8A]">
+            Users
+          </p>
+          <h1 className="text-xl font-bold tracking-[0.4px] text-[#FAFAFA]">
+            Usuarios
+          </h1>
           <p className="text-sm text-[#8A8A8A]">
             {pageInfo.totalElements} user
             {pageInfo.totalElements !== 1 ? "s" : ""} registered
@@ -37,7 +42,7 @@ const UsersPage = async ({
         </div>
         <Link
           href="/admin/users/new"
-          className="bg-[#007AFF] hover:bg-[#1ea4ff] text-white text-sm font-semibold px-4 py-2 rounded-md transition-colors"
+          className="bg-[#28282C] hover:bg-[#404044] text-[#FAFAFA] text-sm font-semibold px-4 py-2 rounded-full transition-colors"
         >
           + Nuevo usuario
         </Link>
@@ -55,15 +60,15 @@ const UsersPage = async ({
         )}
       </div>
 
-      <div className="bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg overflow-x-auto">
+      <div className="bg-[#202024] border border-white/[0.06] rounded-lg overflow-x-auto">
         <table className="w-full text-sm table-fixed">
           <thead>
-            <tr className="bg-[#1A1A1A] text-left text-[#8A8A8A] text-xs uppercase tracking-wide">
+            <tr className="bg-[#18181C] text-left text-[#8A8A8A] text-xs font-bold uppercase tracking-[0.5px]">
               <th className="px-3 py-3 w-16 hidden md:table-cell">ID</th>
               <th className="px-3 py-3">Email</th>
-              <th className="px-3 py-3 w-20">Role</th>
+              <th className="px-3 py-3 w-28">Role</th>
               <th className="px-3 py-3 w-28 hidden sm:table-cell">Created</th>
-              <th className="px-3 py-3 w-28 text-right">Actions</th>
+              <th className="px-3 py-3 w-36 text-right">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -82,7 +87,7 @@ const UsersPage = async ({
               users.map((u) => (
                 <tr
                   key={u.id}
-                  className="border-t border-[#2A2A2A] hover:bg-[#1A1A1A] transition-colors"
+                  className="border-t border-white/[0.06] hover:bg-[#28282C] transition-colors"
                 >
                   <td className="px-3 py-3 text-[#8A8A8A] hidden md:table-cell">
                     #{u.id}
@@ -95,12 +100,12 @@ const UsersPage = async ({
                       {u.email}
                     </Link>
                   </td>
-                  <td className="px-3 py-3">
+                  <td className="px-3 py-3 whitespace-nowrap">
                     <span
-                      className={`px-2 py-0.5 rounded text-xs font-semibold ${
+                      className={`px-2.5 py-1 rounded text-xs font-semibold inline-block ${
                         u.role === ("ADMIN" as UserRole)
-                          ? "bg-[#007AFF] text-white"
-                          : "bg-[#2A2A2A] text-[#8A8A8A]"
+                          ? "bg-[#28282C] text-[#FAFAFA]"
+                          : "bg-[#101014] text-[#8A8A8A]"
                       }`}
                     >
                       {u.role}
@@ -110,7 +115,7 @@ const UsersPage = async ({
                     {new Date(u.createdAt).toLocaleDateString("en-US")}
                   </td>
                   <td className="px-3 py-3 text-right whitespace-nowrap">
-                    <div className="flex items-center justify-end gap-1.5">
+                    <div className="flex items-center justify-end gap-3">
                       <Link
                         href={`/admin/users/${u.id}`}
                         className="text-[#007AFF] hover:text-[#1ea4ff] text-sm font-medium"
@@ -118,9 +123,7 @@ const UsersPage = async ({
                         Edit
                       </Link>
                       {u.role === ("ADMIN" as UserRole) ? (
-                        <span className="text-[#5A5A5A] text-sm px-2 py-1">
-                          —
-                        </span>
+                        <span className="text-[#5A5A5A] text-sm">—</span>
                       ) : (
                         <DeleteUserButton id={u.id} email={u.email} />
                       )}
@@ -147,10 +150,10 @@ const UsersPage = async ({
                 <Link
                   key={i}
                   href={href}
-                  className={`size-8 flex items-center justify-center rounded text-sm ${
+                  className={`size-8 flex items-center justify-center rounded-md text-sm ${
                     i === page
-                      ? "bg-[#007AFF] text-white"
-                      : "text-[#8A8A8A] hover:bg-[#1A1A1A] hover:text-white"
+                      ? "bg-[#28282C] text-white"
+                      : "text-[#8A8A8A] hover:bg-[#28282C] hover:text-white"
                   }`}
                 >
                   {i + 1}
@@ -176,7 +179,7 @@ const DeleteUserButton = ({ id, email }: { id: number; email: string }) => {
     >
       <button
         type="submit"
-        className="text-[#FF6B6B] hover:text-red-400 text-sm font-medium px-2 py-1"
+        className="text-[#FF6B6B] hover:text-red-400 text-sm font-medium"
         aria-label={`Delete user ${email}`}
       >
         Delete

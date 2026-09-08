@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { clean as cleanRun, validate as validateRun } from "rut.js";
 import { Input } from "@/components/ui";
+import { PasswordInput } from "@/components/auth";
 import { createUserFromFormAction } from "@/actions/admin";
 import {
   ComunaSelect,
@@ -12,12 +14,15 @@ import {
 } from "@/components/admin/LocationSelects";
 
 export function NewUserForm() {
+  const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [run, setRun] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -58,7 +63,10 @@ export function NewUserForm() {
       const result = await createUserFromFormAction(formData);
       if (!result.ok) {
         setError(result.error ?? "No se pudo crear el usuario");
+        return;
       }
+      router.push("/admin/users");
+      router.refresh();
     });
   };
 
@@ -95,32 +103,32 @@ export function NewUserForm() {
             <label htmlFor="password" className={labelCls}>
               Contraseña
             </label>
-            <Input
-              id="password"
+            <PasswordInput
               name="password"
-              type="password"
               required
               minLength={4}
               maxLength={10}
               placeholder="4-10 caracteres"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              show={showPassword}
+              onToggle={() => setShowPassword(!showPassword)}
             />
           </div>
           <div className="flex flex-col gap-1 sm:col-span-2">
             <label htmlFor="confirmPassword" className={labelCls}>
               Confirmar contraseña
             </label>
-            <Input
-              id="confirmPassword"
+            <PasswordInput
               name="confirmPassword"
-              type="password"
               required
               minLength={4}
               maxLength={10}
               placeholder="Repite la contraseña"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
+              show={showConfirmPassword}
+              onToggle={() => setShowConfirmPassword(!showConfirmPassword)}
             />
           </div>
         </div>

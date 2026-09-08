@@ -51,7 +51,7 @@ export function SearchInput({
         value={value}
         onChange={(e) => setValue(e.target.value)}
         placeholder={placeholder}
-        className="rounded-lg pl-9 pr-3 py-3"
+        className="rounded-[4px] bg-[#28282C] hover:bg-[#303036] pl-9 pr-3 py-3"
       />
     </form>
   );

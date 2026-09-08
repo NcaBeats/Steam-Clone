@@ -15,7 +15,7 @@ export default async function StudioLayout({
     <div className="flex min-h-screen bg-[#18181C]">
       <StudioSidebar />
       <div className="flex-1 flex flex-col">
-        <header className="sm:hidden bg-[#0A0A0A] border-b border-[#2A2A2A] h-16 flex items-center justify-between px-4">
+        <header className="sm:hidden bg-[#18181C] border-b border-white/[0.06] h-16 flex items-center justify-between px-4">
           <StudioBurgerMenu />
           <Link href="/studio/games" className="flex items-center">
             <Image

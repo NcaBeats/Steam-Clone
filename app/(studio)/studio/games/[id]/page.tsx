@@ -4,7 +4,6 @@ import Image from "next/image";
 import { ArrowLeft, Calendar, DollarSign, Tag } from "lucide-react";
 import { requireRole } from "@/actions/admin/guard";
 import { getManageGameById } from "@/lib/api/games";
-import type { Game } from "@/types";
 
 const StudioGameDetailPage = async ({
   params,
@@ -49,13 +48,15 @@ const StudioGameDetailPage = async ({
           />
         </div>
         <div className="flex flex-col gap-1">
-          <h1 className="text-2xl font-bold text-[#FAFAFA]">{game.name}</h1>
+          <h1 className="text-xl font-bold tracking-[0.4px] text-[#FAFAFA]">
+            {game.name}
+          </h1>
           <div className="flex items-center gap-2 text-sm text-[#8A8A8A]">
             <span
-              className={`px-2 py-0.5 rounded text-xs font-semibold ${
+              className={`px-2.5 py-1 rounded text-xs font-semibold inline-block ${
                 game.state === "AVAILABLE"
-                  ? "bg-[#A1CD44] text-black"
-                  : "bg-[#2A2A2A] text-[#FAFAFA]"
+                  ? "bg-[#28282C] text-[#FAFAFA]"
+                  : "bg-[#101014] text-[#8A8A8A]"
               }`}
             >
               {game.state}
@@ -63,7 +64,7 @@ const StudioGameDetailPage = async ({
             <span>#{game.id}</span>
             <Link
               href={`/studio/games/${game.id}/edit`}
-              className="text-[#007AFF] hover:text-[#1ea4ff] text-sm font-medium"
+              className="text-[#8A8A8A] hover:text-white text-sm font-medium"
             >
               Edit
             </Link>
@@ -72,19 +73,19 @@ const StudioGameDetailPage = async ({
       </header>
 
       <section className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <div className="bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg p-4 flex items-center gap-3">
-          <DollarSign size={18} className="text-[#A1CD44]" />
+        <div className="bg-[#202024] border border-white/[0.06] rounded-lg p-4 flex items-center gap-3">
+          <DollarSign size={18} className="text-[#26BBFF]" />
           <div>
             <p className="text-xs text-[#8A8A8A]">Price</p>
             <p className="text-sm text-[#FAFAFA]">${game.price.toFixed(2)}</p>
             {game.discountPercent > 0 && (
-              <p className="text-xs text-[#A1CD44]">
+              <p className="text-xs text-[#26BBFF]">
                 -{game.discountPercent}% off
               </p>
             )}
           </div>
         </div>
-        <div className="bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg p-4 flex items-center gap-3">
+        <div className="bg-[#202024] border border-white/[0.06] rounded-lg p-4 flex items-center gap-3">
           <Calendar size={18} className="text-[#8A8A8A]" />
           <div>
             <p className="text-xs text-[#8A8A8A]">Launch date</p>
@@ -93,7 +94,7 @@ const StudioGameDetailPage = async ({
             </p>
           </div>
         </div>
-        <div className="bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg p-4 flex items-center gap-3">
+        <div className="bg-[#202024] border border-white/[0.06] rounded-lg p-4 flex items-center gap-3">
           <Tag size={18} className="text-[#8A8A8A]" />
           <div>
             <p className="text-xs text-[#8A8A8A]">Categories</p>
@@ -104,8 +105,8 @@ const StudioGameDetailPage = async ({
         </div>
       </section>
 
-      <section className="bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg p-5 flex flex-col gap-2">
-        <h2 className="text-sm font-semibold text-[#FAFAFA] uppercase tracking-wide">
+      <section className="bg-[#202024] border border-white/[0.06] rounded-lg p-5 flex flex-col gap-2">
+        <h2 className="text-sm font-bold text-[#FAFAFA] uppercase tracking-[0.5px]">
           Descripción
         </h2>
         <p className="text-sm text-[#8A8A8A] whitespace-pre-line">
@@ -114,8 +115,8 @@ const StudioGameDetailPage = async ({
       </section>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <section className="bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg p-5 flex flex-col gap-2">
-          <h2 className="text-sm font-semibold text-[#FAFAFA] uppercase tracking-wide">
+        <section className="bg-[#202024] border border-white/[0.06] rounded-lg p-5 flex flex-col gap-2">
+          <h2 className="text-sm font-bold text-[#FAFAFA] uppercase tracking-[0.5px]">
             Requisitos mínimos
           </h2>
           {specEntries(game.minimumSpecs).length > 0 ? (
@@ -133,8 +134,8 @@ const StudioGameDetailPage = async ({
             <p className="text-sm text-[#8A8A8A]">—</p>
           )}
         </section>
-        <section className="bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg p-5 flex flex-col gap-2">
-          <h2 className="text-sm font-semibold text-[#FAFAFA] uppercase tracking-wide">
+        <section className="bg-[#202024] border border-white/[0.06] rounded-lg p-5 flex flex-col gap-2">
+          <h2 className="text-sm font-bold text-[#FAFAFA] uppercase tracking-[0.5px]">
             Requisitos recomendados
           </h2>
           {specEntries(game.recommendedSpecs).length > 0 ? (

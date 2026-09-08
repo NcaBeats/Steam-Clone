@@ -40,7 +40,7 @@ export const BlogCard = ({ blog }: Props) => {
           )}
           <span>{date}</span>
         </div>
-        <h3 className="text-lg font-semibold text-[#FAFAFA] line-clamp-2 group-hover:text-[#007AFF] transition-colors">
+        <h3 className="text-lg font-semibold text-[#FAFAFA] line-clamp-2 group-hover:text-[#007AFF]  transition-colors">
           {blog.title}
         </h3>
         <p className="text-sm text-[#C0C0C0] line-clamp-3">{blog.excerpt}</p>

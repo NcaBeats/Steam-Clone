@@ -7,6 +7,8 @@ import { PasswordInput, AuthSwitchLink, RegionSelect } from "@/components/auth";
 import { Input } from "@/components/ui";
 import regiones from "@/data/regiones.json";
 
+const inputCls = "bg-[#28282C] hover:bg-[#303036] placeholder:text-white/55";
+
 const SignUp = () => {
   const [state, formAction, pending] = useActionState(signUpAction, null);
   const [showPassword, setShowPassword] = useState(false);
@@ -14,9 +16,14 @@ const SignUp = () => {
 
   return (
     <AuthLayout formAction={formAction}>
-      <h1 className="text-3xl text-[#8D8C8D] font-bold text-center mt-20">
-        Create an account
-      </h1>
+      <div className="flex flex-col items-center gap-1">
+        <p className="text-xs font-bold uppercase tracking-[0.5px] text-[#8A8A8A]">
+          Create account
+        </p>
+        <h1 className="text-xl font-bold tracking-[0.4px] text-[#FAFAFA]">
+          Sign up
+        </h1>
+      </div>
       <div className="min-h-6">
         {state?.errors?.global && (
           <p className="text-red-500 text-sm text-center italic">
@@ -31,6 +38,7 @@ const SignUp = () => {
           placeholder="RUT"
           required
           defaultValue={state?.fields?.run}
+          className={inputCls}
         />
         <div className="min-h-5">
           {state?.errors?.run && (
@@ -47,6 +55,7 @@ const SignUp = () => {
           placeholder="Email"
           required
           defaultValue={state?.fields?.email}
+          className={inputCls}
         />
         <div className="min-h-5">
           {state?.errors?.email && (
@@ -64,6 +73,7 @@ const SignUp = () => {
             show={showPassword}
             onToggle={() => setShowPassword(!showPassword)}
             defaultValue={state?.fields?.password}
+            inputClassName={inputCls}
           />
           <div className="min-h-5">
             {state?.errors?.password && (
@@ -79,6 +89,7 @@ const SignUp = () => {
             placeholder="Confirm password"
             show={showConfirmPassword}
             onToggle={() => setShowConfirmPassword(!showConfirmPassword)}
+            inputClassName={inputCls}
           />
           <div className="min-h-5">
             {state?.errors?.password && (
@@ -97,6 +108,7 @@ const SignUp = () => {
             placeholder="First name"
             required
             defaultValue={state?.fields?.name}
+            className={inputCls}
           />
           <div className="min-h-5">
             {state?.errors?.name && (
@@ -113,6 +125,7 @@ const SignUp = () => {
             placeholder="Last name"
             required
             defaultValue={state?.fields?.lastName}
+            className={inputCls}
           />
           <div className="min-h-5">
             {state?.errors?.lastName && (
@@ -132,6 +145,7 @@ const SignUp = () => {
           name="birthdate"
           type="date"
           defaultValue={state?.fields?.birthdate}
+          className={inputCls}
         />
         <div className="min-h-5">
           {state?.errors?.birthdate && (
@@ -146,6 +160,7 @@ const SignUp = () => {
         layout="inline"
         regionError={state?.errors?.region}
         comunaError={state?.errors?.comuna}
+        selectClassName={inputCls}
       />
       <div>
         <Input
@@ -155,6 +170,7 @@ const SignUp = () => {
           required
           maxLength={300}
           defaultValue={state?.fields?.direccion}
+          className={inputCls}
         />
         <div className="min-h-5">
           {state?.errors?.direccion && (
@@ -167,7 +183,7 @@ const SignUp = () => {
       <button
         type="submit"
         disabled={pending}
-        className="flex items-center gap-1 justify-center bg-[#007AFF] hover:bg-[#1ea4ff] text-[#FAFAFA] rounded-md py-2 font-semibold disabled:opacity-50 cursor-pointer transition-colors duration-200 ease-in-out"
+        className="flex items-center gap-1 justify-center bg-[#26bbff] hover:bg-[#78d3ff] text-black rounded-full py-3 font-semibold disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-colors duration-200 ease-in-out focus-visible:ring-[#26BBFF]"
       >
         {pending ? "Loading..." : "Sign Up"}
       </button>

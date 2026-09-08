@@ -1,5 +1,4 @@
 import { cookies } from "next/headers";
-import Image from "next/image";
 import Link from "next/link";
 import { ShoppingCart } from "lucide-react";
 import {
@@ -10,6 +9,13 @@ import {
 } from "@/components/layout";
 import { logoutAction } from "@/actions/logout";
 import { getCurrentUserAction } from "@/actions/admin/auth";
+import { Erica_One } from "next/font/google";
+
+const ericaOne = Erica_One({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-erica-one",
+});
 
 export const Nav = async () => {
   const cookieStore = await cookies();
@@ -49,14 +55,12 @@ export const Nav = async () => {
   return (
     <nav className="text-sm flex items-center h-full px-4 gap-6 ">
       <div className="">
-        <Link href="/" className="block h-8">
-          <Image
-            src={"Logo.svg"}
-            width={128}
-            height={128}
-            alt="Steam Logo"
-            className="w-auto h-8"
-          />
+        <Link href="/" className="block items-center min-h-full">
+          <h1
+            className={`text-3xl hover:text-[#a5a5a5] transition-colors ease-in-out duration-100 ${ericaOne.className}`}
+          >
+            MBR
+          </h1>
         </Link>
       </div>
       <NavBarLinks
@@ -68,7 +72,7 @@ export const Nav = async () => {
       <div className="sm:flex hidden justify-end items-center gap-4 ml-auto">
         <Link
           href="/cart"
-          className="hover:bg-[#111111] active:bg-[#111111] rounded-md p-1.5"
+          className="hover:bg-[#28282C] active:bg-[#28282C] rounded-full p-2.5"
           aria-label="Cart"
         >
           <ShoppingCart size={20} />
@@ -77,7 +81,7 @@ export const Nav = async () => {
           <form action={logoutAction}>
             <button
               type="submit"
-              className="bg-[#EDEDED] text-black rounded-md px-3 py-1.5 font-medium hover:bg-[#7b7b7b] cursor-pointer"
+              className="bg-[#28282C] hover:bg-[#404044] text-[#FAFAFA] rounded-full px-4 py-1.5 font-medium cursor-pointer transition-colors duration-200 ease-out"
             >
               Log out
             </button>
@@ -86,15 +90,13 @@ export const Nav = async () => {
           <>
             <Link
               href={"/sign-up"}
-              className="bg-[#0A0A0A] text-[#EDEDED] border border-[#2E2E2E]
-                         hover:bg-[#2E2E2E] px-3 py-1.5 font-medium text-sm text-center rounded-md  cursor-pointer transition-colors duration-250 ease-out"
+              className="bg-[#28282C] hover:bg-[#404044] text-[#EDEDED] px-4 py-1.5 font-medium text-sm text-center rounded-full cursor-pointer transition-colors duration-200 ease-out"
             >
               Sign Up
             </Link>
             <Link
               href={"/log-in"}
-              className="bg-[#EDEDED] text-[#0A0A0A] border
-                         hover:bg-[#b0b0b0] px-3 py-1.5 font-medium text-sm text-center rounded-md  cursor-pointer transition-colors duration-250 ease-out"
+              className="bg-[#EDEDED] text-[#0A0A0A] border hover:bg-[#b0b0b0] px-4 py-1.5 font-medium text-sm text-center rounded-full cursor-pointer transition-colors duration-200 ease-out"
             >
               Log In
             </Link>

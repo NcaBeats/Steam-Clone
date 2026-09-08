@@ -13,6 +13,7 @@ interface RegionSelectProps {
   readonly comunaError?: string[];
   readonly layout?: "stacked" | "inline";
   readonly className?: string;
+  readonly selectClassName?: string;
 }
 
 export const RegionSelect = ({
@@ -23,6 +24,7 @@ export const RegionSelect = ({
   comunaError,
   layout = "stacked",
   className,
+  selectClassName,
 }: RegionSelectProps) => {
   const [region, setRegion] = useState(defaultRegion);
   const [comuna, setComuna] = useState(defaultComuna);
@@ -42,7 +44,7 @@ export const RegionSelect = ({
           value={region}
           onChange={handleRegionChange}
           required
-          className="appearance-none pr-10"
+          className={`appearance-none pr-10 ${selectClassName ?? ""}`}
         >
           <option value="">Select a region</option>
           {regiones.map((r) => (
@@ -73,7 +75,7 @@ export const RegionSelect = ({
           onChange={(e) => setComuna(e.target.value)}
           required
           disabled={!region}
-          className="appearance-none pr-10 disabled:opacity-50 disabled:hover:bg-[#1A1A1A]"
+          className={`appearance-none pr-10 disabled:opacity-50 disabled:hover:bg-[#1A1A1A] ${selectClassName ?? ""}`}
         >
           <option value="">
             {region ? "Select a municipality" : "Select a region first"}
