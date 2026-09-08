@@ -3,3 +3,4 @@ export * from "./Header";
 export * from "./Nav";
 export * from "./NavBarLinks";
 export * from "./SearchBar";
+export * from "./Footer";
