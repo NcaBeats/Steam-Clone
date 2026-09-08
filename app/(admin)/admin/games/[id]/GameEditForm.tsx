@@ -10,6 +10,7 @@ import {
   FileDropzone,
 } from "@/components/ui";
 import { updateGameWithMediaAction } from "@/actions/admin";
+import { resolveVideoUrl } from "@/lib/media";
 import type { Category, Game, GameState } from "@/types";
 
 type Props = Readonly<{
@@ -244,7 +245,7 @@ export function GameEditForm({
           value={video}
           onChange={(v) => setVideo(Array.isArray(v) ? (v[0] ?? null) : v)}
           existingUrl={game.videoUrl}
-          existingPreview={game.videoUrl}
+          existingPreview={resolveVideoUrl(game.videoUrl)}
         />
         <FileDropzone
           kind="gallery"

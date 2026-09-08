@@ -3,6 +3,7 @@
 import "@videojs/react/video/skin.css";
 
 import { Video, VideoPlayer, VideoSkin } from "@videojs/react/video";
+import { resolveVideoUrl } from "@/lib/media";
 
 type Props = Readonly<{
   src: string;
@@ -10,13 +11,11 @@ type Props = Readonly<{
   title?: string | null;
 }>;
 
-const API_BASE =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:9090/api/v1";
-const ORIGIN = new URL(API_BASE).origin;
-
-function resolveVideoUrl(src: string): string {
-  if (src.startsWith("http")) return src;
-  return new URL(src, ORIGIN).href;
+function videoType(src: string): string {
+  const ext = src.split("?")[0].split("#")[0].split(".").pop()?.toLowerCase();
+  if (ext === "webm") return "video/webm";
+  if (ext === "mov") return "video/quicktime";
+  return "video/mp4";
 }
 
 export function GameVideo({ src, poster, title }: Props) {
@@ -31,7 +30,7 @@ export function GameVideo({ src, poster, title }: Props) {
             src={absoluteSrc}
             playsInline
           />
-          <source src={absoluteSrc} type="video/mp4" />
+          <source src={absoluteSrc} type={videoType(src)} />
         </VideoSkin>
       </VideoPlayer>
     </div>
