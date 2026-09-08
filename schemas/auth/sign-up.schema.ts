@@ -5,34 +5,34 @@ import type { RegionData } from "@/types";
 const domains = new Set(["duoc.cl", "profesor.duoc.cl", "gmail.com"]);
 
 const run = z
-  .string("Formato inválido")
+  .string("Invalid format")
   .trim()
-  .min(7, "El mínimo de caracteres son 7")
-  .max(9, "El máximo de caracteres son 9")
+  .min(7, "The minimum amount of characters is 7")
+  .max(9, "The maximum amount of characters is 9")
   .refine((val) => !val.includes(".") && !val.includes("-"), {
-    message: "No se aceptan puntos ni guiones",
+    message: "Points and dashes are not allowed",
   })
   .refine((val) => validate(val), {
-    message: "El rut no es válido",
+    message: "RUN is not valid",
   })
   .transform((val) => clean(val));
 
-const name = z.string().max(50, "El máximo dde caracteres son 50");
+const name = z.string().max(50, "The maximum amount of characters is 50");
 
-const lastName = z.string().max(50, "El máximo dde caracteres son 50");
+const lastName = z.string().max(50, "The maximum amount of characters is 50");
 
 const email = z
   .string()
   .trim()
-  .max(100, "El email no puede superar los 100 caracteres")
-  .pipe(z.email("Formato de email inválido"))
+  .max(100, "Email cannot exceed 100 characters")
+  .pipe(z.email("Invalid email format"))
   .refine(
     (val) => {
       const domain = val.split("@").pop()?.toLowerCase();
       return domains.has(domain || "");
     },
     {
-      message: "Solo dominios @duoc.cl @profesor.duoc.cl @gmail.com",
+      message: "Only @duoc.cl @profesor.duoc.cl @gmail.com domains",
     },
   );
 
@@ -40,22 +40,22 @@ const birthdate = z
   .date({
     error: (issue) => {
       if (issue.input === undefined) return undefined;
-      return "La fecha ingresada no existe o tiene un formato inválido";
+      return "The entered date does not exist or has an invalid format";
     },
   })
   .max(new Date(), {
-    error: "La fecha de nacimiento no puede ser en el futuro",
+    error: "The birth date cannot be in the future",
   })
   .optional();
 
-const region = z.string().min(1, "Selecciona una región");
+const region = z.string().min(1, "Select a region");
 
 const comuna = z.string().min(1, "Select a municipality");
 
 const direccion = z
   .string()
-  .min(1, "La dirección es requerida")
-  .max(300, "La dirección no puede superar los 300 caracteres");
+  .min(1, "Address is required")
+  .max(300, "Address cannot exceed 300 characters");
 
 export const createSignUpSchema = (regiones: RegionData[]) => {
   return z
@@ -66,7 +66,7 @@ export const createSignUpSchema = (regiones: RegionData[]) => {
       email: email,
       birthdate: birthdate,
       region: region.refine((val) => regiones.some((r) => r.nombre === val), {
-        message: "Región inválida",
+        message: "Invalid region",
       }),
       comuna: comuna,
       direccion: direccion,

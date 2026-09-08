@@ -4,35 +4,32 @@ export const AdminUserCreateSchema = z.object({
   email: z
     .string()
     .trim()
-    .min(1, "El email es obligatorio")
-    .max(100, "El email no puede superar los 100 caracteres")
-    .pipe(z.email("Formato de email inválido")),
+    .min(1, "Email is required")
+    .max(100, "Email cannot exceed 100 characters")
+    .pipe(z.email("Invalid email format")),
   password: z
     .string()
-    .min(4, "El mínimo de caracteres son 4")
-    .max(10, "El máximo de caracteres son 10"),
+    .min(4, "The minimum amount of characters is 4")
+    .max(10, "The maximum amount of characters is 10"),
   run: z
     .string()
     .trim()
-    .min(7, "El RUN no es válido (7-9 caracteres)")
-    .max(9, "El RUN no es válido (7-9 caracteres)"),
+    .min(7, "RUN is not valid (7-9 characters)")
+    .max(9, "RUN is not valid (7-9 characters)"),
   firstName: z
     .string()
     .trim()
-    .min(1, "Los nombres son obligatorios")
-    .max(50, "Los nombres no pueden superar 50 caracteres"),
+    .min(1, "First name is required")
+    .max(50, "First name cannot exceed 50 characters"),
   lastName: z
     .string()
     .trim()
-    .min(1, "Los apellidos son obligatorios")
-    .max(100, "Los apellidos no pueden superar 100 caracteres"),
+    .min(1, "Last name is required")
+    .max(100, "Last name cannot exceed 100 characters"),
   birthDate: z.string().optional(),
   region: z.string().optional(),
   comuna: z.string().optional(),
-  address: z
-    .string()
-    .trim()
-    .max(300, "La dirección no puede superar 300 caracteres"),
+  address: z.string().trim().max(300, "Address cannot exceed 300 characters"),
 });
 
 export type AdminUserCreateInput = z.infer<typeof AdminUserCreateSchema>;

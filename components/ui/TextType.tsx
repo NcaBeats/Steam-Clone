@@ -196,25 +196,30 @@ const TextType = ({
     // eslint-disable-next-line react-hooks/refs -- Component is a dynamic host element (h2, div, etc.)
     {
       ref: setContainerRef,
-      className: `inline-block whitespace-pre-wrap tracking-tight ${className}`,
+      className: `relative inline-block whitespace-pre-wrap tracking-tight ${className}`,
       ...props,
     },
-    <span
-      className="inline"
-      style={{ color: getCurrentTextColor() || "inherit" }}
-    >
-      {displayedText}
+    <span className="invisible" aria-hidden="true">
+      {textArray[currentTextIndex]}
     </span>,
-    showCursor && (
+    <span className="absolute left-0 top-0 inline-block">
       <span
-        ref={cursorRef}
-        className={`ml-1 inline-block opacity-100 ${
-          shouldHideCursor ? "hidden" : ""
-        } ${cursorClassName}`}
+        className="inline"
+        style={{ color: getCurrentTextColor() || "inherit" }}
       >
-        {cursorCharacter}
+        {displayedText}
       </span>
-    ),
+      {showCursor && (
+        <span
+          ref={cursorRef}
+          className={`ml-1 inline-block opacity-100 ${
+            shouldHideCursor ? "hidden" : ""
+          } ${cursorClassName}`}
+        >
+          {cursorCharacter}
+        </span>
+      )}
+    </span>,
   );
 };
 

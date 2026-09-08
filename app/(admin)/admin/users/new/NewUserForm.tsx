@@ -35,15 +35,15 @@ export function NewUserForm() {
     e.preventDefault();
 
     if (password.length < 4 || password.length > 10) {
-      setError("La contraseña debe tener entre 4 y 10 caracteres");
+      setError("Password must be between 4 and 10 characters");
       return;
     }
     if (password !== confirmPassword) {
-      setError("Las contraseñas no coinciden");
+      setError("Passwords do not match");
       return;
     }
     if (!validateRun(run)) {
-      setError("El RUN no es válido (7-9 caracteres, sin puntos ni guiones)");
+      setError("RUN is not valid (7-9 characters, no dots or dashes)");
       return;
     }
 
@@ -62,7 +62,7 @@ export function NewUserForm() {
     startTransition(async () => {
       const result = await createUserFromFormAction(formData);
       if (!result.ok) {
-        setError(result.error ?? "No se pudo crear el usuario");
+        setError(result.error ?? "Could not create the user");
         return;
       }
       router.push("/admin/users");
@@ -81,7 +81,7 @@ export function NewUserForm() {
 
       <fieldset className="flex flex-col gap-4">
         <legend className="text-sm font-semibold text-[#FAFAFA] mb-2">
-          Cuenta
+          Account
         </legend>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div className="flex flex-col gap-1">
@@ -101,14 +101,14 @@ export function NewUserForm() {
           </div>
           <div className="flex flex-col gap-1">
             <label htmlFor="password" className={labelCls}>
-              Contraseña
+              Password
             </label>
             <PasswordInput
               name="password"
               required
               minLength={4}
               maxLength={10}
-              placeholder="4-10 caracteres"
+              placeholder="4-10 characters"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               show={showPassword}
@@ -117,14 +117,14 @@ export function NewUserForm() {
           </div>
           <div className="flex flex-col gap-1 sm:col-span-2">
             <label htmlFor="confirmPassword" className={labelCls}>
-              Confirmar contraseña
+              Confirm password
             </label>
             <PasswordInput
               name="confirmPassword"
               required
               minLength={4}
               maxLength={10}
-              placeholder="Repite la contraseña"
+              placeholder="Repeat password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               show={showConfirmPassword}
@@ -136,7 +136,7 @@ export function NewUserForm() {
 
       <fieldset className="flex flex-col gap-4 border-t border-[#2A2A2A] pt-4">
         <legend className="text-sm font-semibold text-[#FAFAFA] mb-2">
-          Perfil
+          Profile
         </legend>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div className="flex flex-col gap-1">
@@ -156,7 +156,7 @@ export function NewUserForm() {
           </div>
           <div className="flex flex-col gap-1">
             <label htmlFor="firstName" className={labelCls}>
-              Nombres
+              First name
             </label>
             <Input
               id="firstName"
@@ -170,7 +170,7 @@ export function NewUserForm() {
           </div>
           <div className="flex flex-col gap-1">
             <label htmlFor="lastName" className={labelCls}>
-              Apellidos
+              Last name
             </label>
             <Input
               id="lastName"
@@ -184,7 +184,7 @@ export function NewUserForm() {
           </div>
           <div className="flex flex-col gap-1">
             <label htmlFor="birthDate" className={labelCls}>
-              Fecha de nacimiento
+              Date of birth
             </label>
             <Input
               id="birthDate"
@@ -196,7 +196,7 @@ export function NewUserForm() {
           </div>
           <div className="flex flex-col gap-1">
             <label htmlFor="region" className={labelCls}>
-              Región
+              Region
             </label>
             <RegionSelect
               name="region"
@@ -209,7 +209,7 @@ export function NewUserForm() {
           </div>
           <div className="flex flex-col gap-1">
             <label htmlFor="comuna" className={labelCls}>
-              Comuna
+              Municipality
             </label>
             <ComunaSelect
               name="comuna"
@@ -220,7 +220,7 @@ export function NewUserForm() {
           </div>
           <div className="flex flex-col gap-1 sm:col-span-2">
             <label htmlFor="address" className={labelCls}>
-              Dirección
+              Address
             </label>
             <Input
               id="address"
@@ -241,7 +241,7 @@ export function NewUserForm() {
           disabled={pending}
           className="bg-[#007AFF] hover:bg-[#1ea4ff] disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold px-5 py-2.5 rounded-md transition-colors"
         >
-          {pending ? "Creando..." : "Crear usuario"}
+          {pending ? "Creating..." : "Create user"}
         </button>
         <Link
           href="/admin/users"

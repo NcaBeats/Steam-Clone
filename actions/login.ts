@@ -77,7 +77,7 @@ export async function loginAction(
   } catch {
     return {
       success: false,
-      errors: { global: ["Credenciales inválidas o error en el servidor"] },
+      errors: { global: ["Invalid credentials or server error"] },
     };
   }
 

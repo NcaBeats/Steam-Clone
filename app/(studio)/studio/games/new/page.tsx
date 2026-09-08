@@ -16,9 +16,10 @@ const StudioNewGamePage = async () => {
         >
           ← Back to products
         </Link>
-        <h1 className="text-2xl font-bold text-[#FAFAFA]">Nuevo producto</h1>
+        <h1 className="text-2xl font-bold text-[#FAFAFA]">New product</h1>
         <p className="text-sm text-[#8A8A8A]">
-          Crea un juego. Se asignará automáticamente a tu cuenta de vendedor.
+          Create a game. It will be assigned automatically to your seller
+          account.
         </p>
       </header>
 

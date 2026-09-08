@@ -85,16 +85,16 @@ export function GameEditForm({
     if (!result.ok) {
       showAlert({
         variant: "destructive",
-        title: "Error al guardar",
-        description: result.error ?? "No se pudo actualizar el producto",
+        title: "Save error",
+        description: result.error ?? "Could not update the product",
       });
       setSaving(false);
       return;
     }
     showAlert({
       variant: "default",
-      title: "Producto actualizado",
-      description: `${name} se actualizó correctamente`,
+      title: "Product updated",
+      description: `${name} updated successfully`,
     });
     router.push(redirectTo);
     router.refresh();
@@ -110,7 +110,7 @@ export function GameEditForm({
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div className="flex flex-col gap-1 sm:col-span-2">
           <label htmlFor="name" className={labelCls}>
-            Nombre
+            Name
           </label>
           <Input
             id="name"
@@ -124,7 +124,7 @@ export function GameEditForm({
         </div>
         <div className="flex flex-col gap-1">
           <label htmlFor="originalPrice" className={labelCls}>
-            Precio original (USD)
+            Original price (USD)
           </label>
           <Input
             id="originalPrice"
@@ -139,7 +139,7 @@ export function GameEditForm({
         </div>
         <div className="flex flex-col gap-1">
           <label htmlFor="discountPercent" className={labelCls}>
-            Descuento (0-100%)
+            Discount (0-100%)
           </label>
           <Input
             id="discountPercent"
@@ -154,7 +154,7 @@ export function GameEditForm({
         </div>
         <div className="flex flex-col gap-1">
           <label htmlFor="state" className={labelCls}>
-            Estado
+            State
           </label>
           <Select
             id="state"
@@ -169,7 +169,7 @@ export function GameEditForm({
         </div>
         <div className="flex flex-col gap-1">
           <label htmlFor="launchDate" className={labelCls}>
-            Fecha de lanzamiento
+            Launch date
           </label>
           <Input
             id="launchDate"
@@ -181,7 +181,7 @@ export function GameEditForm({
           />
         </div>
         <div className="flex flex-col gap-1">
-          <label className={labelCls}>Precio calculado (USD)</label>
+          <label className={labelCls}>Calculated price (USD)</label>
           <div className="rounded-lg bg-[#1A1A1A] px-3 py-3 text-sm font-semibold text-[#A1CD44]">
             ${price.toFixed(2)}
           </div>
@@ -190,7 +190,7 @@ export function GameEditForm({
 
       <div className="flex flex-col gap-1">
         <label htmlFor="description" className={labelCls}>
-          Descripción
+          Description
         </label>
         <Textarea
           id="description"
@@ -203,7 +203,7 @@ export function GameEditForm({
       </div>
 
       <div className="flex flex-col gap-2">
-        <span className={labelCls}>Categorías</span>
+        <span className={labelCls}>Categories</span>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 bg-[#1A1A1A] border border-[#2A2A2A] rounded-md p-3 max-h-60 overflow-y-auto">
           {categories.map((c) => (
             <label
@@ -224,9 +224,9 @@ export function GameEditForm({
 
       <div className="flex flex-col gap-4 border-t border-[#2A2A2A] pt-4">
         <p className="text-xs text-[#5A5A5A]">
-          Sube archivos para reemplazar el recurso actual. Deja los campos
-          vacíos para conservar lo existente. La galería se reemplaza por
-          completo si eliges nuevas imágenes.
+          Upload files to replace the current asset. Leave fields empty to keep
+          what already exists. The gallery is replaced completely if you choose
+          new images.
         </p>
         <FileDropzone
           kind="image"
@@ -262,7 +262,7 @@ export function GameEditForm({
           disabled={saving}
           className="bg-[#007AFF] hover:bg-[#1ea4ff] disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold px-5 py-2.5 rounded-md transition-colors"
         >
-          {saving ? "Guardando..." : "Guardar cambios"}
+          {saving ? "Saving..." : "Save changes"}
         </button>
       </div>
     </form>

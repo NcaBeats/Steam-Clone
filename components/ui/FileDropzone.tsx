@@ -21,8 +21,8 @@ type FileDropzoneProps = {
 
 const KIND_CONFIG = {
   image: {
-    label: "Imagen principal",
-    hint: "PNG, JPG, WEBP o AVIF · máx 10MB",
+    label: "Main image",
+    hint: "PNG, JPG, WEBP or AVIF · max 10MB",
     accept: { "image/*": [".png", ".jpg", ".jpeg", ".webp", ".avif"] },
     maxSize: 10 * 1024 * 1024,
     multiple: false,
@@ -30,7 +30,7 @@ const KIND_CONFIG = {
   },
   banner: {
     label: "Banner",
-    hint: "PNG, JPG, WEBP o AVIF · máx 10MB",
+    hint: "PNG, JPG, WEBP or AVIF · max 10MB",
     accept: { "image/*": [".png", ".jpg", ".jpeg", ".webp", ".avif"] },
     maxSize: 10 * 1024 * 1024,
     multiple: false,
@@ -38,15 +38,15 @@ const KIND_CONFIG = {
   },
   video: {
     label: "Trailer (video)",
-    hint: "MP4, WEBM o MOV · máx 300MB",
+    hint: "MP4, WEBM or MOV · max 300MB",
     accept: { "video/*": [".mp4", ".webm", ".mov"] },
     maxSize: 300 * 1024 * 1024,
     multiple: false,
     icon: VideoIcon,
   },
   gallery: {
-    label: "Galería de imágenes",
-    hint: "PNG, JPG, WEBP o AVIF · hasta 10 archivos · máx 10MB c/u",
+    label: "Image gallery",
+    hint: "PNG, JPG, WEBP or AVIF · up to 10 files · max 10MB each",
     accept: { "image/*": [".png", ".jpg", ".jpeg", ".webp", ".avif"] },
     maxSize: 10 * 1024 * 1024,
     multiple: true,
@@ -108,14 +108,14 @@ export function FileDropzone({
       const code = first?.errors?.[0]?.code as string | undefined;
       if (code === "file-too-large") {
         setError(
-          `El archivo supera el tamaño máximo permitido (${toMB(cfg.maxSize)}MB).`,
+          `The file exceeds the maximum allowed size (${toMB(cfg.maxSize)}MB).`,
         );
       } else if (code === "file-invalid-type") {
-        setError("Tipo de archivo no permitido en este campo.");
+        setError("File type not allowed in this field.");
       } else if (code === "too-many-files") {
-        setError(`Máximo ${maxFiles} archivos permitidos.`);
+        setError(`Maximum ${maxFiles} files allowed.`);
       } else {
-        setError("No se pudo agregar el archivo.");
+        setError("Could not add the file.");
       }
     },
     [cfg.maxSize, maxFiles],
@@ -154,7 +154,7 @@ export function FileDropzone({
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={previewUrl}
-            alt="Vista previa"
+            alt="Preview"
             className="w-full h-full object-cover"
           />
         </div>
@@ -164,7 +164,7 @@ export function FileDropzone({
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={previewUrl}
-            alt="Vista previa banner"
+            alt="Banner preview"
             className="w-full h-full object-cover"
           />
         </div>
@@ -194,7 +194,7 @@ export function FileDropzone({
                 type="button"
                 onClick={() => removeFile(i)}
                 className="absolute top-0.5 right-0.5 size-5 rounded-full bg-black/70 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
-                aria-label="Quitar archivo"
+                aria-label="Remove file"
               >
                 <X size={12} />
               </button>
@@ -224,10 +224,10 @@ export function FileDropzone({
           className={isDragActive ? "text-[#007AFF]" : ""}
         />
         {isDragActive
-          ? "Suelta los archivos aquí"
+          ? "Drop the files here"
           : hasNewFile
-            ? "Reemplazar archivo"
-            : "Arrastra y suelta o haz clic para seleccionar"}
+            ? "Replace file"
+            : "Drag & drop or click to select"}
       </div>
 
       {error && <p className="text-xs text-[#FF6B6B]">{error}</p>}

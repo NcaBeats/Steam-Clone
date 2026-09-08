@@ -33,7 +33,7 @@ const OrdersPage = async ({
           Orders
         </p>
         <h1 className="text-xl font-bold tracking-[0.4px] text-[#FAFAFA]">
-          Órdenes
+          Orders
         </h1>
         <p className="text-sm text-[#8A8A8A]">
           {pageInfo.totalElements} order

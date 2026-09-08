@@ -31,7 +31,6 @@ function parseError(status: number, text: string): CreatePurchaseError {
     lower.includes("already in library") ||
     lower.includes("already in cart") ||
     lower.includes("duplicate") ||
-    lower.includes("ya está") ||
     lower.includes("duplicado")
   )
     return "duplicate";

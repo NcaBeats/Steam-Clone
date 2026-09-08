@@ -118,7 +118,7 @@ export const BurgerMenu = ({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        aria-label={isOpen ? "Cerrar Menú" : "Abrir Menú"}
+        aria-label={isOpen ? "Close menu" : "Open menu"}
         aria-expanded={isOpen}
         className="hover:bg-[#28282C] active:bg-[#28282C] rounded-md p-1"
       >

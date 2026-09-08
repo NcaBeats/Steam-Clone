@@ -11,7 +11,7 @@ type Props = Readonly<{
 }>;
 
 export function SearchInput({
-  placeholder = "Buscar...",
+  placeholder = "Search...",
   paramName = "q",
 }: Props) {
   const router = useRouter();

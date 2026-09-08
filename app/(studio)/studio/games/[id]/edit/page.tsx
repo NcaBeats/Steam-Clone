@@ -29,10 +29,9 @@ const StudioEditGamePage = async ({
         >
           ← Back to product
         </Link>
-        <h1 className="text-2xl font-bold text-[#FAFAFA]">Editar producto</h1>
+        <h1 className="text-2xl font-bold text-[#FAFAFA]">Edit product</h1>
         <p className="text-sm text-[#8A8A8A]">
-          Actualiza los datos y, si lo deseas, reemplaza los recursos
-          multimedia.
+          Update the data and, if you wish, replace the media assets.
         </p>
       </header>
 

@@ -51,8 +51,8 @@ export function UserEditForm({ user }: Props) {
       if (!userResult.ok) {
         showAlert({
           variant: "destructive",
-          title: "Error al guardar",
-          description: userResult.error ?? "No se pudo actualizar el usuario",
+          title: "Save error",
+          description: userResult.error ?? "Could not update the user",
         });
         setSaving(false);
         return;
@@ -73,8 +73,8 @@ export function UserEditForm({ user }: Props) {
       if (!profileResult.ok) {
         showAlert({
           variant: "destructive",
-          title: "Error al guardar perfil",
-          description: profileResult.error ?? "No se pudo actualizar el perfil",
+          title: "Profile save error",
+          description: profileResult.error ?? "Could not update the profile",
         });
         setSaving(false);
         return;
@@ -82,8 +82,8 @@ export function UserEditForm({ user }: Props) {
 
       showAlert({
         variant: "default",
-        title: "Usuario actualizado",
-        description: `${email} se actualizó correctamente`,
+        title: "User updated",
+        description: `${email} updated successfully`,
       });
       router.push("/admin/users");
       router.refresh();
@@ -91,7 +91,7 @@ export function UserEditForm({ user }: Props) {
       showAlert({
         variant: "destructive",
         title: "Error",
-        description: e instanceof Error ? e.message : "Error desconocido",
+        description: e instanceof Error ? e.message : "Unknown error",
       });
       setSaving(false);
     }
@@ -106,7 +106,7 @@ export function UserEditForm({ user }: Props) {
     >
       <fieldset className="flex flex-col gap-4">
         <legend className="text-sm font-semibold text-[#FAFAFA] mb-2">
-          Cuenta
+          Account
         </legend>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div className="flex flex-col gap-1">
@@ -140,7 +140,7 @@ export function UserEditForm({ user }: Props) {
         </div>
         <div className="flex flex-col gap-1">
           <label htmlFor="password" className={labelCls}>
-            Nueva contraseña (opcional, dejar vacío para mantener la actual)
+            New password (optional, leave blank to keep current)
           </label>
           <PasswordInput
             name="password"
@@ -158,7 +158,7 @@ export function UserEditForm({ user }: Props) {
 
       <fieldset className="flex flex-col gap-4 border-t border-[#2A2A2A] pt-4">
         <legend className="text-sm font-semibold text-[#FAFAFA] mb-2">
-          Perfil
+          Profile
         </legend>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div className="flex flex-col gap-1">
@@ -177,7 +177,7 @@ export function UserEditForm({ user }: Props) {
           </div>
           <div className="flex flex-col gap-1">
             <label htmlFor="firstName" className={labelCls}>
-              Nombres
+              First name
             </label>
             <Input
               id="firstName"
@@ -191,7 +191,7 @@ export function UserEditForm({ user }: Props) {
           </div>
           <div className="flex flex-col gap-1">
             <label htmlFor="lastName" className={labelCls}>
-              Apellidos
+              Last name
             </label>
             <Input
               id="lastName"
@@ -205,7 +205,7 @@ export function UserEditForm({ user }: Props) {
           </div>
           <div className="flex flex-col gap-1">
             <label htmlFor="birthDate" className={labelCls}>
-              Fecha de nacimiento
+              Date of birth
             </label>
             <Input
               id="birthDate"
@@ -217,7 +217,7 @@ export function UserEditForm({ user }: Props) {
           </div>
           <div className="flex flex-col gap-1">
             <label htmlFor="region" className={labelCls}>
-              Región
+              Region
             </label>
             <RegionSelect
               name="region"
@@ -230,7 +230,7 @@ export function UserEditForm({ user }: Props) {
           </div>
           <div className="flex flex-col gap-1">
             <label htmlFor="comuna" className={labelCls}>
-              Comuna
+              Municipality
             </label>
             <ComunaSelect
               name="comuna"
@@ -241,7 +241,7 @@ export function UserEditForm({ user }: Props) {
           </div>
           <div className="flex flex-col gap-1 sm:col-span-2">
             <label htmlFor="address" className={labelCls}>
-              Dirección
+              Address
             </label>
             <Input
               id="address"
@@ -256,7 +256,7 @@ export function UserEditForm({ user }: Props) {
         </div>
         <div className="flex flex-col gap-1">
           <label htmlFor="bio" className={labelCls}>
-            Biografía
+            Bio
           </label>
           <Textarea
             id="bio"
@@ -268,7 +268,7 @@ export function UserEditForm({ user }: Props) {
         </div>
         <div className="flex flex-col gap-1">
           <label htmlFor="visibility" className={labelCls}>
-            Visibilidad
+            Visibility
           </label>
           <Select
             id="visibility"
@@ -278,8 +278,8 @@ export function UserEditForm({ user }: Props) {
               setVisibility(e.target.value as "PUBLIC" | "PRIVATE")
             }
           >
-            <option value="PUBLIC">Público</option>
-            <option value="PRIVATE">Privado</option>
+            <option value="PUBLIC">Public</option>
+            <option value="PRIVATE">Private</option>
           </Select>
         </div>
       </fieldset>
@@ -290,7 +290,7 @@ export function UserEditForm({ user }: Props) {
           disabled={saving}
           className="bg-[#007AFF] hover:bg-[#1ea4ff] disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold px-5 py-2.5 rounded-md transition-colors"
         >
-          {saving ? "Guardando..." : "Guardar cambios"}
+          {saving ? "Saving..." : "Save changes"}
         </button>
       </div>
     </form>

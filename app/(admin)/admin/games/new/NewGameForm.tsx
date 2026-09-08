@@ -48,15 +48,15 @@ export function NewGameForm({
       if (!result.ok) {
         showAlert({
           variant: "destructive",
-          title: "No se pudo crear el producto",
-          description: result.error ?? "Inténtalo de nuevo",
+          title: "Could not create the product",
+          description: result.error ?? "Try again",
         });
         return;
       }
       showAlert({
         variant: "default",
-        title: "Producto creado",
-        description: "El juego se creó correctamente",
+        title: "Product created",
+        description: "The game was created successfully",
       });
       router.push(redirectTo);
       router.refresh();
@@ -193,7 +193,7 @@ export function NewGameForm({
 
       {!image && (
         <p className="text-xs text-[#FF6B6B]">
-          La imagen principal es obligatoria para crear el producto.
+          A main image is required to create the product.
         </p>
       )}
 
@@ -203,7 +203,7 @@ export function NewGameForm({
           disabled={pending || !image}
           className="bg-[#007AFF] hover:bg-[#1ea4ff] disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold px-5 py-2.5 rounded-md transition-colors"
         >
-          {pending ? "Creando..." : "Crear producto"}
+          {pending ? "Creating..." : "Create product"}
         </button>
         <Link
           href={redirectTo}

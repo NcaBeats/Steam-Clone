@@ -49,7 +49,7 @@ const UsersPage = async ({
       </header>
 
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <SearchInput placeholder="Buscar por email..." paramName="q" />
+        <SearchInput placeholder="Search by email..." paramName="q" />
         {searchEmail && (
           <Link
             href="/admin/users"

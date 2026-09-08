@@ -107,7 +107,7 @@ const StudioGameDetailPage = async ({
 
       <section className="bg-[#202024] border border-white/[0.06] rounded-lg p-5 flex flex-col gap-2">
         <h2 className="text-sm font-bold text-[#FAFAFA] uppercase tracking-[0.5px]">
-          Descripción
+          Description
         </h2>
         <p className="text-sm text-[#8A8A8A] whitespace-pre-line">
           {game.description}
@@ -117,7 +117,7 @@ const StudioGameDetailPage = async ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <section className="bg-[#202024] border border-white/[0.06] rounded-lg p-5 flex flex-col gap-2">
           <h2 className="text-sm font-bold text-[#FAFAFA] uppercase tracking-[0.5px]">
-            Requisitos mínimos
+            Minimum requirements
           </h2>
           {specEntries(game.minimumSpecs).length > 0 ? (
             <ul className="flex flex-col gap-1.5 text-sm">
@@ -136,7 +136,7 @@ const StudioGameDetailPage = async ({
         </section>
         <section className="bg-[#202024] border border-white/[0.06] rounded-lg p-5 flex flex-col gap-2">
           <h2 className="text-sm font-bold text-[#FAFAFA] uppercase tracking-[0.5px]">
-            Requisitos recomendados
+            Recommended requirements
           </h2>
           {specEntries(game.recommendedSpecs).length > 0 ? (
             <ul className="flex flex-col gap-1.5 text-sm">

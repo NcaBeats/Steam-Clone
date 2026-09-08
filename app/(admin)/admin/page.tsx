@@ -50,7 +50,7 @@ const AdminHomePage = async () => {
           Dashboard
         </p>
         <h1 className="text-xl font-bold tracking-[0.4px] text-[#FAFAFA]">
-          ¡HOLA Administrador!
+          HELLO Administrator!
         </h1>
         <p className="text-sm text-[#8A8A8A]">
           Welcome to your dashboard. Here is a quick overview of your store.

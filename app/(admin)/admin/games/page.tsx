@@ -49,7 +49,7 @@ const GamesPage = async ({
       </header>
 
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <SearchInput placeholder="Buscar por nombre..." paramName="q" />
+        <SearchInput placeholder="Search by name..." paramName="q" />
         {searchName && (
           <Link
             href="/admin/games"

@@ -37,35 +37,9 @@ const ContactPage = () => {
               <Mail size={18} className="text-[#8A8A8A] shrink-0 mt-0.5" />
               <div>
                 <p className="text-xs text-[#8A8A8A]">Email</p>
-                <p className="text-sm text-[#FAFAFA]">
-                  support@proyectojuegos.cl
-                </p>
+                <p className="text-sm text-[#FAFAFA]">mbrsupport@gmail.com</p>
               </div>
             </div>
-            <div className="flex items-start gap-3">
-              <Phone size={18} className="text-[#8A8A8A] shrink-0 mt-0.5" />
-              <div>
-                <p className="text-xs text-[#8A8A8A]">Phone</p>
-                <p className="text-sm text-[#FAFAFA]">+56 9 1234 5678</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3">
-              <MapPin size={18} className="text-[#8A8A8A] shrink-0 mt-0.5" />
-              <div>
-                <p className="text-xs text-[#8A8A8A]">Location</p>
-                <p className="text-sm text-[#FAFAFA]">
-                  Av. Libertador 1234, Santiago, Chile
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className={`${cardCls} p-5 flex flex-col gap-2`}>
-            <h3 className="text-base font-bold tracking-[0.32px] text-[#FAFAFA]">
-              Business hours
-            </h3>
-            <p className="text-sm text-[#EDEDED]">Monday to Friday</p>
-            <p className="text-sm text-[#EDEDED]">9:00 AM - 6:00 PM (CLT)</p>
           </div>
         </aside>
       </section>

@@ -16,19 +16,33 @@ const eyebrowCls =
 
 const titleCls = "text-5xl font-extrabold tracking-[0.4px] text-[#FAFAFA]";
 
+const heroCls =
+  "font-extrabold tracking-[0.4px] text-[#FAFAFA] text-4xl sm:text-5xl md:text-7xl lg:text-8xl";
+
 const AboutPage = () => {
   return (
     <div className="flex flex-col gap-16 w-full max-w-5xl mx-auto py-16 px-4">
       {/* Hero */}
       <section className="flex flex-col items-center text-center gap-10">
-        <div className="flex flex-col items-center text-center gap-1">
+        <div className="flex flex-col justify-center items-center gap-1 min-h-[5.5rem] sm:min-h-[6.5rem] md:min-h-[8rem] lg:min-h-[10rem]">
           <TextType
             as="h2"
-            text={["For the customer,", "The best experience."]}
-            className={`${titleCls} text-8xl`}
+            text={["For the customer"]}
+            className={heroCls}
             typingSpeed={45}
-            pauseDuration={2200}
             startOnVisible
+            showCursor={false}
+            loop={false}
+          />
+          <TextType
+            as="span"
+            text={["The best experience"]}
+            className={heroCls}
+            typingSpeed={45}
+            initialDelay={760}
+            startOnVisible
+            showCursor={false}
+            loop={false}
           />
         </div>
       </section>
@@ -36,7 +50,7 @@ const AboutPage = () => {
       {/* What this is */}
       <section className="flex flex-col gap-6">
         <div
-          className={`${cardCls} p-6 flex flex-col gap-40 text-center items-center`}
+          className={`${cardCls} p-6 flex flex-col gap-45 text-center items-center`}
         >
           <FoldText
             text="We are a store specializing in digital PC games. We deliver your code instantly, with no waiting or physical shipping. We work with the largest catalogs on the market to offer you the best prices and the widest selection."
@@ -48,8 +62,8 @@ const AboutPage = () => {
             ease="power3.out"
             perspective={700}
             creaseShading={0.55}
-            fontSize="2rem"
-            fontWeight={600}
+            fontSize="1.5rem"
+            fontWeight={400}
             color="#8A8A8A"
             className="max-w-2xl"
           />
@@ -65,7 +79,7 @@ To become the digital meeting point where any player, regardless of location or 
             ease="power3.out"
             perspective={700}
             creaseShading={0.55}
-            fontSize="2.25rem"
+            fontSize="1.5rem"
             fontWeight={400}
             color="#EDEDED"
           />
@@ -128,7 +142,7 @@ To become the digital meeting point where any player, regardless of location or 
           ease="power3.out"
           perspective={700}
           creaseShading={0.55}
-          fontSize="0.875rem"
+          fontSize="0.75rem"
           fontWeight={400}
           color="#8A8A8A"
           className="max-w-xl"
@@ -136,7 +150,7 @@ To become the digital meeting point where any player, regardless of location or 
         <div className="flex flex-col sm:flex-row gap-3 mt-2">
           <Link
             href="/catalog"
-            className="bg-[#28282C] hover:bg-[#404044] text-[#FAFAFA] font-semibold px-6 py-2.5 rounded-full transition-colors duration-150 ease-out"
+            className="bg-[#007aff] hover:bg-[#78d3ff] text-[#FAFAFA] font-semibold px-6 py-2.5 rounded-full transition-colors duration-150 ease-out"
           >
             Browse the catalog
           </Link>

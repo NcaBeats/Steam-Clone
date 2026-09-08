@@ -69,7 +69,7 @@ export type RegionSelectProps = Readonly<{
 
 export function RegionSelect({
   name,
-  placeholder = "Selecciona una región",
+  placeholder = "Select a region",
   value,
   defaultValue,
   onValueChange,
@@ -105,7 +105,7 @@ export type ComunaSelectProps = Readonly<{
 
 export function ComunaSelect({
   name,
-  placeholder = "Selecciona una comuna",
+  placeholder = "Select a municipality",
   value,
   defaultValue,
   region,

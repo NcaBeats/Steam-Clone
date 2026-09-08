@@ -39,7 +39,7 @@ const StudioGamesPage = async ({
       </header>
 
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <SearchInput placeholder="Buscar por nombre..." paramName="q" />
+        <SearchInput placeholder="Search by name..." paramName="q" />
         <div className="flex items-center gap-3">
           {searchName && (
             <Link

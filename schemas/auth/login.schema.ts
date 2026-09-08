@@ -5,22 +5,22 @@ const domains = new Set(["duoc.cl", "profesor.duoc.cl", "gmail.com"]);
 const email = z
   .string()
   .trim()
-  .max(100, "El email no puede superar los 100 caracteres")
-  .pipe(z.email("Formato de email inválido"))
+  .max(100, "Email cannot exceed 100 characters")
+  .pipe(z.email("Invalid email format"))
   .refine(
     (val) => {
       const domain = val.split("@").pop()?.toLowerCase();
       return domains.has(domain || "");
     },
     {
-      message: "Solo dominios @duoc.cl @profesor.duoc.cl @gmail.com",
+      message: "Only @duoc.cl @profesor.duoc.cl @gmail.com domains",
     },
   );
 
 const password = z
   .string()
-  .min(4, "El mínimo de caracteres son 4")
-  .max(10, "El máximo de caracteres son 10");
+  .min(4, "The minimum amount of characters is 4")
+  .max(10, "The maximum amount of characters is 10");
 
 export const LoginSchema = z.object({
   email: email,

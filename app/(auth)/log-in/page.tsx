@@ -66,9 +66,9 @@ const LogIn = () => {
       <button
         type="submit"
         disabled={pending}
-        className="flex items-center gap-1 justify-center bg-[#26bbff] hover:bg-[#78d3ff] text-black rounded-full py-3 font-semibold disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-colors duration-200 ease-in-out focus-visible:ring-[#26BBFF]"
+        className="flex items-center gap-1 justify-center bg-[#007aff] hover:bg-[#26bbff] text-white rounded-full py-3 font-semibold disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-colors duration-200 ease-in-out focus-visible:ring-[#26BBFF]"
       >
-        {pending ? "Cargando..." : "Log In"}
+        {pending ? "Loading..." : "Log In"}
       </button>
       <AuthSwitchLink
         text="Don't have an account?"

@@ -22,7 +22,7 @@ function errorMessage(e: unknown): string {
 }
 
 function firstZodError(error: ZodError): string {
-  return error.issues[0]?.message ?? "Datos inválidos";
+  return error.issues[0]?.message ?? "Invalid data";
 }
 
 async function runMutation<T>(
