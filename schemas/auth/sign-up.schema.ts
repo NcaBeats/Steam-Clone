@@ -57,6 +57,13 @@ const direccion = z
   .min(1, "Address is required")
   .max(300, "Address cannot exceed 300 characters");
 
+const password = z
+  .string()
+  .min(4, "Password must be at least 4 characters")
+  .max(10, "Password cannot exceed 10 characters");
+
+const confirmPassword = z.string();
+
 export const createSignUpSchema = (regiones: RegionData[]) => {
   return z
     .object({
@@ -70,6 +77,8 @@ export const createSignUpSchema = (regiones: RegionData[]) => {
       }),
       comuna: comuna,
       direccion: direccion,
+      password: password,
+      confirmPassword: confirmPassword,
     })
     .refine(
       (data) => {
@@ -81,5 +90,9 @@ export const createSignUpSchema = (regiones: RegionData[]) => {
         message: "Invalid municipality for the selected region",
         path: ["comuna"],
       },
-    );
+    )
+    .refine((data) => data.password === data.confirmPassword, {
+      message: "Passwords do not match",
+      path: ["password"],
+    });
 };

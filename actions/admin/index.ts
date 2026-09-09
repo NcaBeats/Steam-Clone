@@ -49,6 +49,8 @@ function readRawGameMetadata(formData: FormData) {
     state: formData.get("state")?.toString() ?? "",
     launchDate: formData.get("launchDate")?.toString() ?? "",
     categoryNames: formData.getAll("categories").map(String),
+    minimumSpecs: formData.get("minimumSpecs")?.toString() ?? "",
+    recommendedSpecs: formData.get("recommendedSpecs")?.toString() ?? "",
   };
 }
 

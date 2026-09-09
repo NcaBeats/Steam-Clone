@@ -8,9 +8,9 @@ export const FreeToPlaySection = ({ games }: Props) => {
   if (freeGames.length === 0) return null;
 
   return (
-    <div className="flex flex-col">
+    <section className="flex flex-col">
       <h2 className="text-xl text-[#EDEDED] ml-1">Free to Play</h2>
       <DiscountCarousel games={freeGames} />
-    </div>
+    </section>
   );
 };

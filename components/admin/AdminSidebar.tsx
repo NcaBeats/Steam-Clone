@@ -31,7 +31,7 @@ export const AdminSidebar = () => {
     <aside className="hidden sm:flex w-56 bg-[#0A0A0A] border-r border-[#2A2A2A] h-screen sticky top-0 flex-col p-4 gap-1">
       <div className="mb-4 flex items-center gap-2 px-2">
         <div className="size-8 bg-[#007AFF] rounded-lg flex items-center justify-center text-white font-bold text-sm">
-          D
+          MBR
         </div>
         <span className="font-semibold text-[#FAFAFA]">Dashboard</span>
       </div>

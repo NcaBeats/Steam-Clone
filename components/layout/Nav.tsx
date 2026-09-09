@@ -5,10 +5,12 @@ import {
   NavBarLinks,
   SearchBar,
   BurgerMenu,
+  WalletBalance,
   type BurgerMenuItem,
 } from "@/components/layout";
 import { logoutAction } from "@/actions/logout";
 import { getCurrentUserAction } from "@/actions/admin/auth";
+import { getMyWalletAction } from "@/actions/wallet";
 import { Erica_One } from "next/font/google";
 
 const ericaOne = Erica_One({
@@ -21,6 +23,7 @@ export const Nav = async () => {
   const cookieStore = await cookies();
   const isLoggedIn = !!cookieStore.get("token")?.value;
   const user = isLoggedIn ? await getCurrentUserAction() : null;
+  const wallet = isLoggedIn ? await getMyWalletAction() : null;
   const isStaff = user?.role === "ADMIN" || user?.role === "VENDEDOR";
   const staffHref = user?.role === "ADMIN" ? "/admin" : "/studio/games";
 
@@ -70,6 +73,7 @@ export const Nav = async () => {
       />
       <SearchBar />
       <div className="sm:flex hidden justify-end items-center gap-4 ml-auto">
+        {wallet && <WalletBalance initialBalance={wallet.balance} />}
         <Link
           href="/cart"
           className="hover:bg-[#28282C] active:bg-[#28282C] rounded-full p-2.5"

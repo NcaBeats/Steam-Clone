@@ -59,8 +59,17 @@ export async function signUpAction(
 
   if (!validation.success) return validation;
 
-  const { run, name, lastName, email, birthdate, region, comuna, direccion } =
-    validation.data;
+  const {
+    run,
+    name,
+    lastName,
+    email,
+    password,
+    birthdate,
+    region,
+    comuna,
+    direccion,
+  } = validation.data;
 
   try {
     await fetchAPI<Auth>("/auth/register", {
@@ -70,6 +79,7 @@ export async function signUpAction(
         firstName: name,
         lastName,
         email,
+        password,
         birthDate:
           birthdate instanceof Date
             ? birthdate.toISOString().split("T")[0]
@@ -82,7 +92,7 @@ export async function signUpAction(
   } catch {
     return {
       success: false,
-      errors: { global: ["Error al registrar. Intente nuevamente."] },
+      errors: { global: ["Registration failed. Please try again."] },
     };
   }
 

@@ -11,6 +11,7 @@ const inputCls =
 const initialState: ContactFormState = {
   success: false,
   errors: null,
+  timestamp: Date.now(),
 };
 
 export const ContactForm = () => {
@@ -35,6 +36,7 @@ export const ContactForm = () => {
 
   return (
     <form
+      key={state.timestamp}
       action={formAction}
       className="bg-[#202024] border border-white/[0.06] rounded-lg p-6 flex flex-col gap-4 text-[#FAFAFA]"
       noValidate
@@ -114,7 +116,7 @@ export const ContactForm = () => {
       <button
         type="submit"
         disabled={pending}
-        className="bg-[#26bbff] hover:bg-[#78d3ff] text-[#FAFAFA] font-semibold py-2.5 rounded-full transition-colors cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:ring-[#26BBFF]"
+        className="bg-[#007aff] hover:bg-[#26bbff] text-[#FAFAFA] font-semibold py-2.5 rounded-full transition-colors cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:ring-[#26BBFF]"
       >
         {pending ? (
           <>

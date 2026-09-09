@@ -8,6 +8,7 @@ import {
   Select,
   Textarea,
   FileDropzone,
+  SpecsEditor,
 } from "@/components/ui";
 import { updateGameWithMediaAction } from "@/actions/admin";
 import { resolveVideoUrl } from "@/lib/media";
@@ -57,6 +58,12 @@ export function GameEditForm({
       ? Math.round(originalPrice * (1 - discountValue / 100) * 100) / 100
       : 0;
 
+  // Specs states
+  const [minimumSpecs, setMinimumSpecs] = useState(game.minimumSpecs ?? "");
+  const [recommendedSpecs, setRecommendedSpecs] = useState(
+    game.recommendedSpecs ?? "",
+  );
+
   const toggleCategory = (cat: string) => {
     setSelectedCategories((prev) =>
       prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat],
@@ -74,6 +81,8 @@ export function GameEditForm({
     formData.set("state", state);
     formData.set("launchDate", launchDate);
     for (const c of selectedCategories) formData.append("categories", c);
+    formData.set("minimumSpecs", minimumSpecs);
+    formData.set("recommendedSpecs", recommendedSpecs);
     if (image) formData.set("image", image);
     if (banner) formData.set("banner", banner);
     if (video) formData.set("video", video);
@@ -254,6 +263,25 @@ export function GameEditForm({
           maxFiles={10}
           existingUrl={game.galleryUrls[0] ?? null}
         />
+      </div>
+
+      {/* System Requirements */}
+      <div className="flex flex-col gap-4 border-t border-[#2A2A2A] pt-4">
+        <p className="text-xs text-[#5A5A5A]">
+          System Requirements (leave blank to hide this section on the game
+          page)
+        </p>
+        <div className="flex flex-col gap-1">
+          <span className={labelCls}>Minimum Specifications</span>
+          <SpecsEditor value={minimumSpecs} onChange={setMinimumSpecs} />
+        </div>
+        <div className="flex flex-col gap-1">
+          <span className={labelCls}>Recommended Specifications</span>
+          <SpecsEditor
+            value={recommendedSpecs}
+            onChange={setRecommendedSpecs}
+          />
+        </div>
       </div>
 
       <div className="flex items-center gap-2 mt-2">

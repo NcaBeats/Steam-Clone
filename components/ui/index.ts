@@ -10,5 +10,6 @@ export * from "./select";
 export * from "./textarea";
 export * from "./Pagination";
 export * from "./marquee";
+export * from "./SpecsEditor";
 export { default as TextType } from "./TextType";
 export { default as FoldText } from "./FoldText";

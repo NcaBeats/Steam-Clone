@@ -1,6 +1,5 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
+/** @type {import('next').NextConfig} */
+const nextConfig: Record<string, unknown> = {
   /* config options here */
   allowedDevOrigins: ["192.168.100.40", "localhost:3000"],
   images: {
@@ -15,6 +14,11 @@ const nextConfig: NextConfig = {
         hostname: "res.cloudinary.com",
       },
     ],
+  },
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "512mb",
+    },
   },
 };
 

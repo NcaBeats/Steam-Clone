@@ -8,9 +8,9 @@ export const ComingSoonSection = ({ games }: Props) => {
   if (comingSoon.length === 0) return null;
 
   return (
-    <div className="flex flex-col">
+    <section className="flex flex-col">
       <h2 className="text-xl text-[#EDEDED] ml-1">Coming Soon</h2>
       <DiscountCarousel games={comingSoon} />
-    </div>
+    </section>
   );
 };

@@ -12,5 +12,5 @@ export default async function AuthLayout({
     redirect("/studio/games");
   }
 
-  return <>{children}</>;
+  return <main>{children}</main>;
 }

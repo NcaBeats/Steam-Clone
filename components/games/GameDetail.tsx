@@ -10,6 +10,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { getMyLibraryAction } from "@/actions/library";
 import { formatPrice } from "@/lib";
 import { addToCart, isInCart } from "@/lib/cart";
 import { useAlert } from "@/components/ui";
@@ -141,6 +142,7 @@ function GalleryLightbox({
 export const GameDetail = ({ game }: Props) => {
   const { showAlert } = useAlert();
   const [alreadyInCart, setAlreadyInCart] = useState(false);
+  const [alreadyInLibrary, setAlreadyInLibrary] = useState(false);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const gallery = game.galleryUrls ?? [];
 
@@ -148,6 +150,13 @@ export const GameDetail = ({ game }: Props) => {
     /* eslint-disable react-hooks/set-state-in-effect */
     setAlreadyInCart(isInCart(game.id));
     /* eslint-enable react-hooks/set-state-in-effect */
+    // Check if user already owns this game
+    getMyLibraryAction()
+      .then((library) => {
+        const owned = library.some((item) => item.gameId === game.id);
+        setAlreadyInLibrary(owned);
+      })
+      .catch(() => {});
   }, [game.id]);
 
   const handleAddToCart = () => {
@@ -264,7 +273,7 @@ export const GameDetail = ({ game }: Props) => {
 
         {/* COLUMNA DERECHA: Categorías, Precios y Juego Destacado */}
         <div className="flex flex-col lg:w-96 shrink-0 gap-2 order-1 lg:order-2">
-          <div className="relative w-full aspect-video rounded-4xl overflow-hidden">
+          <div className="relative w-full aspect-video rounded-xl overflow-hidden">
             <Image
               src={game.bannerUrl ?? game.imageUrl}
               alt={game.name}
@@ -308,14 +317,21 @@ export const GameDetail = ({ game }: Props) => {
                 </div>
               </div>
 
-              <button
-                type="button"
-                onClick={handleAddToCart}
-                disabled={alreadyInCart}
-                className="bg-[#007AFF] hover:bg-[#1ea4ff] text-white font-semibold py-3 px-5 rounded-lg transition-colors cursor-pointer disabled:bg-[#3A3A3A] disabled:cursor-not-allowed disabled:hover:bg-[#3A3A3A]"
-              >
-                {alreadyInCart ? "Already in cart" : "Add to Cart"}
-              </button>
+              {/* Check if user already owns the game */}
+              {alreadyInLibrary ? (
+                <div className="bg-[#2A2A2A] text-[#8A8A8A] py-3 px-5 rounded-lg text-center font-semibold">
+                  In your library
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleAddToCart}
+                  disabled={alreadyInCart}
+                  className="bg-[#007AFF] hover:bg-[#1ea4ff] text-white font-semibold py-3 px-5 rounded-lg transition-colors cursor-pointer disabled:bg-[#3A3A3A] disabled:cursor-not-allowed disabled:hover:bg-[#3A3A3A]"
+                >
+                  {alreadyInCart ? "Already in cart" : "Add to Cart"}
+                </button>
+              )}
             </div>
           </div>
         </div>

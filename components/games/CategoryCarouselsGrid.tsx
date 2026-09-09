@@ -26,14 +26,14 @@ export const CategoryCarouselsGrid = ({ games, categoriesToShow }: Props) => {
   return (
     <div className="flex flex-col gap-6">
       {Array.from(byCategory.entries()).map(([cat, list]) => (
-        <div
+        <section
           key={cat}
           id={`category-${cat}`}
           className="flex flex-col scroll-mt-20"
         >
           <h2 className="text-xl text-[#EDEDED] ml-1">{cat}</h2>
           <DiscountCarousel games={list} />
-        </div>
+        </section>
       ))}
     </div>
   );

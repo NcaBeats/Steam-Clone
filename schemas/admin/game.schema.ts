@@ -25,6 +25,8 @@ export const GameMetadataSchema = z.object({
   categoryNames: z
     .array(z.string().trim().min(1, "Invalid category"))
     .min(1, "Select at least one category"),
+  minimumSpecs: z.string().optional().default(""),
+  recommendedSpecs: z.string().optional().default(""),
 });
 
 export type GameMetadata = z.infer<typeof GameMetadataSchema>;

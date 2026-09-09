@@ -15,6 +15,7 @@ export type ContactFormState = {
     comment?: string[];
     global?: string[];
   } | null;
+  timestamp?: number;
 };
 
 export async function sendContactAction(
@@ -29,6 +30,7 @@ export async function sendContactAction(
       success: false,
       fields: rawFields as ContactInput,
       errors: result.error.flatten().fieldErrors,
+      timestamp: Date.now(),
     };
   }
 
@@ -37,7 +39,7 @@ export async function sendContactAction(
       method: "POST",
       body: result.data,
     });
-    return { success: true, errors: null };
+    return { success: true, errors: null, timestamp: Date.now() };
   } catch (e) {
     return {
       success: false,
@@ -48,6 +50,7 @@ export async function sendContactAction(
             : "Could not send your message. Please try again.",
         ],
       },
+      timestamp: Date.now(),
     };
   }
 }

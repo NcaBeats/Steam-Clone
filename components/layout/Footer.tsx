@@ -36,7 +36,7 @@ export function Footer() {
               <Link
                 key={href}
                 href={href}
-                className="text-[#d6d6da] hover:text-white transition-colors"
+                className="text-[#d6d6da] hover:text-[#26BBFF] transition-colors"
               >
                 {label}
               </Link>
@@ -46,10 +46,24 @@ export function Footer() {
 
         <div className="mt-8 pt-4 border-t border-[#404044]/40 flex flex-col md:flex-row items-center justify-between gap-2 text-xs text-[#6f6f75]">
           <p>© {new Date().getFullYear()} MBR. All rights reserved.</p>
-          <span
-            aria-hidden="true"
-            className="h-1.5 w-1.5 rounded-full bg-[#26bbff]"
-          />
+          <p>
+            Created by{" "}
+            <a
+              target="blank"
+              href="https://github.com/NcaBeats"
+              className="hover:text-[#26BBFF] transition-colors cursor-pointer"
+            >
+              Nico
+            </a>{" "}
+            and{" "}
+            <a
+              target="blank"
+              href="https://github.com/benjaminsotoarrano"
+              className="hover:text-[#26BBFF] transition-colors cursor-pointer"
+            >
+              Benja
+            </a>
+          </p>
         </div>
       </div>
     </footer>

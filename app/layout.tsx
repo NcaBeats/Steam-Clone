@@ -13,7 +13,7 @@ const inter = Inter({
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
-      lang="es"
+      lang="en"
       className={cn(
         "h-full",
         "antialiased",

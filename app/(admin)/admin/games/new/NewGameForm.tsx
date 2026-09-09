@@ -8,6 +8,7 @@ import {
   Select,
   Textarea,
   FileDropzone,
+  SpecsEditor,
   useAlert,
 } from "@/components/ui";
 import { createGameWithMediaAction } from "@/actions/admin";
@@ -29,6 +30,8 @@ export function NewGameForm({
   const [banner, setBanner] = useState<File | null>(null);
   const [video, setVideo] = useState<File | null>(null);
   const [gallery, setGallery] = useState<File[]>([]);
+  const [minimumSpecs, setMinimumSpecs] = useState("");
+  const [recommendedSpecs, setRecommendedSpecs] = useState("");
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -43,6 +46,8 @@ export function NewGameForm({
       formData.delete("gallery");
       for (const g of gallery) formData.append("gallery", g);
     }
+    formData.set("minimumSpecs", minimumSpecs);
+    formData.set("recommendedSpecs", recommendedSpecs);
     startTransition(async () => {
       const result = await createGameWithMediaAction(formData);
       if (!result.ok) {
@@ -163,6 +168,24 @@ export function NewGameForm({
               {c.name}
             </label>
           ))}
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-4 border-t border-[#2A2A2A] pt-4">
+        <p className="text-xs text-[#5A5A5A]">
+          System Requirements (leave blank to hide this section on the game
+          page)
+        </p>
+        <div className="flex flex-col gap-1">
+          <span className={labelCls}>Minimum Specifications</span>
+          <SpecsEditor value={minimumSpecs} onChange={setMinimumSpecs} />
+        </div>
+        <div className="flex flex-col gap-1">
+          <span className={labelCls}>Recommended Specifications</span>
+          <SpecsEditor
+            value={recommendedSpecs}
+            onChange={setRecommendedSpecs}
+          />
         </div>
       </div>
 

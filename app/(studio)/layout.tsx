@@ -1,8 +1,14 @@
-import Image from "next/image";
 import Link from "next/link";
+import { Erica_One } from "next/font/google";
 import { StudioSidebar } from "@/components/studio/StudioSidebar";
 import { StudioBurgerMenu } from "@/components/studio/StudioBurgerMenu";
 import { requireRole } from "@/actions/admin/guard";
+
+const ericaOne = Erica_One({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-erica-one",
+});
 
 export default async function StudioLayout({
   children,
@@ -18,13 +24,9 @@ export default async function StudioLayout({
         <header className="sm:hidden bg-[#18181C] border-b border-white/[0.06] h-16 flex items-center justify-between px-4">
           <StudioBurgerMenu />
           <Link href="/studio/games" className="flex items-center">
-            <Image
-              src="Logo.svg"
-              width={128}
-              height={128}
-              alt="Steam Logo"
-              className="w-auto h-8"
-            />
+            <span className={`text-2xl text-white ${ericaOne.className}`}>
+              MBR
+            </span>
           </Link>
         </header>
         <main className="flex-1 p-4 sm:p-6 overflow-y-auto">{children}</main>

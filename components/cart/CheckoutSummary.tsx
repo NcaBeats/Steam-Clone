@@ -17,52 +17,50 @@ import {
   removeFromCart,
   type CartItem as CartItemType,
 } from "@/lib/cart";
-import { formatPrice } from "@/lib";
-import { getMyWalletAction, depositToWalletAction } from "@/actions/wallet";
+import { getMyWalletAction } from "@/actions/wallet";
 import { createPurchaseAction } from "@/actions/purchase";
+import { WALLET_UPDATE_EVENT } from "@/components/layout/WalletBalance";
 import type { Wallet } from "@/types";
 import { useAlert } from "@/components/ui";
+import { formatPrice } from "@/lib";
 
 type Status = "loading" | "ready" | "submitting" | "success" | "error";
-
-const DEPOSIT_AMOUNT = 50;
 
 export const CheckoutSummary = () => {
   const router = useRouter();
   const { showAlert } = useAlert();
 
   const [items, setItems] = useState<CartItemType[]>([]);
-  const [wallet, setWallet] = useState<Wallet | null>(null);
   const [status, setStatus] = useState<Status>("loading");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [wallet, setWallet] = useState<Wallet | null>(null);
 
   const total = getCartTotal(items);
   const insufficient = wallet !== null && wallet.balance < total;
+
+  const refreshWallet = async () => {
+    try {
+      const w = await getMyWalletAction();
+      if (w) {
+        setWallet(w);
+      }
+    } catch {
+      // Wallet fetch failed, leave wallet as null
+    }
+  };
 
   useEffect(() => {
     /* eslint-disable react-hooks/set-state-in-effect */
     setItems(getCart());
     setStatus("ready");
+    refreshWallet();
+    /* eslint-enable react-hooks/set-state-in-effect */
   }, []);
 
   const handleRemove = (id: number) => {
     removeFromCart(id);
     setItems(getCart());
   };
-
-  const refreshWallet = async () => {
-    setErrorMsg(null);
-    const w = await getMyWalletAction();
-    if (w) {
-      setWallet(w);
-    } else {
-      setErrorMsg("Could not load your wallet. Try logging in again.");
-    }
-  };
-
-  useEffect(() => {
-    refreshWallet();
-  }, []);
 
   const handleConfirm = async () => {
     if (items.length === 0) return;
@@ -74,6 +72,7 @@ export const CheckoutSummary = () => {
     if (result.ok) {
       clearCart();
       setStatus("success");
+      window.dispatchEvent(new Event(WALLET_UPDATE_EVENT));
       showAlert({
         variant: "default",
         title: "Purchase completed",
@@ -89,28 +88,6 @@ export const CheckoutSummary = () => {
         variant: "destructive",
         title: "Purchase failed",
         description: result.message,
-      });
-    }
-  };
-
-  const handleDeposit = async () => {
-    setStatus("submitting");
-    const w = await depositToWalletAction(DEPOSIT_AMOUNT);
-    if (w) {
-      setWallet(w);
-      setStatus("ready");
-      showAlert({
-        variant: "default",
-        title: "Deposit successful",
-        description: `$${DEPOSIT_AMOUNT} added to your wallet.`,
-      });
-    } else {
-      await refreshWallet();
-      setStatus("ready");
-      showAlert({
-        variant: "destructive",
-        title: "Deposit failed",
-        description: "Could not deposit funds. Please try again.",
       });
     }
   };
@@ -152,22 +129,14 @@ export const CheckoutSummary = () => {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="bg-[#1A1A1A] rounded-lg p-4 flex items-center gap-3">
+      <div className="bg-[#1A1A1A] rounded-lg p-4 flex items-center gap-3 w-fit">
         <WalletIcon size={20} className="text-[#007AFF]" />
         <div className="flex-1">
           <p className="text-xs text-[#8A8A8A]">Wallet balance</p>
           <p className="text-lg font-bold text-[#FAFAFA]">
-            {wallet ? formatPrice(wallet.balance) : "—"}
+            {wallet ? formatPrice(wallet.balance, { zeroAsFree: false }) : "—"}
           </p>
         </div>
-        <button
-          type="button"
-          onClick={handleDeposit}
-          disabled={status === "submitting"}
-          className="bg-[#0A0A0A] text-[#EDEDED] border border-[#2E2E2E] hover:bg-[#2E2E2E] px-3 py-1.5 text-sm font-medium rounded-md cursor-pointer transition-colors duration-200 ease-out disabled:opacity-50"
-        >
-          + ${DEPOSIT_AMOUNT}
-        </button>
       </div>
 
       <div className="flex flex-col gap-3">

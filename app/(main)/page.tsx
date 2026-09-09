@@ -41,10 +41,10 @@ export default async function Home() {
     <div className="flex flex-col p-2 gap-8 w-full max-w-6xl mx-auto min-h-screen">
       <BannerCarousel games={bannerGames} />
       <CategoryChips categories={categories} />
-      <div className="flex flex-col">
+      <section className="flex flex-col">
         <h2 className="text-xl text-[#EDEDED] ml-1">Discounts and Offers</h2>
         <DiscountCarousel games={discountedGames} />
-      </div>
+      </section>
       <FreeToPlaySection games={allGames} />
       <ComingSoonSection games={allGames} />
       <CategoryCarouselsGrid
