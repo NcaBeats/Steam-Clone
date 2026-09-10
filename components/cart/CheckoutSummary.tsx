@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useSyncExternalStore, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -11,11 +11,12 @@ import {
   XCircle,
 } from "lucide-react";
 import {
-  getCart,
-  getCartTotal,
   clearCart,
+  getCartServerSnapshot,
+  getCartSnapshot,
+  getCartTotal,
   removeFromCart,
-  type CartItem as CartItemType,
+  subscribeCart,
 } from "@/lib/cart";
 import { getMyWalletAction } from "@/actions/wallet";
 import { createPurchaseAction } from "@/actions/purchase";
@@ -30,10 +31,15 @@ export const CheckoutSummary = () => {
   const router = useRouter();
   const { showAlert } = useAlert();
 
-  const [items, setItems] = useState<CartItemType[]>([]);
   const [status, setStatus] = useState<Status>("loading");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [wallet, setWallet] = useState<Wallet | null>(null);
+
+  const items = useSyncExternalStore(
+    subscribeCart,
+    getCartSnapshot,
+    getCartServerSnapshot,
+  );
 
   const total = getCartTotal(items);
   const insufficient = wallet !== null && wallet.balance < total;
@@ -51,7 +57,6 @@ export const CheckoutSummary = () => {
 
   useEffect(() => {
     /* eslint-disable react-hooks/set-state-in-effect */
-    setItems(getCart());
     setStatus("ready");
     refreshWallet();
     /* eslint-enable react-hooks/set-state-in-effect */
@@ -59,7 +64,6 @@ export const CheckoutSummary = () => {
 
   const handleRemove = (id: number) => {
     removeFromCart(id);
-    setItems(getCart());
   };
 
   const handleConfirm = async () => {
@@ -92,6 +96,18 @@ export const CheckoutSummary = () => {
     }
   };
 
+  if (status === "success") {
+    return (
+      <div className="flex flex-col items-center justify-center py-16 gap-3">
+        <CheckCircle2 size={56} className="text-[#A1CD44]" />
+        <h2 className="text-xl font-bold text-[#FAFAFA]">
+          Purchase successful
+        </h2>
+        <p className="text-sm text-[#8A8A8A]">Redirecting to your library...</p>
+      </div>
+    );
+  }
+
   if (status === "loading") {
     return (
       <div className="flex items-center justify-center py-16 gap-2 text-[#8A8A8A]">
@@ -111,18 +127,6 @@ export const CheckoutSummary = () => {
         >
           Continue shopping
         </Link>
-      </div>
-    );
-  }
-
-  if (status === "success") {
-    return (
-      <div className="flex flex-col items-center justify-center py-16 gap-3">
-        <CheckCircle2 size={56} className="text-[#A1CD44]" />
-        <h2 className="text-xl font-bold text-[#FAFAFA]">
-          Purchase successful
-        </h2>
-        <p className="text-sm text-[#8A8A8A]">Redirecting to your library...</p>
       </div>
     );
   }
@@ -152,6 +156,7 @@ export const CheckoutSummary = () => {
                   src={item.imageUrl}
                   alt={item.name}
                   fill
+                  sizes="48px"
                   className="object-cover"
                 />
               </div>

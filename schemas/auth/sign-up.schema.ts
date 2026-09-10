@@ -7,15 +7,14 @@ const domains = new Set(["duoc.cl", "profesor.duoc.cl", "gmail.com"]);
 const run = z
   .string("Invalid format")
   .trim()
-  .min(7, "The minimum amount of characters is 7")
-  .max(9, "The maximum amount of characters is 9")
-  .refine((val) => !val.includes(".") && !val.includes("-"), {
-    message: "Points and dashes are not allowed",
-  })
-  .refine((val) => validate(val), {
-    message: "RUN is not valid",
-  })
-  .transform((val) => clean(val));
+  .transform((val) => clean(val))
+  .pipe(
+    z
+      .string()
+      .min(7, "The minimum amount of characters is 7")
+      .max(9, "The maximum amount of characters is 9")
+      .refine((val) => validate(val), { message: "RUN is not valid" }),
+  );
 
 const name = z.string().max(50, "The maximum amount of characters is 50");
 

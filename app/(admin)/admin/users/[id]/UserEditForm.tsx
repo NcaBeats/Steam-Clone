@@ -20,27 +20,19 @@ export function UserEditForm({ user }: Props) {
   const router = useRouter();
   const { showAlert } = useAlert();
   const [saving, setSaving] = useState(false);
-
-  const [email, setEmail] = useState(user.email);
-  const [role, setRole] = useState<UserRole>(user.role);
-  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [nickname, setNickname] = useState(user.profile.nickname);
-  const [bio, setBio] = useState(user.profile.bio ?? "");
-  const [visibility, setVisibility] = useState<"PUBLIC" | "PRIVATE">(
-    user.profile.visibility,
-  );
-  const [firstName, setFirstName] = useState(user.profile.firstName);
-  const [lastName, setLastName] = useState(user.profile.lastName);
-  const [birthDate, setBirthDate] = useState(user.profile.birthDate ?? "");
   const [region, setRegion] = useState<Region | "">(
     (user.profile.region as Region | null) ?? "",
   );
   const [comuna, setComuna] = useState(user.profile.comuna ?? "");
-  const [address, setAddress] = useState(user.profile.address);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const email = (formData.get("email")?.toString() ?? user.email) as string;
+    const role = (formData.get("role")?.toString() ?? user.role) as UserRole;
+    const password = formData.get("password")?.toString() ?? "";
+
     setSaving(true);
     try {
       const userResult = await updateUserAction(user.id, {
@@ -59,15 +51,18 @@ export function UserEditForm({ user }: Props) {
       }
 
       const profileResult = await updateUserProfileAction(user.id, {
-        nickname,
-        bio: bio || null,
-        visibility,
-        firstName,
-        lastName,
-        birthDate: birthDate || null,
+        nickname: formData.get("nickname")?.toString() ?? user.profile.nickname,
+        bio: formData.get("bio")?.toString() || null,
+        visibility: (formData.get("visibility")?.toString() ??
+          user.profile.visibility) as "PUBLIC" | "PRIVATE",
+        firstName:
+          formData.get("firstName")?.toString() ?? user.profile.firstName,
+        lastName: formData.get("lastName")?.toString() ?? user.profile.lastName,
+        birthDate:
+          formData.get("birthDate")?.toString() || user.profile.birthDate,
         region: region || null,
         comuna: comuna || null,
-        address,
+        address: formData.get("address")?.toString() ?? user.profile.address,
       });
 
       if (!profileResult.ok) {
@@ -118,20 +113,14 @@ export function UserEditForm({ user }: Props) {
               name="email"
               type="email"
               required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              defaultValue={user.email}
             />
           </div>
           <div className="flex flex-col gap-1">
             <label htmlFor="role" className={labelCls}>
               Role
             </label>
-            <Select
-              id="role"
-              name="role"
-              value={role}
-              onChange={(e) => setRole(e.target.value as UserRole)}
-            >
+            <Select id="role" name="role" defaultValue={user.role}>
               <option value="ADMIN">ADMIN</option>
               <option value="VENDEDOR">VENDEDOR</option>
               <option value="CLIENTE">CLIENTE</option>
@@ -147,8 +136,6 @@ export function UserEditForm({ user }: Props) {
             required={false}
             minLength={4}
             maxLength={10}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
             placeholder="••••••"
             show={showPassword}
             onToggle={() => setShowPassword(!showPassword)}
@@ -171,8 +158,7 @@ export function UserEditForm({ user }: Props) {
               type="text"
               required
               maxLength={50}
-              value={nickname}
-              onChange={(e) => setNickname(e.target.value)}
+              defaultValue={user.profile.nickname}
             />
           </div>
           <div className="flex flex-col gap-1">
@@ -185,8 +171,7 @@ export function UserEditForm({ user }: Props) {
               type="text"
               required
               maxLength={50}
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
+              defaultValue={user.profile.firstName}
             />
           </div>
           <div className="flex flex-col gap-1">
@@ -199,8 +184,7 @@ export function UserEditForm({ user }: Props) {
               type="text"
               required
               maxLength={100}
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
+              defaultValue={user.profile.lastName}
             />
           </div>
           <div className="flex flex-col gap-1">
@@ -211,8 +195,7 @@ export function UserEditForm({ user }: Props) {
               id="birthDate"
               name="birthDate"
               type="date"
-              value={birthDate}
-              onChange={(e) => setBirthDate(e.target.value)}
+              defaultValue={user.profile.birthDate ?? ""}
             />
           </div>
           <div className="flex flex-col gap-1">
@@ -249,8 +232,7 @@ export function UserEditForm({ user }: Props) {
               type="text"
               required
               maxLength={300}
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
+              defaultValue={user.profile.address}
             />
           </div>
         </div>
@@ -261,8 +243,7 @@ export function UserEditForm({ user }: Props) {
           <Textarea
             id="bio"
             name="bio"
-            value={bio}
-            onChange={(e) => setBio(e.target.value)}
+            defaultValue={user.profile.bio ?? ""}
             rows={3}
           />
         </div>
@@ -273,10 +254,7 @@ export function UserEditForm({ user }: Props) {
           <Select
             id="visibility"
             name="visibility"
-            value={visibility}
-            onChange={(e) =>
-              setVisibility(e.target.value as "PUBLIC" | "PRIVATE")
-            }
+            defaultValue={user.profile.visibility}
           >
             <option value="PUBLIC">Public</option>
             <option value="PRIVATE">Private</option>

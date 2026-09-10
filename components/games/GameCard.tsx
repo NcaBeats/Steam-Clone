@@ -34,6 +34,7 @@ export const GameCard = ({
           src={imageUrl}
           alt=""
           fill
+          sizes="(min-width: 640px) 18vw, 50vw"
           className="snap-start
           object-cover object-center block transition-all duration-300 ease-out
            "

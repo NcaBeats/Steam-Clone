@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useSyncExternalStore, useState } from "react";
 import Image from "next/image";
 import { X } from "lucide-react";
 import {
@@ -10,14 +10,19 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { getMyLibraryAction } from "@/actions/library";
 import { formatPrice } from "@/lib";
-import { addToCart, isInCart } from "@/lib/cart";
+import {
+  addToCart,
+  getCartServerSnapshot,
+  getCartSnapshot,
+  subscribeCart,
+} from "@/lib/cart";
+import { useHydrated } from "@/lib/use-hydrated";
 import { useAlert } from "@/components/ui";
 import { GameVideo } from "@/components/games/GameVideo";
 import type { Game } from "@/types";
 
-type Props = Readonly<{ game: Game }>;
+type Props = Readonly<{ game: Game; initialInLibrary: boolean }>;
 
 const SPEC_LABELS: Record<string, string> = {
   os: "OS",
@@ -139,25 +144,19 @@ function GalleryLightbox({
   );
 }
 
-export const GameDetail = ({ game }: Props) => {
+export const GameDetail = ({ game, initialInLibrary }: Props) => {
   const { showAlert } = useAlert();
-  const [alreadyInCart, setAlreadyInCart] = useState(false);
-  const [alreadyInLibrary, setAlreadyInLibrary] = useState(false);
+  const hydrated = useHydrated();
+  const [alreadyInLibrary] = useState(initialInLibrary);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const gallery = game.galleryUrls ?? [];
 
-  useEffect(() => {
-    /* eslint-disable react-hooks/set-state-in-effect */
-    setAlreadyInCart(isInCart(game.id));
-    /* eslint-enable react-hooks/set-state-in-effect */
-    // Check if user already owns this game
-    getMyLibraryAction()
-      .then((library) => {
-        const owned = library.some((item) => item.gameId === game.id);
-        setAlreadyInLibrary(owned);
-      })
-      .catch(() => {});
-  }, [game.id]);
+  const cart = useSyncExternalStore(
+    subscribeCart,
+    getCartSnapshot,
+    getCartServerSnapshot,
+  );
+  const alreadyInCart = cart.some((item) => item.id === game.id);
 
   const handleAddToCart = () => {
     const result = addToCart({
@@ -168,7 +167,6 @@ export const GameDetail = ({ game }: Props) => {
       discountPercent: game.discountPercent,
     });
     if (result.ok) {
-      setAlreadyInCart(true);
       showAlert({
         variant: "default",
         title: "Added to cart",
@@ -212,6 +210,7 @@ export const GameDetail = ({ game }: Props) => {
                 src={game.bannerUrl ?? game.imageUrl}
                 alt={game.name}
                 fill
+                sizes="(min-width: 1024px) 60vw, 100vw"
                 className="object-cover"
                 priority
               />
@@ -278,6 +277,7 @@ export const GameDetail = ({ game }: Props) => {
               src={game.bannerUrl ?? game.imageUrl}
               alt={game.name}
               fill
+              sizes="(min-width: 1024px) 384px, 100vw"
               className="object-cover"
             />
           </div>
@@ -321,6 +321,13 @@ export const GameDetail = ({ game }: Props) => {
               {alreadyInLibrary ? (
                 <div className="bg-[#2A2A2A] text-[#8A8A8A] py-3 px-5 rounded-lg text-center font-semibold">
                   In your library
+                </div>
+              ) : !hydrated ? (
+                <div
+                  className="bg-[#3A3A3A] text-[#6A6A6A] py-3 px-5 rounded-lg text-center font-semibold animate-pulse"
+                  aria-hidden="true"
+                >
+                  Loading…
                 </div>
               ) : (
                 <button

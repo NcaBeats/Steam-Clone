@@ -35,4 +35,11 @@ export type GameCreateInput = {
 export type UserCreateInput = {
   email: string;
   password: string;
+  firstName?: string;
+  lastName?: string;
+  run?: string;
+  birthDate?: string | null;
+  region?: string | null;
+  comuna?: string | null;
+  address?: string;
 };

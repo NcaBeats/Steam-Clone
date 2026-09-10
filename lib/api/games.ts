@@ -10,16 +10,20 @@ import type {
   GameUpdateInput,
 } from "@/types";
 
-export const getGames = (): Promise<Game[]> => fetchAPI("/games?size=100");
+export const getGames = (): Promise<Game[]> =>
+  fetchAPI("/games?size=100", { noStore: true });
 
 export const getGamesPaginated = (
   page = 0,
   size = 10,
 ): Promise<Paginated<Game>> =>
-  fetchAPI(`/games?page=${page}&size=${size}`, { paginated: true });
+  fetchAPI(`/games?page=${page}&size=${size}`, {
+    noStore: true,
+    paginated: true,
+  });
 
 export const getGameById = (id: number): Promise<Game> =>
-  fetchAPI(`/games/${id}`, { revalidate: 60 });
+  fetchAPI(`/games/${id}`, { noStore: true });
 
 export type GameStats = {
   total: number;
@@ -31,13 +35,13 @@ export const getGameStats = (): Promise<GameStats> =>
   fetchAPI("/games/stats", { noStore: true });
 
 export const getDiscountedGames = (): Promise<Game[]> =>
-  fetchAPI("/games/discounted", { revalidate: 30 });
+  fetchAPI("/games/discounted", { noStore: true });
 
 export const getBannerGames = (): Promise<Game[]> =>
-  fetchAPI("/games/banners?size=4", { revalidate: 300 });
+  fetchAPI("/games/banners?size=4", { noStore: true });
 
 export const getCategories = (): Promise<Category[]> =>
-  fetchAPI("/categories?size=50", { revalidate: 300 });
+  fetchAPI("/categories?size=50", { noStore: true });
 
 export const getMyLibrary = (): Promise<Library[]> =>
   fetchAPI("/library?size=50", { auth: true, revalidate: 0 });

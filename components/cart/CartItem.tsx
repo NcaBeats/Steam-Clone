@@ -16,6 +16,7 @@ export const CartItem = ({ item, onRemove }: Props) => {
           src={item.imageUrl}
           alt={item.name}
           fill
+          sizes="64px"
           className="object-cover"
         />
       </div>

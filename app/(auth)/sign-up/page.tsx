@@ -33,9 +33,10 @@ const SignUp = () => {
       </div>
       <div>
         <Input
+          key={state?.fields?.run ?? "run-initial"}
           name="run"
           type="text"
-          placeholder="RUT"
+          placeholder="12.345.678-9"
           required
           defaultValue={state?.fields?.run}
           className={inputCls}
@@ -50,6 +51,7 @@ const SignUp = () => {
       </div>
       <div>
         <Input
+          key={state?.fields?.email ?? "email-initial"}
           name="email"
           type="email"
           placeholder="Email"
@@ -72,7 +74,6 @@ const SignUp = () => {
             placeholder="Password"
             show={showPassword}
             onToggle={() => setShowPassword(!showPassword)}
-            defaultValue={state?.fields?.password}
             inputClassName={inputCls}
           />
           <div className="min-h-5">
@@ -103,6 +104,7 @@ const SignUp = () => {
       <div className="flex gap-4">
         <div className="flex-1">
           <Input
+            key={state?.fields?.name ?? "name-initial"}
             name="name"
             type="text"
             placeholder="First name"
@@ -120,6 +122,7 @@ const SignUp = () => {
         </div>
         <div className="flex-1">
           <Input
+            key={state?.fields?.lastName ?? "lastName-initial"}
             name="lastName"
             type="text"
             placeholder="Last name"
@@ -141,6 +144,7 @@ const SignUp = () => {
           Optional
         </label>
         <Input
+          key={state?.fields?.birthdate ?? "birthdate-initial"}
           id="birthdate"
           name="birthdate"
           type="date"
@@ -164,6 +168,7 @@ const SignUp = () => {
       />
       <div>
         <Input
+          key={state?.fields?.direccion ?? "direccion-initial"}
           name="direccion"
           type="text"
           placeholder="Address"

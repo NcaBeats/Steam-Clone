@@ -48,6 +48,7 @@ const BlogDetailPage = async ({ params }: Props) => {
             src={blog.coverImage}
             alt={blog.title}
             fill
+            sizes="100vw"
             className="object-cover"
             priority
           />

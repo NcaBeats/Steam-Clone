@@ -1,15 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
-  getCart,
-  removeFromCart,
+  getCartSnapshot,
+  getCartServerSnapshot,
   getCartTotal,
-  type CartItem as CartItemType,
+  removeFromCart,
+  subscribeCart,
 } from "@/lib/cart";
 import { formatPrice } from "@/lib";
+import { useHydrated } from "@/lib/use-hydrated";
 import { CartItem } from "./CartItem";
 import { AuthOverlay } from "./AuthOverlay";
 
@@ -17,19 +19,16 @@ type Props = Readonly<{ isLoggedIn: boolean }>;
 
 export const CartList = ({ isLoggedIn }: Props) => {
   const router = useRouter();
-  const [items, setItems] = useState<CartItemType[]>([]);
-  const [mounted, setMounted] = useState(false);
+  const hydrated = useHydrated();
   const [authOpen, setAuthOpen] = useState(false);
-
-  useEffect(() => {
-    /* eslint-disable react-hooks/set-state-in-effect */
-    setItems(getCart());
-    setMounted(true);
-  }, []);
+  const items = useSyncExternalStore(
+    subscribeCart,
+    getCartSnapshot,
+    getCartServerSnapshot,
+  );
 
   const handleRemove = (id: number) => {
     removeFromCart(id);
-    setItems(getCart());
   };
 
   const handleCheckout = () => {
@@ -40,7 +39,14 @@ export const CartList = ({ isLoggedIn }: Props) => {
     router.push("/checkout");
   };
 
-  if (!mounted) return null;
+  if (!hydrated) {
+    return (
+      <div className="flex flex-col items-center justify-center py-16 gap-4">
+        <div className="h-4 w-40 bg-[#2A2A2A] rounded animate-pulse" />
+        <div className="h-3 w-52 bg-[#2A2A2A] rounded animate-pulse" />
+      </div>
+    );
+  }
 
   if (items.length === 0) {
     return (

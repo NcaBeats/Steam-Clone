@@ -34,6 +34,7 @@ export const BannerCarousel = ({ games }: BannerCarouselProps) => {
                   src={game.bannerUrl!}
                   alt={game.name}
                   fill
+                  sizes="100vw"
                   className="object-cover"
                 />
               </Link>

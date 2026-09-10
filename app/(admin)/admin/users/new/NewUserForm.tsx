@@ -18,21 +18,19 @@ export function NewUserForm() {
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [run, setRun] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [birthDate, setBirthDate] = useState("");
   const [region, setRegion] = useState<Region | "">("");
   const [comuna, setComuna] = useState("");
-  const [address, setAddress] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    const formData = new FormData(e.currentTarget);
+    const password = formData.get("password")?.toString() ?? "";
+    const confirmPassword = formData.get("confirmPassword")?.toString() ?? "";
+    const run = formData.get("run")?.toString() ?? "";
+    const cleanedRun = cleanRun(run);
 
     if (password.length < 4 || password.length > 10) {
       setError("Password must be between 4 and 10 characters");
@@ -42,23 +40,16 @@ export function NewUserForm() {
       setError("Passwords do not match");
       return;
     }
-    if (!validateRun(run)) {
-      setError("RUN is not valid (7-9 characters, no dots or dashes)");
+    if (!validateRun(cleanedRun)) {
+      setError("RUN is not valid (e.g. 12.345.678-9)");
       return;
     }
 
-    setError(null);
-    const formData = new FormData();
-    formData.set("email", email);
-    formData.set("password", password);
-    formData.set("run", cleanRun(run));
-    formData.set("firstName", firstName);
-    formData.set("lastName", lastName);
-    if (birthDate) formData.set("birthDate", birthDate);
+    formData.set("run", cleanedRun);
     formData.set("region", region || "");
     formData.set("comuna", comuna || "");
-    formData.set("address", address);
 
+    setError(null);
     startTransition(async () => {
       const result = await createUserFromFormAction(formData);
       if (!result.ok) {
@@ -95,8 +86,6 @@ export function NewUserForm() {
               required
               maxLength={100}
               placeholder="user@gmail.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
           <div className="flex flex-col gap-1">
@@ -109,8 +98,6 @@ export function NewUserForm() {
               minLength={4}
               maxLength={10}
               placeholder="4-10 characters"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
               show={showPassword}
               onToggle={() => setShowPassword(!showPassword)}
             />
@@ -125,8 +112,6 @@ export function NewUserForm() {
               minLength={4}
               maxLength={10}
               placeholder="Repeat password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
               show={showConfirmPassword}
               onToggle={() => setShowConfirmPassword(!showConfirmPassword)}
             />
@@ -148,10 +133,8 @@ export function NewUserForm() {
               name="run"
               type="text"
               required
-              maxLength={9}
-              placeholder="19011022K"
-              value={run}
-              onChange={(e) => setRun(e.target.value)}
+              maxLength={13}
+              placeholder="12.345.678-9"
             />
           </div>
           <div className="flex flex-col gap-1">
@@ -164,8 +147,6 @@ export function NewUserForm() {
               type="text"
               required
               maxLength={50}
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
             />
           </div>
           <div className="flex flex-col gap-1">
@@ -178,21 +159,13 @@ export function NewUserForm() {
               type="text"
               required
               maxLength={100}
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
             />
           </div>
           <div className="flex flex-col gap-1">
             <label htmlFor="birthDate" className={labelCls}>
               Date of birth
             </label>
-            <Input
-              id="birthDate"
-              name="birthDate"
-              type="date"
-              value={birthDate}
-              onChange={(e) => setBirthDate(e.target.value)}
-            />
+            <Input id="birthDate" name="birthDate" type="date" />
           </div>
           <div className="flex flex-col gap-1">
             <label htmlFor="region" className={labelCls}>
@@ -228,8 +201,6 @@ export function NewUserForm() {
               type="text"
               required
               maxLength={300}
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
             />
           </div>
         </div>

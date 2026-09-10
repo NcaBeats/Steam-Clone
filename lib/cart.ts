@@ -14,22 +14,55 @@ export type AddToCartResult =
   | { ok: true }
   | { ok: false; reason: "duplicate" | "validation"; error: string };
 
+type CartListener = () => void;
+
+const listeners = new Set<CartListener>();
+
+const EMPTY_CART: CartItem[] = [];
+
+let cachedCart: CartItem[] | null = null;
+
 function isClient(): boolean {
   return typeof window !== "undefined";
 }
 
-export function getCart(): CartItem[] {
-  if (!isClient()) return [];
+function readCart(): CartItem[] {
   const raw = localStorage.getItem(CART_KEY);
-  if (!raw) return [];
+  if (!raw) return EMPTY_CART;
   const parsed: unknown = JSON.parse(raw);
   const result = CartItemSchema.array().safeParse(parsed);
-  return result.success ? result.data : [];
+  return result.success ? result.data : EMPTY_CART;
+}
+
+export function getCart(): CartItem[] {
+  if (!isClient()) return [];
+  if (cachedCart === null) cachedCart = readCart();
+  return cachedCart;
+}
+
+function emitChange(): void {
+  for (const listener of listeners) listener();
+}
+
+export function subscribeCart(listener: CartListener): () => void {
+  listeners.add(listener);
+  return () => {
+    listeners.delete(listener);
+  };
+}
+
+export function getCartSnapshot(): CartItem[] {
+  return getCart();
+}
+
+export function getCartServerSnapshot(): CartItem[] {
+  return EMPTY_CART;
 }
 
 function saveCart(items: CartItem[]): void {
-  if (!isClient()) return;
+  cachedCart = items;
   localStorage.setItem(CART_KEY, JSON.stringify(items));
+  emitChange();
 }
 
 export function addToCart(item: CartItem): AddToCartResult {

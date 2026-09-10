@@ -1,9 +1,8 @@
 import Link from "next/link";
-import { revalidatePath } from "next/cache";
 import { requireAdmin } from "@/actions/admin/guard";
 import { getAdminUsers } from "@/lib/api/games";
-import { deleteUserByIdAction } from "@/actions/admin";
 import { SearchInput } from "@/components/admin/SearchInput";
+import { DeleteUserButton } from "@/components/admin/DeleteUserButton";
 import type { UserRole } from "@/types";
 
 const PAGE_SIZE = 10;
@@ -164,27 +163,6 @@ const UsersPage = async ({
         </nav>
       )}
     </div>
-  );
-};
-
-const DeleteUserButton = ({ id, email }: { id: number; email: string }) => {
-  return (
-    <form
-      action={async () => {
-        "use server";
-        await deleteUserByIdAction(id);
-        revalidatePath("/admin/users");
-      }}
-      className="inline"
-    >
-      <button
-        type="submit"
-        className="text-[#FF6B6B] hover:text-red-400 text-sm font-medium"
-        aria-label={`Delete user ${email}`}
-      >
-        Delete
-      </button>
-    </form>
   );
 };
 

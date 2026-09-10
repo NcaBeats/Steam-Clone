@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import { fetchAPI } from "@/lib/api/fetch";
 import { appendMediaFiles, toFile, toJsonPart } from "@/lib/form-data";
 import { GameMetadataSchema } from "@/schemas/admin/game.schema";
@@ -100,7 +100,17 @@ export async function createUserAction(
     () =>
       fetchAPI<User>("/users", {
         method: "POST",
-        body: { email: input.email, password: input.password },
+        body: {
+          email: input.email,
+          password: input.password,
+          firstName: input.firstName,
+          lastName: input.lastName,
+          run: input.run,
+          birthDate: input.birthDate ?? null,
+          region: input.region ?? null,
+          comuna: input.comuna ?? null,
+          address: input.address,
+        },
         auth: true,
         noStore: true,
       }),
@@ -120,12 +130,6 @@ export async function createUserFromFormAction(
   const created = await createUserAction({
     email: parsed.data.email,
     password: parsed.data.password,
-  });
-  if (!created.ok || !created.user) {
-    return { ok: false, error: created.error };
-  }
-
-  return updateUserProfileAction(created.user.id, {
     run: parsed.data.run,
     firstName: parsed.data.firstName,
     lastName: parsed.data.lastName,
@@ -134,20 +138,45 @@ export async function createUserFromFormAction(
     comuna: parsed.data.comuna || null,
     address: parsed.data.address,
   });
+  if (!created.ok || !created.user) {
+    return { ok: false, error: created.error };
+  }
+
+  return { ok: true };
 }
 
 export async function deleteGameAction(
   id: number,
 ): Promise<{ ok: boolean; error?: string }> {
-  return runMutation(
+  const result = await runMutation(
     () =>
       fetchAPI<void>(`/games/${id}`, {
         method: "DELETE",
         auth: true,
         noStore: true,
       }),
-    ["/admin/games", "/studio/games", "/admin", "/studio"],
+    [
+      "/admin/games",
+      `/admin/games/${id}`,
+      "/studio/games",
+      `/studio/games/${id}`,
+      "/admin",
+      "/studio",
+      "/games",
+      `/games/${id}`,
+      "/catalog",
+      "/",
+      "/search",
+      "/library",
+    ],
   );
+  if (result.ok) {
+    updateTag(`/games/${id}`);
+    updateTag("/games?size=100");
+    updateTag("/games/discounted");
+    updateTag("/games/banners?size=4");
+  }
+  return result;
 }
 
 export async function createGameWithMediaAction(

@@ -7,8 +7,6 @@ interface PasswordInputProps {
   readonly show: boolean;
   readonly onToggle: () => void;
   readonly defaultValue?: string;
-  readonly value?: string;
-  readonly onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   readonly required?: boolean;
   readonly minLength?: number;
   readonly maxLength?: number;
@@ -22,8 +20,6 @@ export const PasswordInput = ({
   show,
   onToggle,
   defaultValue,
-  value,
-  onChange,
   required = true,
   minLength,
   maxLength,
@@ -42,8 +38,6 @@ export const PasswordInput = ({
         placeholder={placeholder}
         required={required}
         defaultValue={defaultValue}
-        value={value}
-        onChange={onChange}
         minLength={minLength}
         maxLength={maxLength}
         className={`pr-10 ${inputClassName ?? ""}`}

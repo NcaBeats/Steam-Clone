@@ -52,6 +52,7 @@ const CatalogPage = async ({ searchParams }: Props) => {
                   src={featured.bannerUrl ?? featured.imageUrl}
                   alt={featured.name}
                   fill
+                  sizes="320px"
                   className="object-cover"
                 />
               </div>

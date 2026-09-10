@@ -11,8 +11,6 @@ const inputCls = "bg-[#28282C] hover:bg-[#303036] placeholder:text-white/55";
 const LogIn = () => {
   const [state, formAction, pending] = useActionState(loginAction, null);
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
 
   return (
     <AuthLayout formAction={formAction}>
@@ -33,12 +31,12 @@ const LogIn = () => {
       </div>
       <div>
         <Input
+          key={state?.fields?.email ?? "email-initial"}
           name="email"
           type="email"
           placeholder="Email"
           required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          defaultValue={state?.fields?.email}
           className={inputCls}
         />
         <div className="min-h-[20px]">
@@ -55,8 +53,6 @@ const LogIn = () => {
           placeholder="Password"
           show={showPassword}
           onToggle={() => setShowPassword(!showPassword)}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
           inputClassName={inputCls}
         />
         <div className="min-h-[20px]">

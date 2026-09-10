@@ -1,4 +1,5 @@
 import * as z from "zod";
+import { validate, clean } from "rut.js";
 
 export const AdminUserCreateSchema = z.object({
   email: z
@@ -14,8 +15,14 @@ export const AdminUserCreateSchema = z.object({
   run: z
     .string()
     .trim()
-    .min(7, "RUN is not valid (7-9 characters)")
-    .max(9, "RUN is not valid (7-9 characters)"),
+    .transform((val) => clean(val))
+    .pipe(
+      z
+        .string()
+        .min(7, "RUN is not valid (7-9 characters)")
+        .max(9, "RUN is not valid (7-9 characters)")
+        .refine((val) => validate(val), { message: "RUN is not valid" }),
+    ),
   firstName: z
     .string()
     .trim()

@@ -34,6 +34,7 @@ export const SearchGameCard = ({
           src={imageUrl}
           alt={name}
           fill
+          sizes="(min-width: 1024px) 20vw, (min-width: 768px) 25vw, (min-width: 640px) 33vw, 50vw"
           className="object-cover object-center block transition-all duration-300 ease-out"
         />
       </div>

@@ -43,6 +43,7 @@ export async function sendContactAction(
   } catch (e) {
     return {
       success: false,
+      fields: rawFields as ContactInput,
       errors: {
         global: [
           e instanceof Error

@@ -2,9 +2,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { requireRole } from "@/actions/admin/guard";
 import { getManageGames } from "@/lib/api/games";
-import { deleteGameAction } from "@/actions/admin";
-import { revalidatePath } from "next/cache";
 import { SearchInput } from "@/components/admin/SearchInput";
+import { DeleteGameButton } from "@/components/admin/DeleteGameButton";
 
 const PAGE_SIZE = 10;
 
@@ -184,28 +183,6 @@ const GamesPage = async ({
         </nav>
       )}
     </div>
-  );
-};
-
-const DeleteGameButton = ({ id, name }: { id: number; name: string }) => {
-  return (
-    <form
-      action={async () => {
-        "use server";
-        await deleteGameAction(id);
-        revalidatePath("/admin/games");
-      }}
-      className="inline"
-    >
-      <input type="hidden" name="id" value={id} />
-      <button
-        type="submit"
-        className="text-[#FF6B6B] hover:text-red-400 text-sm font-medium"
-        aria-label={`Delete game ${name}`}
-      >
-        Delete
-      </button>
-    </form>
   );
 };
 

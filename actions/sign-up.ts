@@ -37,9 +37,14 @@ function validateSignUp(formData: FormData) {
   const result = schema.safeParse(parsed);
 
   if (!result.success) {
+    // Sólo aquí, al devolver error, sacamos password/confirmPassword para safeFields
+    const { password, confirmPassword, ...safeFields } = entries as Record<
+      string,
+      string
+    >;
     return {
       success: false as const,
-      fields: entries as Record<string, string>,
+      fields: safeFields as Record<string, string>,
       errors: z.flattenError(result.error).fieldErrors,
     };
   }
@@ -90,8 +95,12 @@ export async function signUpAction(
       },
     });
   } catch {
+    const fields = Object.fromEntries(formData) as Record<string, string>;
+    delete fields.password;
+    delete fields.confirmPassword;
     return {
       success: false,
+      fields,
       errors: { global: ["Registration failed. Please try again."] },
     };
   }

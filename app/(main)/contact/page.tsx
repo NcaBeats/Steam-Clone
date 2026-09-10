@@ -64,14 +64,7 @@ const ContactPage = () => {
               </svg>
               <div>
                 <p className="text-xs text-[#8A8A8A]">X/Twitter</p>
-                <a
-                  href="https://twitter.com/yourprofile"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-[#FAFAFA] hover:text-[#26BBFF] transition-colors"
-                >
-                  @yourprofile
-                </a>
+                <p className="text-sm text-[#FAFAFA]">@mbr</p>
               </div>
             </div>
             <div className="flex items-start gap-3">
@@ -88,14 +81,7 @@ const ContactPage = () => {
               </svg>
               <div>
                 <p className="text-xs text-[#8A8A8A]">YouTube</p>
-                <a
-                  href="https://youtube.com/@yourchannel"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-[#FAFAFA] hover:text-[#26BBFF] transition-colors"
-                >
-                  @yourchannel
-                </a>
+                <p className="text-sm text-[#FAFAFA]">@mbrofficial</p>
               </div>
             </div>
           </div>

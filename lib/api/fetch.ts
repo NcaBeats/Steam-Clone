@@ -1,6 +1,28 @@
 import { cookies } from "next/headers";
+import { ApiError } from "./errors";
 
 const API_BASE = process.env.API_BASE_URL ?? "http://127.0.0.1:9090/api/v1";
+
+function parseError(status: number, raw: string): ApiError {
+  if (raw) {
+    try {
+      const body = JSON.parse(raw);
+      if (body && typeof body === "object") {
+        const detail =
+          typeof body.detail === "string"
+            ? body.detail
+            : typeof body.message === "string"
+              ? body.message
+              : `Request failed with status ${status}`;
+        const code = typeof body.code === "string" ? body.code : undefined;
+        return new ApiError(status, detail, code);
+      }
+    } catch {
+      // Response body was not JSON; fall back to raw text below.
+    }
+  }
+  return new ApiError(status, raw || `Request failed with status ${status}`);
+}
 
 export async function fetchAPI<T>(
   endpoint: string,
@@ -53,8 +75,12 @@ export async function fetchAPI<T>(
   });
 
   if (!res.ok) {
-    const text = await res.text().catch(() => "Unknown error");
-    throw new Error(`API error ${res.status} en ${endpoint}: ${text}`);
+    const text = await res.text().catch(() => "");
+    throw parseError(res.status, text);
+  }
+
+  if (res.status === 204) {
+    return undefined as T;
   }
 
   const data = await res.json();

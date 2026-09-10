@@ -3,6 +3,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { fetchAPI } from "@/lib/api/fetch";
+import { ApiError } from "@/lib/api/errors";
 import type { Auth, User } from "@/types";
 import { LoginSchema } from "@/schemas/auth/login.schema";
 import { COOKIE_OPTIONS } from "./cookiesOptions";
@@ -10,12 +11,10 @@ import * as z from "zod";
 
 const COOKIE_NAME = "token";
 
-// 1. Tu interfaz unificada que cubre tanto los retornos de error como los de éxito
 export interface FormState {
   success: boolean;
   fields?: {
     email?: string;
-    password?: string;
   };
   errors: {
     email?: string[];
@@ -24,20 +23,19 @@ export interface FormState {
   } | null;
 }
 
-// 2. Tu función de simplificación (Helper local de validación)
 function validateLogin(formData: FormData) {
   const rawFields = Object.fromEntries(formData);
   const result = LoginSchema.safeParse(rawFields);
 
   if (!result.success) {
+    const { password, ...safeFields } = rawFields as Record<string, string>;
     return {
       success: false as const,
-      fields: rawFields as Record<string, string>,
+      fields: safeFields,
       errors: z.flattenError(result.error).fieldErrors,
     };
   }
 
-  // Retornamos null en errors para cumplir estrictamente con la forma de FormState
   return {
     success: true as const,
     data: result.data,
@@ -45,18 +43,14 @@ function validateLogin(formData: FormData) {
   };
 }
 
-// 3. Tu Server Action ultra limpio
 export async function loginAction(
   _prevState: FormState | null,
   formData: FormData,
 ): Promise<FormState> {
-  // Ejecutamos tu abstracción
   const validation = validateLogin(formData);
 
-  // Si falla la validación de Zod, retornamos inmediatamente el estado de error
   if (!validation.success) return validation;
 
-  // Si tiene éxito, extraemos el email y el password sanitizados
   const { email, password } = validation.data;
 
   let role: User["role"];
@@ -74,10 +68,15 @@ export async function loginAction(
       headers: { Authorization: `Bearer ${data.token}` },
     });
     role = me.role;
-  } catch {
+  } catch (error) {
+    const message =
+      error instanceof ApiError && error.status === 401
+        ? "Invalid email or password."
+        : "Server error. Please try again.";
     return {
       success: false,
-      errors: { global: ["Invalid credentials or server error"] },
+      fields: { email },
+      errors: { global: [message] },
     };
   }
 
