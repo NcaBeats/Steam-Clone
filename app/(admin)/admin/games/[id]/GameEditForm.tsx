@@ -10,8 +10,14 @@ import {
   FileDropzone,
   SpecsEditor,
 } from "@/components/ui";
-import { updateGameWithMediaAction } from "@/actions/admin";
+import {
+  presignGameImageAction,
+  presignGameVideoAction,
+  updateGameWithUrlsAction,
+} from "@/actions/admin";
+import { uploadGameMedia } from "@/lib/game-upload";
 import { resolveVideoUrl } from "@/lib/media";
+import { GameMetadataSchema } from "@/schemas/admin/game.schema";
 import type { Category, Game, GameState } from "@/types";
 
 type Props = Readonly<{
@@ -28,6 +34,7 @@ export function GameEditForm({
   const router = useRouter();
   const { showAlert } = useAlert();
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState<string | null>(null);
 
   const [name, setName] = useState(game.name);
   const [originalPrice, setOriginalPrice] = useState(game.originalPrice);
@@ -73,40 +80,75 @@ export function GameEditForm({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
-    const formData = new FormData();
-    formData.set("name", name);
-    formData.set("originalPrice", String(originalPrice));
-    formData.set("discountPercent", String(discountValue));
-    formData.set("description", description);
-    formData.set("state", state);
-    formData.set("launchDate", launchDate);
-    for (const c of selectedCategories) formData.append("categories", c);
-    formData.set("minimumSpecs", minimumSpecs);
-    formData.set("recommendedSpecs", recommendedSpecs);
-    if (image) formData.set("image", image);
-    if (banner) formData.set("banner", banner);
-    if (video) formData.set("video", video);
-    if (gallery.length > 0) {
-      formData.delete("gallery");
-      for (const g of gallery) formData.append("gallery", g);
-    }
-    const result = await updateGameWithMediaAction(game.id, formData);
-    if (!result.ok) {
+
+    const parsed = GameMetadataSchema.safeParse({
+      name,
+      originalPrice,
+      discountPercent: discountValue,
+      description,
+      state,
+      launchDate,
+      categoryNames: selectedCategories,
+      minimumSpecs,
+      recommendedSpecs,
+    });
+    if (!parsed.success) {
       showAlert({
         variant: "destructive",
         title: "Save error",
-        description: result.error ?? "Could not update the product",
+        description: parsed.error.issues[0]?.message ?? "Invalid data",
       });
-      setSaving(false);
       return;
     }
-    showAlert({
-      variant: "default",
-      title: "Product updated",
-      description: `${name} updated successfully`,
-    });
-    router.push(redirectTo);
-    router.refresh();
+
+    try {
+      setUploading("Uploading files...");
+      // Solo viajan los campos con archivo nuevo; el resto conserva lo que ya
+      // habia en el backend.
+      const media = await uploadGameMedia({
+        name: parsed.data.name,
+        image,
+        banner,
+        video,
+        gallery,
+        presignVideo: presignGameVideoAction,
+        presignImage: presignGameImageAction,
+        onProgress: setUploading,
+      });
+
+      setUploading("Saving changes...");
+      const result = await updateGameWithUrlsAction(
+        game.id,
+        parsed.data,
+        media,
+      );
+      if (!result.ok) {
+        showAlert({
+          variant: "destructive",
+          title: "Save error",
+          description: result.error ?? "Could not update the product",
+        });
+        setUploading(null);
+        setSaving(false);
+        return;
+      }
+      showAlert({
+        variant: "default",
+        title: "Product updated",
+        description: `${name} updated successfully`,
+      });
+      router.push(redirectTo);
+      router.refresh();
+    } catch (err) {
+      setUploading(null);
+      setSaving(false);
+      showAlert({
+        variant: "destructive",
+        title: "Upload failed",
+        description:
+          err instanceof Error ? err.message : "Could not upload the files",
+      });
+    }
   };
 
   const labelCls = "text-xs text-[#8A8A8A] font-medium";
@@ -287,10 +329,10 @@ export function GameEditForm({
       <div className="flex items-center gap-2 mt-2">
         <button
           type="submit"
-          disabled={saving}
+          disabled={saving || uploading !== null}
           className="bg-[#007AFF] hover:bg-[#1ea4ff] disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold px-5 py-2.5 rounded-md transition-colors"
         >
-          {saving ? "Saving..." : "Save changes"}
+          {uploading ?? (saving ? "Saving..." : "Save changes")}
         </button>
       </div>
     </form>

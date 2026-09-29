@@ -11,7 +11,13 @@ import {
   SpecsEditor,
   useAlert,
 } from "@/components/ui";
-import { createGameWithMediaAction } from "@/actions/admin";
+import {
+  createGameWithUrlsAction,
+  presignGameImageAction,
+  presignGameVideoAction,
+} from "@/actions/admin";
+import { uploadGameMedia } from "@/lib/game-upload";
+import { GameMetadataSchema } from "@/schemas/admin/game.schema";
 import type { Category } from "@/types";
 
 type Props = Readonly<{
@@ -26,6 +32,7 @@ export function NewGameForm({
   const router = useRouter();
   const { showAlert } = useAlert();
   const [pending, startTransition] = useTransition();
+  const [uploading, setUploading] = useState<string | null>(null);
   const [image, setImage] = useState<File | null>(null);
   const [banner, setBanner] = useState<File | null>(null);
   const [video, setVideo] = useState<File | null>(null);
@@ -33,39 +40,83 @@ export function NewGameForm({
   const [minimumSpecs, setMinimumSpecs] = useState("");
   const [recommendedSpecs, setRecommendedSpecs] = useState("");
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const busy = pending || uploading !== null;
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!image) {
       return;
     }
+
     const formData = new FormData(e.currentTarget);
-    if (image) formData.set("image", image);
-    if (banner) formData.set("banner", banner);
-    if (video) formData.set("video", video);
-    if (gallery.length > 0) {
-      formData.delete("gallery");
-      for (const g of gallery) formData.append("gallery", g);
-    }
     formData.set("minimumSpecs", minimumSpecs);
     formData.set("recommendedSpecs", recommendedSpecs);
-    startTransition(async () => {
-      const result = await createGameWithMediaAction(formData);
-      if (!result.ok) {
-        showAlert({
-          variant: "destructive",
-          title: "Could not create the product",
-          description: result.error ?? "Try again",
-        });
-        return;
-      }
-      showAlert({
-        variant: "default",
-        title: "Product created",
-        description: "The game was created successfully",
-      });
-      router.push(redirectTo);
-      router.refresh();
+
+    const parsed = GameMetadataSchema.safeParse({
+      name: formData.get("name"),
+      originalPrice: formData.get("originalPrice"),
+      discountPercent: formData.get("discountPercent") || 0,
+      description: formData.get("description"),
+      state: formData.get("state"),
+      launchDate: formData.get("launchDate"),
+      categoryNames: formData.getAll("categories").map(String),
+      minimumSpecs,
+      recommendedSpecs,
     });
+    if (!parsed.success) {
+      showAlert({
+        variant: "destructive",
+        title: "Could not create the product",
+        description: parsed.error.issues[0]?.message ?? "Invalid data",
+      });
+      return;
+    }
+
+    // El nombre determina la carpeta en Cloudinary y el key en R2, asi que se
+    // valida antes de pedir ninguna firma.
+    const name = parsed.data.name;
+
+    try {
+      setUploading("Uploading files...");
+      const media = await uploadGameMedia({
+        name,
+        image,
+        banner,
+        video,
+        gallery,
+        presignVideo: presignGameVideoAction,
+        presignImage: presignGameImageAction,
+        onProgress: setUploading,
+      });
+
+      setUploading("Saving the product...");
+      startTransition(async () => {
+        const result = await createGameWithUrlsAction(parsed.data, media);
+        if (!result.ok) {
+          showAlert({
+            variant: "destructive",
+            title: "Could not create the product",
+            description: result.error ?? "Try again",
+          });
+          return;
+        }
+        showAlert({
+          variant: "default",
+          title: "Product created",
+          description: "The game was created successfully",
+        });
+        router.push(redirectTo);
+        router.refresh();
+      });
+    } catch (err) {
+      setUploading(null);
+      showAlert({
+        variant: "destructive",
+        title: "Upload failed",
+        description:
+          err instanceof Error ? err.message : "Could not upload the files",
+      });
+    }
   };
 
   const labelCls = "text-xs text-[#8A8A8A] font-medium";
@@ -220,13 +271,15 @@ export function NewGameForm({
         </p>
       )}
 
+      {uploading && <p className="text-xs text-[#8A8A8A]">{uploading}</p>}
+
       <div className="flex items-center gap-2 mt-2">
         <button
           type="submit"
-          disabled={pending || !image}
+          disabled={busy || !image}
           className="bg-[#007AFF] hover:bg-[#1ea4ff] disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold px-5 py-2.5 rounded-md transition-colors"
         >
-          {pending ? "Creating..." : "Create product"}
+          {busy ? (uploading ?? "Creating...") : "Create product"}
         </button>
         <Link
           href={redirectTo}

@@ -4,6 +4,7 @@ export * from "./AdminUser";
 export * from "./Blog";
 export * from "./Category";
 export * from "./Game";
+export * from "./GameUpload";
 export * from "./Library";
 export * from "./Purchase";
 export * from "./Region";

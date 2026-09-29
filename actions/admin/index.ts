@@ -2,17 +2,21 @@
 
 import { revalidatePath, updateTag } from "next/cache";
 import { fetchAPI } from "@/lib/api/fetch";
-import { appendMediaFiles, toFile, toJsonPart } from "@/lib/form-data";
 import { GameMetadataSchema } from "@/schemas/admin/game.schema";
 import { AdminUserCreateSchema } from "@/schemas/admin/user.schema";
 import type {
   AdminUser,
   AdminUserUpdateInput,
   Game,
+  GameMediaUrls,
+  MediaKind,
   Profile,
+  SignedImageUpload,
   User,
   UserCreateInput,
+  VideoPresignResponse,
 } from "@/types";
+import type { PresignResult } from "@/lib/game-upload";
 import type { ZodError } from "zod";
 
 type MutationResult<T> = { ok: true; data: T } | { ok: false; error: string };
@@ -40,18 +44,20 @@ async function runMutation<T>(
   }
 }
 
-function readRawGameMetadata(formData: FormData) {
-  return {
-    name: formData.get("name")?.toString() ?? "",
-    originalPrice: formData.get("originalPrice")?.toString() ?? "",
-    discountPercent: formData.get("discountPercent")?.toString() ?? "",
-    description: formData.get("description")?.toString() ?? "",
-    state: formData.get("state")?.toString() ?? "",
-    launchDate: formData.get("launchDate")?.toString() ?? "",
-    categoryNames: formData.getAll("categories").map(String),
-    minimumSpecs: formData.get("minimumSpecs")?.toString() ?? "",
-    recommendedSpecs: formData.get("recommendedSpecs")?.toString() ?? "",
-  };
+/**
+ * Descarta los campos de media que no se subieron para que el backend conserve
+ * lo que ya habia. Una galeria vacia tampoco se envia: el backend solo reemplaza
+ * cuando recibe al menos una URL.
+ */
+function compactMedia(media: GameMediaUrls): Record<string, unknown> {
+  const compact: Record<string, unknown> = {};
+  if (media.videoUrl) compact.videoUrl = media.videoUrl;
+  if (media.imageUrl) compact.imageUrl = media.imageUrl;
+  if (media.bannerUrl) compact.bannerUrl = media.bannerUrl;
+  if (media.galleryUrls && media.galleryUrls.length > 0) {
+    compact.galleryUrls = media.galleryUrls;
+  }
+  return compact;
 }
 
 function readRawUserProfile(formData: FormData) {
@@ -179,29 +185,58 @@ export async function deleteGameAction(
   return result;
 }
 
-export async function createGameWithMediaAction(
-  formData: FormData,
+export async function presignGameVideoAction(
+  name: string,
+  contentType: string,
+): Promise<PresignResult<VideoPresignResponse>> {
+  try {
+    return {
+      ok: true,
+      data: await fetchAPI<VideoPresignResponse>("/games/media/video/presign", {
+        method: "POST",
+        body: { name, contentType },
+        auth: true,
+        noStore: true,
+      }),
+    };
+  } catch (e) {
+    return { ok: false, error: errorMessage(e) };
+  }
+}
+
+export async function presignGameImageAction(
+  name: string,
+  kind: MediaKind,
+): Promise<PresignResult<SignedImageUpload>> {
+  try {
+    return {
+      ok: true,
+      data: await fetchAPI<SignedImageUpload>("/games/media/image/presign", {
+        method: "POST",
+        body: { name, kind },
+        auth: true,
+        noStore: true,
+      }),
+    };
+  } catch (e) {
+    return { ok: false, error: errorMessage(e) };
+  }
+}
+
+export async function createGameWithUrlsAction(
+  metadata: unknown,
+  media: GameMediaUrls,
 ): Promise<{ ok: boolean; error?: string }> {
-  const parsed = GameMetadataSchema.safeParse(readRawGameMetadata(formData));
+  const parsed = GameMetadataSchema.safeParse(metadata);
   if (!parsed.success) {
     return { ok: false, error: firstZodError(parsed.error) };
   }
-
-  const image = toFile(formData.get("image"));
-  if (!image) {
-    return { ok: false, error: "La imagen principal es obligatoria" };
-  }
-
-  const backend = new FormData();
-  backend.append("metadata", toJsonPart(parsed.data));
-  backend.append("image", image);
-  appendMediaFiles(backend, formData);
 
   return runMutation(
     () =>
       fetchAPI<Game>("/games", {
         method: "POST",
-        body: backend,
+        body: { ...parsed.data, ...compactMedia(media) },
         auth: true,
         noStore: true,
       }),
@@ -209,26 +244,21 @@ export async function createGameWithMediaAction(
   );
 }
 
-export async function updateGameWithMediaAction(
+export async function updateGameWithUrlsAction(
   id: number,
-  formData: FormData,
+  metadata: unknown,
+  media: GameMediaUrls,
 ): Promise<{ ok: boolean; error?: string }> {
-  const parsed = GameMetadataSchema.safeParse(readRawGameMetadata(formData));
+  const parsed = GameMetadataSchema.safeParse(metadata);
   if (!parsed.success) {
     return { ok: false, error: firstZodError(parsed.error) };
   }
-
-  const backend = new FormData();
-  backend.append("metadata", toJsonPart(parsed.data));
-  const image = toFile(formData.get("image"));
-  if (image) backend.append("image", image);
-  appendMediaFiles(backend, formData);
 
   return runMutation(
     () =>
       fetchAPI<Game>(`/games/${id}`, {
         method: "PUT",
-        body: backend,
+        body: { ...parsed.data, ...compactMedia(media) },
         auth: true,
         noStore: true,
       }),
