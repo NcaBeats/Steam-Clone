@@ -55,9 +55,38 @@ export function resolveVideoContentType(file: File): string {
 }
 
 /**
- * PUT a R2 con la URL prefirmada. El Content-Type tiene que ser exactamente el
- * que el backend firmo (viene en la respuesta), porque la firma cubre la
- * cabecera content-type: cualquier diferencia produce SignatureDoesNotMatch.
+ * Cantidad de bytes que entran en la huella.tiene que coincidir con
+ * R2StorageService.FINGERPRINT_BYTES: es el mismo prefijo del que el runner saca
+ * la huella con un GET con Range.
+ */
+const FINGERPRINT_BYTES = 16 * 1024 * 1024;
+
+/**
+ * Huella del contenido: SHA-256 de los primeros 16 MiB mas el tamano total en
+ * decimal, recortada a 8 hexadecimales. Es la misma funcion que
+ * R2StorageService.fingerprint, y el nombre del trailer lo lleva incrustado
+ * ({slug}/trailer-a1b2c3d4.mp4), de modo que cambiar el archivo produce una URL
+ * nueva y el navegador puede guardar la anterior como inmutable sin volver a
+ * comprobarla.
+ *
+ * El tamano entra en el digest a proposito: el runner solo lee el prefijo, asi
+ * que sin el largo dos archivos distintos que arrancan igual colisionarian.
+ */
+export async function fingerprintFile(file: Blob): Promise<string> {
+  const head = await file.slice(0, FINGERPRINT_BYTES).arrayBuffer();
+  const payload = new Uint8Array(head.byteLength + String(file.size).length);
+  payload.set(new Uint8Array(head), 0);
+  payload.set(new TextEncoder().encode(String(file.size)), head.byteLength);
+  const digest = new Uint8Array(await crypto.subtle.digest("SHA-256", payload));
+  return Array.from(digest.slice(0, 4))
+    .map((byte) => byte.toString(16).padStart(2, "0"))
+    .join("");
+}
+
+/**
+ * PUT a R2 con la URL prefirmada. Content-Type y Cache-Control tienen que ser
+ * exactamente los que el backend firmo (vienen ambos en la respuesta), porque la
+ * firma cubre esas cabeceras: cualquier diferencia produce SignatureDoesNotMatch.
  */
 export async function uploadVideoToR2(
   file: File,
@@ -65,7 +94,10 @@ export async function uploadVideoToR2(
 ): Promise<string> {
   const res = await fetch(presign.uploadUrl, {
     method: "PUT",
-    headers: { "Content-Type": presign.contentType },
+    headers: {
+      "Content-Type": presign.contentType,
+      "Cache-Control": presign.cacheControl,
+    },
     body: file,
   });
   if (!res.ok) {
@@ -80,7 +112,10 @@ export async function uploadImageToR2(
 ): Promise<string> {
   const res = await fetch(presign.uploadUrl, {
     method: "PUT",
-    headers: { "Content-Type": presign.contentType },
+    headers: {
+      "Content-Type": presign.contentType,
+      "Cache-Control": presign.cacheControl,
+    },
     body: file,
   });
   if (!res.ok) {
@@ -95,6 +130,7 @@ export type PresignResult<T> =
 export type PresignVideoFn = (
   name: string,
   contentType: string,
+  fingerprint?: string,
 ) => Promise<PresignResult<PresignedUploadResponse>>;
 
 export type PresignImageFn = (
@@ -157,7 +193,10 @@ export async function uploadGameMedia({
     // El contentType se resuelve antes de firmar y se reutiliza en el PUT, de
     // modo que la cabecera que viaja siempre es la que quedo firmada.
     const contentType = resolveVideoContentType(video);
-    const presign = unwrap(await presignVideo(name, contentType));
+    // La huella viaja en el nombre del objeto, no en un parametro: es lo que
+    // permite marcar el trailer como immutable sin arriesgar contenido rancio.
+    const fingerprint = await fingerprintFile(video);
+    const presign = unwrap(await presignVideo(name, contentType, fingerprint));
     media.videoUrl = await uploadVideoToR2(video, presign);
   }
 

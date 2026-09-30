@@ -16,6 +16,13 @@ export type PresignedUploadResponse = {
   key: string;
   publicPath: string;
   contentType: string;
+  /**
+   * Cache-Control exacto que el backend firmo. R2 solo guarda el header si vino
+   * firmado, y la firma cubre el valor byte a byte, asi que el PUT tiene que
+   * reenviar esta cadena tal cual: no hay que reimplementar la politica aqui, y
+   * duplicar la constante es exactamente como aparecen los 403 en silencio.
+   */
+  cacheControl: string;
   expiresInSeconds: number;
 };
 

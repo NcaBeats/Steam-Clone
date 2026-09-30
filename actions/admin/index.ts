@@ -187,6 +187,7 @@ export async function deleteGameAction(
 export async function presignGameVideoAction(
   name: string,
   contentType: string,
+  fingerprint?: string,
 ): Promise<PresignResult<PresignedUploadResponse>> {
   try {
     return {
@@ -195,7 +196,10 @@ export async function presignGameVideoAction(
         "/games/media/video/presign",
         {
           method: "POST",
-          body: { name, contentType },
+          // El fingerprint es opcional en el contrato: si falta, el backend usa la
+          // clave canonica {slug}/trailer.mp4. Asi un bundle viejo del cliente
+          // sigue pudiendo subir, solo que sin el beneficio del cache inmutable.
+          body: { name, contentType, fingerprint },
           auth: true,
           noStore: true,
         },
