@@ -21,13 +21,10 @@ Tienda de videojuegos — frontend **Next.js** que consume el backend Spring Boo
 
 ## Configuración
 
-Creá un `.env.local` con:
+Creá un `.env` con:
 
 ```bash
-# Base de la API (server-side, usada por lib/api/fetch.ts)
-API_BASE_URL=http://127.0.0.1:9090/api/v1
-
-# Base de la API (client-side: búsqueda, media)
+# Base de la API (una sola: server y client). Evaluada en build time.
 NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:9090/api/v1
 
 # URL pública de videos subidos a Cloudflare R2
@@ -64,4 +61,4 @@ pnpm lint       # eslint
   detalle) sin depender de invalidaciones de caché.
 - **Imágenes**: Cloudinary vía `next/image` con el prop `sizes` seteado; **videos**:
   subidos por el backend a Cloudflare R2 y servidos desde `NEXT_PUBLIC_R2_PUBLIC_BASE_URL`.
-- La búsqueda (client) usa `NEXT_PUBLIC_API_BASE_URL`; el resto de la API va server-side.
+- La API completa (server y client) usa una sola variable, `NEXT_PUBLIC_API_BASE_URL`, evaluada en build time.

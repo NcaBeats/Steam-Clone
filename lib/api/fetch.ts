@@ -1,7 +1,8 @@
 import { cookies } from "next/headers";
 import { ApiError } from "./errors";
 
-const API_BASE = process.env.API_BASE_URL ?? "http://127.0.0.1:9090/api/v1";
+const API_BASE =
+  process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:9090/api/v1";
 
 function parseError(status: number, raw: string): ApiError {
   if (raw) {
