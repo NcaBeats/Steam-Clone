@@ -16,11 +16,7 @@ const nextConfig: Record<string, unknown> = {
         hostname: "127.0.0.1",
         port: "9090",
       },
-      {
-        protocol: "https",
-        hostname: "res.cloudinary.com",
-      },
-      // Traalers e imagenes subidos directo a Cloudflare R2.
+      // Imagenes y trailers subidos directo a Cloudflare R2.
       {
         protocol: "https",
         hostname: "*.r2.dev",
@@ -38,7 +34,7 @@ const nextConfig: Record<string, unknown> = {
     serverActions: {
       // Solo aplica en desarrollo. En Vercel la peticion se corta en 4.5MB
       // aunque se declare un limite mayor, por eso la media grande ya no
-      // viaja por Server Actions: se sube con URL prefirmada a R2/Cloudinary.
+      // viaja por Server Actions: se sube con URL prefirmada directo a R2.
       bodySizeLimit: "512mb",
     },
   },

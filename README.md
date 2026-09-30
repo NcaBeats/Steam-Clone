@@ -59,6 +59,6 @@ pnpm lint       # eslint
 - **Caché**: las lecturas públicas de juegos/catálogo usan `noStore` — siempre se
   consultan al backend, por lo que borrar un juego se refleja al instante (404 en su
   detalle) sin depender de invalidaciones de caché.
-- **Imágenes**: Cloudinary vía `next/image` con el prop `sizes` seteado; **videos**:
-  subidos por el backend a Cloudflare R2 y servidos desde `NEXT_PUBLIC_R2_PUBLIC_BASE_URL`.
+- **Imágenes y vídeos**: subidos directo a Cloudflare R2 con URL prefirmada desde
+  el navegador (imágenes vía `next/image` + `NEXT_PUBLIC_R2_PUBLIC_BASE_URL`).
 - La API completa (server y client) usa una sola variable, `NEXT_PUBLIC_API_BASE_URL`, evaluada en build time.

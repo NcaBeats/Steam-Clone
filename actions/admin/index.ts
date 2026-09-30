@@ -10,11 +10,10 @@ import type {
   Game,
   GameMediaUrls,
   MediaKind,
+  PresignedUploadResponse,
   Profile,
-  SignedImageUpload,
   User,
   UserCreateInput,
-  VideoPresignResponse,
 } from "@/types";
 import type { PresignResult } from "@/lib/game-upload";
 import type { ZodError } from "zod";
@@ -188,16 +187,19 @@ export async function deleteGameAction(
 export async function presignGameVideoAction(
   name: string,
   contentType: string,
-): Promise<PresignResult<VideoPresignResponse>> {
+): Promise<PresignResult<PresignedUploadResponse>> {
   try {
     return {
       ok: true,
-      data: await fetchAPI<VideoPresignResponse>("/games/media/video/presign", {
-        method: "POST",
-        body: { name, contentType },
-        auth: true,
-        noStore: true,
-      }),
+      data: await fetchAPI<PresignedUploadResponse>(
+        "/games/media/video/presign",
+        {
+          method: "POST",
+          body: { name, contentType },
+          auth: true,
+          noStore: true,
+        },
+      ),
     };
   } catch (e) {
     return { ok: false, error: errorMessage(e) };
@@ -207,16 +209,20 @@ export async function presignGameVideoAction(
 export async function presignGameImageAction(
   name: string,
   kind: MediaKind,
-): Promise<PresignResult<SignedImageUpload>> {
+  contentType: string,
+): Promise<PresignResult<PresignedUploadResponse>> {
   try {
     return {
       ok: true,
-      data: await fetchAPI<SignedImageUpload>("/games/media/image/presign", {
-        method: "POST",
-        body: { name, kind },
-        auth: true,
-        noStore: true,
-      }),
+      data: await fetchAPI<PresignedUploadResponse>(
+        "/games/media/image/presign",
+        {
+          method: "POST",
+          body: { name, kind, contentType },
+          auth: true,
+          noStore: true,
+        },
+      ),
     };
   } catch (e) {
     return { ok: false, error: errorMessage(e) };

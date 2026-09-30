@@ -1,8 +1,7 @@
 import type {
   GameMediaUrls,
   MediaKind,
-  SignedImageUpload,
-  VideoPresignResponse,
+  PresignedUploadResponse,
 } from "@/types";
 
 /**
@@ -17,6 +16,34 @@ const VIDEO_CONTENT_TYPES: Record<string, string> = {
   mov: "video/quicktime",
   qt: "video/quicktime",
 };
+
+/**
+ * Allowlist de imagenes del backend (R2StorageService). El Content-Type queda
+ * firmado en la URL de presign, asi que este valor se reutiliza tanto en la
+ * peticion de firma como en el header del PUT.
+ */
+const IMAGE_CONTENT_TYPES: Record<string, string> = {
+  png: "image/png",
+  jpg: "image/jpeg",
+  jpeg: "image/jpeg",
+  webp: "image/webp",
+  avif: "image/avif",
+  gif: "image/gif",
+};
+
+const IMAGE_CONTENT_TYPE_PATTERN = /^image\/(png|jpe?g|webp|avif|gif)$/;
+
+export function resolveImageContentType(file: File): string {
+  if (IMAGE_CONTENT_TYPE_PATTERN.test(file.type)) {
+    return file.type.toLowerCase();
+  }
+  const ext = file.name.split(".").pop()?.toLowerCase() ?? "";
+  const resolved = IMAGE_CONTENT_TYPES[ext];
+  if (!resolved) {
+    throw new Error(`Unsupported image format: .${ext || file.type}`);
+  }
+  return resolved;
+}
 
 export function resolveVideoContentType(file: File): string {
   const ext = file.name.split(".").pop()?.toLowerCase() ?? "";
@@ -34,7 +61,7 @@ export function resolveVideoContentType(file: File): string {
  */
 export async function uploadVideoToR2(
   file: File,
-  presign: VideoPresignResponse,
+  presign: PresignedUploadResponse,
 ): Promise<string> {
   const res = await fetch(presign.uploadUrl, {
     method: "PUT",
@@ -47,26 +74,19 @@ export async function uploadVideoToR2(
   return presign.publicPath;
 }
 
-export async function uploadImageToCloudinary(
+export async function uploadImageToR2(
   file: File,
-  signed: SignedImageUpload,
+  presign: PresignedUploadResponse,
 ): Promise<string> {
-  const data = new FormData();
-  data.append("file", file);
-  data.append("api_key", signed.apiKey);
-  data.append("timestamp", String(signed.timestamp));
-  data.append("signature", signed.signature);
-  data.append("folder", signed.folder);
-
-  const res = await fetch(signed.uploadUrl, { method: "POST", body: data });
+  const res = await fetch(presign.uploadUrl, {
+    method: "PUT",
+    headers: { "Content-Type": presign.contentType },
+    body: file,
+  });
   if (!res.ok) {
     throw new Error(`Image upload failed (${res.status})`);
   }
-  const json = (await res.json()) as { secure_url?: string };
-  if (!json.secure_url) {
-    throw new Error("Image upload did not return a URL");
-  }
-  return json.secure_url;
+  return presign.publicPath;
 }
 
 export type PresignResult<T> =
@@ -75,12 +95,13 @@ export type PresignResult<T> =
 export type PresignVideoFn = (
   name: string,
   contentType: string,
-) => Promise<PresignResult<VideoPresignResponse>>;
+) => Promise<PresignResult<PresignedUploadResponse>>;
 
 export type PresignImageFn = (
   name: string,
   kind: MediaKind,
-) => Promise<PresignResult<SignedImageUpload>>;
+  contentType: string,
+) => Promise<PresignResult<PresignedUploadResponse>>;
 
 type UploadGameMediaParams = {
   name: string;
@@ -119,14 +140,16 @@ export async function uploadGameMedia({
 
   if (image) {
     onProgress?.("Uploading main image...");
-    const signed = unwrap(await presignImage(name, "image"));
-    media.imageUrl = await uploadImageToCloudinary(image, signed);
+    const contentType = resolveImageContentType(image);
+    const signed = unwrap(await presignImage(name, "image", contentType));
+    media.imageUrl = await uploadImageToR2(image, signed);
   }
 
   if (banner) {
     onProgress?.("Uploading banner...");
-    const signed = unwrap(await presignImage(name, "banner"));
-    media.bannerUrl = await uploadImageToCloudinary(banner, signed);
+    const contentType = resolveImageContentType(banner);
+    const signed = unwrap(await presignImage(name, "banner", contentType));
+    media.bannerUrl = await uploadImageToR2(banner, signed);
   }
 
   if (video) {
@@ -139,13 +162,15 @@ export async function uploadGameMedia({
   }
 
   if (gallery.length > 0) {
-    // La firma de Cloudinary solo cubre timestamp y folder, asi que una sola
-    // firma alcanza para todas las imagenes de la galeria.
-    const signed = unwrap(await presignImage(name, "gallery"));
     onProgress?.(`Uploading ${gallery.length} gallery images...`);
     const urls: string[] = [];
     for (const file of gallery) {
-      urls.push(await uploadImageToCloudinary(file, signed));
+      // Cada imagen de la galeria lleva su propia firma: la key
+      // {slug}/gallery/{uuid}.{ext} forma parte de la URL firmada, asi que no
+      // se puede reutilizar una firma para mas de un archivo.
+      const contentType = resolveImageContentType(file);
+      const signed = unwrap(await presignImage(name, "gallery", contentType));
+      urls.push(await uploadImageToR2(file, signed));
     }
     media.galleryUrls = urls;
   }

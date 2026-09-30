@@ -6,21 +6,17 @@
 
 export type MediaKind = "image" | "banner" | "gallery";
 
-export type VideoPresignResponse = {
+/**
+ * Respuesta de presign del backend (tanto para imagen como para video). El
+ * navegador debe hacer PUT contra uploadUrl enviando contentType verbatim,
+ * ya que la firma cubre la cabecera: un valor distinto produce 403.
+ */
+export type PresignedUploadResponse = {
   uploadUrl: string;
   key: string;
   publicPath: string;
   contentType: string;
   expiresInSeconds: number;
-};
-
-export type SignedImageUpload = {
-  uploadUrl: string;
-  cloudName: string;
-  apiKey: string;
-  timestamp: number;
-  signature: string;
-  folder: string;
 };
 
 /** URLs ya alojadas. Los campos ausentes o vacios conservan el valor actual. */

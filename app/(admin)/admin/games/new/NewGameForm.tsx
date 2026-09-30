@@ -72,7 +72,7 @@ export function NewGameForm({
       return;
     }
 
-    // El nombre determina la carpeta en Cloudinary y el key en R2, asi que se
+    // El nombre determina la key en R2 ({slug}/{kind}/...), asi que se
     // valida antes de pedir ninguna firma.
     const name = parsed.data.name;
 
