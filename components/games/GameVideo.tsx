@@ -11,6 +11,13 @@ type Props = Readonly<{
   title?: string | null;
 }>;
 
+function videoType(src: string): string {
+  const ext = src.split("?")[0].split("#")[0].split(".").pop()?.toLowerCase();
+  if (ext === "webm") return "video/webm";
+  if (ext === "mov") return "video/quicktime";
+  return "video/mp4";
+}
+
 export function GameVideo({ src, poster, title }: Props) {
   const absoluteSrc = resolveVideoUrl(src);
 
@@ -18,20 +25,12 @@ export function GameVideo({ src, poster, title }: Props) {
     <div className="w-full aspect-video rounded-full  bg-black">
       <VideoPlayer poster={poster ?? undefined} title={title ?? undefined}>
         <VideoSkin className="w-full h-full rounded-lg">
-          {/*
-            preload="metadata" pide solo los bytes del indice: el navegador sabe
-            duracion y dimensiones para pintar los controles, pero no baja los ~90 MB
-            del trailer hasta que el usuario le da a reproducir. Con "auto" el
-            movil descarga el archivo entero al abrir la ficha.
-            El src va solo en <Video>: un <source> con la misma URL hace que el
-            navegador pida el recurso dos veces.
-          */}
           <Video
             style={{ borderRadius: "inherit" }}
             src={absoluteSrc}
             playsInline
-            preload="metadata"
           />
+          <source src={absoluteSrc} type={videoType(src)} />
         </VideoSkin>
       </VideoPlayer>
     </div>
