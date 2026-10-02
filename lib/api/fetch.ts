@@ -25,6 +25,34 @@ function parseError(status: number, raw: string): ApiError {
   return new ApiError(status, raw || `Request failed with status ${status}`);
 }
 
+/**
+ * How the caller expects the endpoint to be wrapped.
+ *
+ * - `raw` — body as-is. Default. Single objects, `void`, and anything that is
+ *   not a Spring page.
+ * - `page` — keep the whole `PagedModel` envelope (`{ content, page }`), for
+ *   callers that render pagination controls.
+ * - `list` — keep only `content`, for callers that render one list and do not
+ *   care about the totals.
+ *
+ * Every paginated backend endpoint returns `Page<T>`, which Spring Boot
+ * serializes as `PagedModel`. Naming that at each call site keeps the two ends
+ * honest: `page` and `list` throw when the body is not paginated instead of
+ * coercing whatever happens to arrive.
+ */
+export type ResponseShape = "raw" | "page" | "list";
+
+type PageEnvelope = { content: unknown[] };
+
+function isPageEnvelope(data: unknown): data is PageEnvelope {
+  return (
+    typeof data === "object" &&
+    data !== null &&
+    "content" in data &&
+    Array.isArray((data as PageEnvelope).content)
+  );
+}
+
 export async function fetchAPI<T>(
   endpoint: string,
   options: {
@@ -34,7 +62,7 @@ export async function fetchAPI<T>(
     body?: unknown;
     headers?: Record<string, string>;
     noStore?: boolean;
-    paginated?: boolean;
+    responseShape?: ResponseShape;
   } = {},
 ): Promise<T> {
   const {
@@ -44,7 +72,7 @@ export async function fetchAPI<T>(
     body,
     headers: customHeaders,
     noStore = false,
-    paginated = false,
+    responseShape = "raw",
   } = options;
   const reqHeaders: Record<string, string> = { ...customHeaders };
 
@@ -85,22 +113,19 @@ export async function fetchAPI<T>(
   }
 
   const data = await res.json();
-  if (
-    paginated &&
-    data &&
-    typeof data === "object" &&
-    "content" in data &&
-    Array.isArray(data.content)
-  ) {
+
+  if (responseShape === "raw") {
     return data as T;
   }
-  if (
-    data &&
-    typeof data === "object" &&
-    "content" in data &&
-    Array.isArray(data.content)
-  ) {
-    return data.content as T;
+
+  if (!isPageEnvelope(data)) {
+    throw new ApiError(
+      res.status,
+      `${endpoint} was requested as "${responseShape}" but the response is not a ` +
+        `paginated page. Either the endpoint stopped returning Page<T>, or this ` +
+        `call should use responseShape: "raw".`,
+    );
   }
-  return data as T;
+
+  return (responseShape === "page" ? data : data.content) as T;
 }

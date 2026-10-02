@@ -7,7 +7,11 @@ import type { Library } from "@/types";
 export async function getMyLibraryAction(): Promise<Library[]> {
   return (
     (await fetchOrNull(() =>
-      fetchAPI<Library[]>("/library?size=50", { auth: true, revalidate: 0 }),
+      fetchAPI<Library[]>("/library?size=50", {
+        auth: true,
+        revalidate: 0,
+        responseShape: "list",
+      }),
     )) ?? []
   );
 }

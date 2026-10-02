@@ -11,5 +11,16 @@ export async function searchGamesClient(name: string): Promise<Game[]> {
     throw new Error(`Search failed: ${res.status}`);
   }
   const data = await res.json();
-  return (data.content ?? data) as Game[];
+  // Same contract as fetchAPI's responseShape: "list". /games returns
+  // Page<GameResponse>; failing loudly beats coercing whatever arrived.
+  if (
+    typeof data !== "object" ||
+    data === null ||
+    !Array.isArray((data as { content?: unknown }).content)
+  ) {
+    throw new Error(
+      "Search expected a paginated response from /games but got an unexpected shape.",
+    );
+  }
+  return (data as { content: Game[] }).content;
 }
