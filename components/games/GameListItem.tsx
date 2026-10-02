@@ -1,14 +1,14 @@
-import Image from "next/image";
 import Link from "next/link";
 import { Gamepad2, Trophy, BadgeCheck } from "lucide-react";
 import { Category } from "@/types";
 import { formatPrice } from "@/lib";
+import { GameImage } from "@/components/games/GameImage";
 
 type Props = Readonly<{
   id: number;
   name: string;
   price: number;
-  imageUrl: string;
+  imageUrl: string | null;
   categories: Category[];
   launchDate: string;
 }>;
@@ -26,7 +26,7 @@ export const GameListItem = ({
       href={`/games/${id}`}
       className="overflow-hidden rounded-lg select-none shadow-md shadow-[#00000089] cursor-pointer group flex relative transition-transform hover:scale-101 active:scale-101"
     >
-      <Image
+      <GameImage
         src={imageUrl}
         alt="Item-1"
         width={1920}

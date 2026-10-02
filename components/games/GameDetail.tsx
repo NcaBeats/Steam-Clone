@@ -3,6 +3,7 @@
 import { useEffect, useSyncExternalStore, useState } from "react";
 import Image from "next/image";
 import { X } from "lucide-react";
+import { GameImage } from "@/components/games/GameImage";
 import {
   Carousel,
   CarouselContent,
@@ -206,7 +207,7 @@ export const GameDetail = ({ game, initialInLibrary }: Props) => {
             />
           ) : (
             <div className="relative w-full aspect-video rounded-lg overflow-hidden">
-              <Image
+              <GameImage
                 src={game.bannerUrl ?? game.imageUrl}
                 alt={game.name}
                 fill
@@ -273,7 +274,7 @@ export const GameDetail = ({ game, initialInLibrary }: Props) => {
         {/* COLUMNA DERECHA: Categorías, Precios y Juego Destacado */}
         <div className="flex flex-col lg:w-96 shrink-0 gap-2 order-1 lg:order-2">
           <div className="relative w-full aspect-video rounded-xl overflow-hidden">
-            <Image
+            <GameImage
               src={game.bannerUrl ?? game.imageUrl}
               alt={game.name}
               fill

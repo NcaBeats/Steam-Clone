@@ -1,6 +1,6 @@
-import Image from "next/image";
 import { X } from "lucide-react";
 import { formatPrice } from "@/lib";
+import { GameImage } from "@/components/games/GameImage";
 import type { CartItem as CartItemType } from "@/lib/cart";
 
 type Props = Readonly<{
@@ -12,7 +12,7 @@ export const CartItem = ({ item, onRemove }: Props) => {
   return (
     <div className="flex items-center gap-4 bg-[#1A1A1A] rounded-lg p-3">
       <div className="relative w-16 h-20 shrink-0 rounded overflow-hidden">
-        <Image
+        <GameImage
           src={item.imageUrl}
           alt={item.name}
           fill

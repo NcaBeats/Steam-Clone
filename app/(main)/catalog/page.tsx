@@ -1,7 +1,7 @@
 import { CatalogList } from "@/components/games";
+import { GameImage } from "@/components/games/GameImage";
 import { Pagination } from "@/components/ui";
 import { getGamesPaginated, getBannerGames } from "@/lib/api/games";
-import Image from "next/image";
 import Link from "next/link";
 import { formatPrice } from "@/lib";
 
@@ -48,7 +48,7 @@ const CatalogPage = async ({ searchParams }: Props) => {
                 {featured.categories.map((c) => c.name).join(", ")}
               </p>
               <div className="relative w-full aspect-video rounded overflow-hidden">
-                <Image
+                <GameImage
                   src={featured.bannerUrl ?? featured.imageUrl}
                   alt={featured.name}
                   fill

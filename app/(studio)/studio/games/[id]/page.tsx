@@ -1,9 +1,9 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import { ArrowLeft, Calendar, DollarSign, Tag } from "lucide-react";
 import { requireRole } from "@/actions/admin/guard";
 import { getManageGameById } from "@/lib/api/games";
+import { GameImage } from "@/components/games/GameImage";
 
 const StudioGameDetailPage = async ({
   params,
@@ -39,7 +39,7 @@ const StudioGameDetailPage = async ({
 
       <header className="flex items-center gap-4">
         <div className="relative w-24 h-32 rounded overflow-hidden shrink-0">
-          <Image
+          <GameImage
             src={game.imageUrl}
             alt={game.name}
             fill

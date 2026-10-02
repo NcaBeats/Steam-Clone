@@ -1,6 +1,6 @@
 import { Game } from "@/types";
-import Image from "next/image";
 import Link from "next/link";
+import { GameImage } from "@/components/games/GameImage";
 
 type Props = Readonly<Pick<Game, "id" | "name" | "imageUrl">>;
 
@@ -16,7 +16,7 @@ export const LibraryCard = ({ id, name, imageUrl }: Props) => {
       active:text-black hover:text-black duration-200 ease-in rounded-lg overflow-hidden w-full"
     >
       <div className="relative aspect-3/4">
-        <Image
+        <GameImage
           src={imageUrl}
           alt={name}
           fill

@@ -12,7 +12,9 @@ export type Game = {
   state: GameState;
   launchDate: string;
   categories: Category[];
-  imageUrl: string;
+  // Nullable en el backend: la API devuelve null cuando el juego se creo sin
+  // portada. Ver GameImage para el respaldo en la UI.
+  imageUrl: string | null;
   bannerUrl: string | null;
   videoUrl: string | null;
   galleryUrls: string[];

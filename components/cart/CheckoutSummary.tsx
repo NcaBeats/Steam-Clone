@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useSyncExternalStore, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { GameImage } from "@/components/games/GameImage";
 import {
   Wallet as WalletIcon,
   Loader2,
@@ -152,7 +152,7 @@ export const CheckoutSummary = () => {
               className="flex items-center gap-3 bg-[#1A1A1A] rounded-lg p-2"
             >
               <div className="relative w-12 h-16 shrink-0 rounded overflow-hidden">
-                <Image
+                <GameImage
                   src={item.imageUrl}
                   alt={item.name}
                   fill

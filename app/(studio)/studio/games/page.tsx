@@ -1,8 +1,8 @@
 import Link from "next/link";
-import Image from "next/image";
 import { requireRole } from "@/actions/admin/guard";
 import { getManageGames } from "@/lib/api/games";
 import { SearchInput } from "@/components/admin/SearchInput";
+import { GameImage } from "@/components/games/GameImage";
 
 const PAGE_SIZE = 10;
 
@@ -94,7 +94,7 @@ const StudioGamesPage = async ({
                   </td>
                   <td className="px-3 py-3 hidden sm:table-cell">
                     <div className="relative w-10 h-14 rounded overflow-hidden">
-                      <Image
+                      <GameImage
                         src={g.imageUrl}
                         alt={g.name}
                         fill

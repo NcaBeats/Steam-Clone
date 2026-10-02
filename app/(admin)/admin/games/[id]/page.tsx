@@ -1,10 +1,10 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import { ArrowLeft, Calendar, DollarSign, Tag } from "lucide-react";
 import { requireRole } from "@/actions/admin/guard";
 import { getManageGameById, getCategories } from "@/lib/api/games";
 import type { Game } from "@/types";
+import { GameImage } from "@/components/games/GameImage";
 import { GameEditForm } from "./GameEditForm";
 
 const GameDetailPage = async ({
@@ -45,7 +45,7 @@ const GameSummary = ({ game }: { game: Game }) => (
   <>
     <header className="flex items-center gap-4">
       <div className="relative w-24 h-32 rounded overflow-hidden shrink-0">
-        <Image
+        <GameImage
           src={game.imageUrl}
           alt={game.name}
           fill
