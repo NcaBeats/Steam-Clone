@@ -26,10 +26,10 @@ Creá un `.env` con:
 ```bash
 # Base de la API (una sola: server y client). Evaluada en build time.
 NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:9090/api/v1
-
-# URL pública de videos subidos a Cloudflare R2
-NEXT_PUBLIC_R2_PUBLIC_BASE_URL=
 ```
+
+Solo hace falta esa variable: el backend ya devuelve URLs absolutas de R2 en
+todas las columnas de media, así que el frontend no necesita saber el bucket.
 
 ## Comandos
 
@@ -60,5 +60,7 @@ pnpm lint       # eslint
   consultan al backend, por lo que borrar un juego se refleja al instante (404 en su
   detalle) sin depender de invalidaciones de caché.
 - **Imágenes y vídeos**: subidos directo a Cloudflare R2 con URL prefirmada desde
-  el navegador (imágenes vía `next/image` + `NEXT_PUBLIC_R2_PUBLIC_BASE_URL`).
+  el navegador. El backend guarda la URL pública absoluta que devuelve R2, así que
+  el frontend la usa tal cual (imágenes vía `next/image`). `lib/media.ts` solo
+  valida que sea absoluta y falla en voz alta si aparece una ruta.
 - La API completa (server y client) usa una sola variable, `NEXT_PUBLIC_API_BASE_URL`, evaluada en build time.
