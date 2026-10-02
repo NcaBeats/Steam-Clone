@@ -23,7 +23,11 @@ export const Nav = async () => {
   const cookieStore = await cookies();
   const isLoggedIn = !!cookieStore.get("token")?.value;
   const user = isLoggedIn ? await getCurrentUserAction() : null;
-  const wallet = isLoggedIn ? await getMyWalletAction() : null;
+  // El saldo es cromado: si la API falla no queremos que el error tumbe la
+  // pagina entera, solo que el saldo no aparezca.
+  const wallet = isLoggedIn
+    ? await getMyWalletAction().catch(() => null)
+    : null;
   const isStaff = user?.role === "ADMIN" || user?.role === "VENDEDOR";
   const staffHref = user?.role === "ADMIN" ? "/admin" : "/studio/games";
 

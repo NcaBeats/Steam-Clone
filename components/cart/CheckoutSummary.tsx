@@ -34,6 +34,7 @@ export const CheckoutSummary = () => {
   const [status, setStatus] = useState<Status>("loading");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [wallet, setWallet] = useState<Wallet | null>(null);
+  const [walletUnavailable, setWalletUnavailable] = useState(false);
 
   const items = useSyncExternalStore(
     subscribeCart,
@@ -44,14 +45,16 @@ export const CheckoutSummary = () => {
   const total = getCartTotal(items);
   const insufficient = wallet !== null && wallet.balance < total;
 
+  // No se puede afirmar que "no falta saldo" con la billetera sin leer: si la
+  // lectura falla, el backend sigue siendo la autoridad y va a rechazar el
+  // cobro, pero el usuario tiene que saber por que antes de intentarlo.
   const refreshWallet = async () => {
     try {
       const w = await getMyWalletAction();
-      if (w) {
-        setWallet(w);
-      }
+      setWallet(w);
+      setWalletUnavailable(false);
     } catch {
-      // Wallet fetch failed, leave wallet as null
+      setWalletUnavailable(true);
     }
   };
 
@@ -193,6 +196,13 @@ export const CheckoutSummary = () => {
       {insufficient && (
         <div className="bg-[#2A1A1A] border border-[#5C2A2A] rounded-lg p-3 text-sm text-[#FF6B6B]">
           Insufficient balance. Deposit funds to complete your purchase.
+        </div>
+      )}
+
+      {walletUnavailable && (
+        <div className="bg-[#2A1A1A] border border-[#5C2A2A] rounded-lg p-3 text-sm text-[#FF6B6B]">
+          We could not verify your balance, so this purchase may be declined.
+          You can still try.
         </div>
       )}
 

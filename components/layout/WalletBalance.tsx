@@ -11,8 +11,13 @@ export function WalletBalance({ initialBalance }: { initialBalance: number }) {
 
   useEffect(() => {
     const refresh = async () => {
-      const wallet = await getMyWalletAction();
-      if (wallet) setBalance(wallet.balance);
+      try {
+        const wallet = await getMyWalletAction();
+        if (wallet) setBalance(wallet.balance);
+      } catch {
+        // El saldo del nav es decorativo: si la API falla seguimos mostrando
+        // el ultimo valor conocido en vez de dejar el saldo en cero.
+      }
     };
     window.addEventListener(WALLET_UPDATE_EVENT, refresh);
     return () => window.removeEventListener(WALLET_UPDATE_EVENT, refresh);
