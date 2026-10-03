@@ -1,6 +1,7 @@
 import * as z from "zod";
 import { validate, clean } from "rut.js";
 import type { RegionData } from "@/types";
+import { passwordSchema } from "@/schemas/password.schema";
 
 const domains = new Set(["duoc.cl", "profesor.duoc.cl", "gmail.com"]);
 
@@ -56,10 +57,7 @@ const direccion = z
   .min(1, "Address is required")
   .max(300, "Address cannot exceed 300 characters");
 
-const password = z
-  .string()
-  .min(4, "Password must be at least 4 characters")
-  .max(10, "Password cannot exceed 10 characters");
+const password = passwordSchema;
 
 const confirmPassword = z.string();
 

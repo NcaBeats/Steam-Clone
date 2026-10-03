@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { fetchAPI } from "@/lib/api/fetch";
 import { ApiError } from "@/lib/api/errors";
-import type { Auth, User } from "@/types";
+import type { AuthToken, User } from "@/types";
 import { LoginSchema } from "@/schemas/auth/login.schema";
 import { COOKIE_OPTIONS } from "./cookiesOptions";
 import * as z from "zod";
@@ -56,7 +56,7 @@ export async function loginAction(
   let role: User["role"];
 
   try {
-    const data = await fetchAPI<Auth>("/auth/login", {
+    const data = await fetchAPI<AuthToken>("/auth/login", {
       method: "POST",
       body: { email, password },
     });
@@ -81,6 +81,6 @@ export async function loginAction(
   }
 
   redirect(
-    role === "ADMIN" ? "/admin" : role === "VENDEDOR" ? "/studio/games" : "/",
+    role === "ADMIN" ? "/admin" : role === "VENTEDOR" ? "/studio/games" : "/",
   );
 }

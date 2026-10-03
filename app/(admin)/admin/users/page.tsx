@@ -3,8 +3,6 @@ import { requireAdmin } from "@/actions/admin/guard";
 import { getAdminUsers } from "@/lib/api/games";
 import { SearchInput } from "@/components/admin/SearchInput";
 import { DeleteUserButton } from "@/components/admin/DeleteUserButton";
-import type { UserRole } from "@/types";
-
 const PAGE_SIZE = 10;
 
 const UsersPage = async ({
@@ -102,7 +100,7 @@ const UsersPage = async ({
                   <td className="px-3 py-3 whitespace-nowrap">
                     <span
                       className={`px-2.5 py-1 rounded text-xs font-semibold inline-block ${
-                        u.role === ("ADMIN" as UserRole)
+                        u.role === "ADMIN"
                           ? "bg-[#28282C] text-[#FAFAFA]"
                           : "bg-[#101014] text-[#8A8A8A]"
                       }`}
@@ -121,7 +119,7 @@ const UsersPage = async ({
                       >
                         Edit
                       </Link>
-                      {u.role === ("ADMIN" as UserRole) ? (
+                      {u.role === "ADMIN" ? (
                         <span className="text-[#5A5A5A] text-sm">—</span>
                       ) : (
                         <DeleteUserButton id={u.id} email={u.email} />

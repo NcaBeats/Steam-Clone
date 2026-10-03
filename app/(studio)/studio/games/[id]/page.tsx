@@ -10,7 +10,7 @@ const StudioGameDetailPage = async ({
 }: {
   readonly params: Promise<{ id: string }>;
 }) => {
-  await requireRole(["VENDEDOR"], "/admin");
+  await requireRole(["VENTEDOR"], "/admin");
   const { id: idStr } = await params;
   const id = Number(idStr);
   if (!Number.isFinite(id) || id <= 0) notFound();

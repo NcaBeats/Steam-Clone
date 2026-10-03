@@ -8,6 +8,7 @@ import type {
   AdminUser,
   AdminUserUpdateInput,
   GameUpdateInput,
+  Paginated,
 } from "@/types";
 
 export const getGames = (): Promise<Game[]> =>
@@ -55,16 +56,6 @@ export const searchGames = (name: string): Promise<Game[]> =>
     revalidate: 0,
     responseShape: "list",
   });
-
-export type Paginated<T> = {
-  content: T[];
-  page: {
-    size: number;
-    number: number;
-    totalElements: number;
-    totalPages: number;
-  };
-};
 
 export const getAdminUsers = (
   page = 0,

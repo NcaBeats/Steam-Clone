@@ -1,5 +1,6 @@
 import * as z from "zod";
 import { validate, clean } from "rut.js";
+import { passwordSchema } from "@/schemas/password.schema";
 
 export const AdminUserCreateSchema = z.object({
   email: z
@@ -8,10 +9,7 @@ export const AdminUserCreateSchema = z.object({
     .min(1, "Email is required")
     .max(100, "Email cannot exceed 100 characters")
     .pipe(z.email("Invalid email format")),
-  password: z
-    .string()
-    .min(4, "The minimum amount of characters is 4")
-    .max(10, "The maximum amount of characters is 10"),
+  password: passwordSchema,
   run: z
     .string()
     .trim()
@@ -38,5 +36,3 @@ export const AdminUserCreateSchema = z.object({
   comuna: z.string().optional(),
   address: z.string().trim().max(300, "Address cannot exceed 300 characters"),
 });
-
-export type AdminUserCreateInput = z.infer<typeof AdminUserCreateSchema>;

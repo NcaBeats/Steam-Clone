@@ -1,9 +1,11 @@
+import { GameState } from "./Game";
+
 export type GameUpdateInput = {
   name: string;
   originalPrice: number;
   discountPercent: number;
   description: string;
-  state: "AVAILABLE" | "COMING_SOON" | "DISCONTINUED";
+  state: GameState;
   launchDate: string;
   categoryNames: string[];
 };

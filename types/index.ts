@@ -1,4 +1,4 @@
-export * from "./Auth";
+export * from "./AuthToken";
 export * from "./AdminGame";
 export * from "./AdminUser";
 export * from "./Blog";
@@ -6,6 +6,7 @@ export * from "./Category";
 export * from "./Game";
 export * from "./GameUpload";
 export * from "./Library";
+export * from "./Paginated";
 export * from "./Purchase";
 export * from "./Region";
 export * from "./User";

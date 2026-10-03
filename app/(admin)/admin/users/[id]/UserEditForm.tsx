@@ -10,7 +10,8 @@ import {
   type Region,
 } from "@/components/admin/LocationSelects";
 import { updateUserAction, updateUserProfileAction } from "@/actions/admin";
-import type { AdminUser, UserRole } from "@/types";
+import { passwordSchema } from "@/schemas/password.schema";
+import { USER_ROLES, type AdminUser } from "@/types";
 
 type Props = Readonly<{
   user: AdminUser;
@@ -30,15 +31,37 @@ export function UserEditForm({ user }: Props) {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const email = (formData.get("email")?.toString() ?? user.email) as string;
-    const role = (formData.get("role")?.toString() ?? user.role) as UserRole;
-    const password = formData.get("password")?.toString() ?? "";
+    const rawRole = formData.get("role")?.toString() ?? user.role;
+    // Buscar en USER_ROLES en vez de castear a UserRole: el cast era un
+    // agujero por el que paso un "VENDEDOR" que el backend nunca emite.
+    const role = USER_ROLES.find((r) => r === rawRole);
+    if (!role) {
+      showAlert({
+        variant: "destructive",
+        title: "Save error",
+        description: "Invalid role",
+      });
+      return;
+    }
+    const trimmedPassword = (formData.get("password")?.toString() ?? "").trim();
+    if (trimmedPassword.length > 0) {
+      const passwordCheck = passwordSchema.safeParse(trimmedPassword);
+      if (!passwordCheck.success) {
+        showAlert({
+          variant: "destructive",
+          title: "Save error",
+          description: passwordCheck.error.issues[0].message,
+        });
+        return;
+      }
+    }
 
     setSaving(true);
     try {
       const userResult = await updateUserAction(user.id, {
         email,
         role,
-        password: password.trim() || undefined,
+        password: trimmedPassword || undefined,
       });
       if (!userResult.ok) {
         showAlert({
@@ -122,7 +145,7 @@ export function UserEditForm({ user }: Props) {
             </label>
             <Select id="role" name="role" defaultValue={user.role}>
               <option value="ADMIN">ADMIN</option>
-              <option value="VENDEDOR">VENDEDOR</option>
+              <option value="VENTEDOR">VENTEDOR</option>
               <option value="CLIENTE">CLIENTE</option>
             </Select>
           </div>

@@ -11,7 +11,7 @@ const StudioGamesPage = async ({
 }: {
   readonly searchParams: Promise<{ page?: string; q?: string }>;
 }) => {
-  await requireRole(["VENDEDOR"], "/admin");
+  await requireRole(["VENTEDOR"], "/admin");
   const { page: pageParam, q } = await searchParams;
   const page = Math.max(0, Number(pageParam ?? 0));
   const offset = page * PAGE_SIZE;

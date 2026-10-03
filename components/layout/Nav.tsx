@@ -28,7 +28,7 @@ export const Nav = async () => {
   const wallet = isLoggedIn
     ? await getMyWalletAction().catch(() => null)
     : null;
-  const isStaff = user?.role === "ADMIN" || user?.role === "VENDEDOR";
+  const isStaff = user?.role === "ADMIN" || user?.role === "VENTEDOR";
   const staffHref = user?.role === "ADMIN" ? "/admin" : "/studio/games";
 
   const menuItems: BurgerMenuItem[] = [

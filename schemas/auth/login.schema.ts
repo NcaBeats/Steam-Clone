@@ -1,4 +1,5 @@
 import * as z from "zod";
+import { passwordSchema } from "@/schemas/password.schema";
 
 const domains = new Set(["duoc.cl", "profesor.duoc.cl", "gmail.com"]);
 
@@ -17,10 +18,7 @@ const email = z
     },
   );
 
-const password = z
-  .string()
-  .min(4, "The minimum amount of characters is 4")
-  .max(10, "The maximum amount of characters is 10");
+const password = passwordSchema;
 
 export const LoginSchema = z.object({
   email: email,

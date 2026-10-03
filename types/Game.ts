@@ -23,25 +23,3 @@ export type Game = {
   recommendedSpecs: string | null;
   createdAt: string;
 };
-
-export type GameCreateInput = {
-  name: string;
-  originalPrice: number;
-  discountPercent: number;
-  description: string;
-  state: GameState;
-  launchDate: string;
-  categoryNames: string[];
-};
-
-export type UserCreateInput = {
-  email: string;
-  password: string;
-  firstName?: string;
-  lastName?: string;
-  run?: string;
-  birthDate?: string | null;
-  region?: string | null;
-  comuna?: string | null;
-  address?: string;
-};

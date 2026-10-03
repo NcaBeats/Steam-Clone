@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { fetchAPI } from "@/lib/api/fetch";
-import type { Auth } from "@/types";
+import type { AuthToken } from "@/types";
 import { createSignUpSchema } from "@/schemas/auth/sign-up.schema";
 import regiones from "@/data/regiones.json";
 import * as z from "zod";
@@ -77,7 +77,7 @@ export async function signUpAction(
   } = validation.data;
 
   try {
-    await fetchAPI<Auth>("/auth/register", {
+    await fetchAPI<AuthToken>("/auth/register", {
       method: "POST",
       body: {
         run,

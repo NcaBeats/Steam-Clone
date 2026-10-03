@@ -7,6 +7,7 @@ import { clean as cleanRun, validate as validateRun } from "rut.js";
 import { Input } from "@/components/ui";
 import { PasswordInput } from "@/components/auth";
 import { createUserFromFormAction } from "@/actions/admin";
+import { passwordSchema } from "@/schemas/password.schema";
 import {
   ComunaSelect,
   RegionSelect,
@@ -32,8 +33,9 @@ export function NewUserForm() {
     const run = formData.get("run")?.toString() ?? "";
     const cleanedRun = cleanRun(run);
 
-    if (password.length < 4 || password.length > 10) {
-      setError("Password must be between 4 and 10 characters");
+    const passwordCheck = passwordSchema.safeParse(password);
+    if (!passwordCheck.success) {
+      setError(passwordCheck.error.issues[0].message);
       return;
     }
     if (password !== confirmPassword) {
