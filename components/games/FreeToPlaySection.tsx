@@ -4,13 +4,12 @@ import type { Game } from "@/types";
 type Props = Readonly<{ games: Game[] }>;
 
 export const FreeToPlaySection = ({ games }: Props) => {
-  const freeGames = games.filter((g) => g.originalPrice === 0);
-  if (freeGames.length === 0) return null;
+  if (games.length === 0) return null;
 
   return (
     <section className="flex flex-col">
       <h2 className="text-xl text-[#EDEDED] ml-1">Free to Play</h2>
-      <DiscountCarousel games={freeGames} />
+      <DiscountCarousel games={games} />
     </section>
   );
 };

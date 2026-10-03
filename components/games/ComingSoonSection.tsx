@@ -4,13 +4,12 @@ import type { Game } from "@/types";
 type Props = Readonly<{ games: Game[] }>;
 
 export const ComingSoonSection = ({ games }: Props) => {
-  const comingSoon = games.filter((g) => g.state === "COMING_SOON");
-  if (comingSoon.length === 0) return null;
+  if (games.length === 0) return null;
 
   return (
     <section className="flex flex-col">
       <h2 className="text-xl text-[#EDEDED] ml-1">Coming Soon</h2>
-      <DiscountCarousel games={comingSoon} />
+      <DiscountCarousel games={games} />
     </section>
   );
 };
