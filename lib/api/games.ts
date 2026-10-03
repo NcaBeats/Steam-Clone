@@ -1,4 +1,4 @@
-import { fetchAPI } from "./fetch";
+﻿import { fetchAPI } from "./fetch";
 import type {
   Game,
   Category,
@@ -11,20 +11,19 @@ import type {
   Paginated,
 } from "@/types";
 
-export const getGames = (): Promise<Game[]> =>
-  fetchAPI("/games?size=100", { noStore: true, responseShape: "list" });
+export const getGames = async (): Promise<Game[]> => {
+  const page = await fetchAPI<{ content: Game[] }>("/games?size=100");
+  return page.content;
+};
 
 export const getGamesPaginated = (
   page = 0,
   size = 10,
 ): Promise<Paginated<Game>> =>
-  fetchAPI(`/games?page=${page}&size=${size}`, {
-    noStore: true,
-    responseShape: "page",
-  });
+  fetchAPI<Paginated<Game>>("/games?page=" + page + "&size=" + size);
 
 export const getGameById = (id: number): Promise<Game> =>
-  fetchAPI(`/games/${id}`, { noStore: true });
+  fetchAPI<Game>("/games/" + id);
 
 export type GameStats = {
   total: number;
@@ -33,93 +32,120 @@ export type GameStats = {
 };
 
 export const getGameStats = (): Promise<GameStats> =>
-  fetchAPI("/games/stats", { noStore: true });
+  fetchAPI<GameStats>("/games/stats");
 
-export const getDiscountedGames = (): Promise<Game[]> =>
-  fetchAPI("/games/discounted", { noStore: true, responseShape: "list" });
+export const getDiscountedGames = async (): Promise<Game[]> => {
+  const page = await fetchAPI<{ content: Game[] }>("/games/discounted");
+  return page.content;
+};
 
-export const getBannerGames = (): Promise<Game[]> =>
-  fetchAPI("/games/banners?size=4", { noStore: true, responseShape: "list" });
+export const getBannerGames = async (): Promise<Game[]> => {
+  const page = await fetchAPI<{ content: Game[] }>("/games/banners?size=4");
+  return page.content;
+};
 
-export const getCategories = (): Promise<Category[]> =>
-  fetchAPI("/categories?size=50", { noStore: true, responseShape: "list" });
+export const getFreeToPlayGames = async (): Promise<Game[]> => {
+  const page = await fetchAPI<{ content: Game[] }>(
+    "/games/free-to-play?size=12",
+  );
+  return page.content;
+};
 
-export const getMyLibrary = (): Promise<Library[]> =>
-  fetchAPI("/library?size=50", {
+export const getComingSoonGames = async (): Promise<Game[]> => {
+  const page = await fetchAPI<{ content: Game[] }>(
+    "/games/coming-soon?size=12",
+  );
+  return page.content;
+};
+
+export const getCategories = async (): Promise<Category[]> => {
+  const page = await fetchAPI<{ content: Category[] }>("/categories?size=50");
+  return page.content;
+};
+
+export const getMyLibrary = async (): Promise<Library[]> => {
+  const page = await fetchAPI<{ content: Library[] }>("/library?size=50", {
     auth: true,
-    revalidate: 0,
-    responseShape: "list",
   });
+  return page.content;
+};
 
-export const searchGames = (name: string): Promise<Game[]> =>
-  fetchAPI(`/games?name=${encodeURIComponent(name)}&size=10`, {
-    revalidate: 0,
-    responseShape: "list",
-  });
+export const searchGames = async (name: string): Promise<Game[]> => {
+  const page = await fetchAPI<{ content: Game[] }>(
+    "/games?name=" + encodeURIComponent(name) + "&size=10",
+  );
+  return page.content;
+};
 
 export const getAdminUsers = (
   page = 0,
   size = 10,
   email?: string,
 ): Promise<Paginated<User>> =>
-  fetchAPI(
-    `/users?page=${page}&size=${size}${
-      email ? `&email=${encodeURIComponent(email)}` : ""
-    }`,
-    { auth: true, noStore: true, responseShape: "page" },
+  fetchAPI<Paginated<User>>(
+    "/users?page=" +
+      page +
+      "&size=" +
+      size +
+      (email ? "&email=" + encodeURIComponent(email) : ""),
+    { auth: true },
   );
 
 export const getAdminUser = (id: number): Promise<AdminUser> =>
-  fetchAPI(`/users/${id}`, { auth: true, noStore: true });
+  fetchAPI<AdminUser>("/users/" + id, { auth: true });
 
 export const getAdminGames = (
   page = 0,
   size = 10,
   name?: string,
 ): Promise<Paginated<Game>> =>
-  fetchAPI(
-    `/games?page=${page}&size=${size}${
-      name ? `&name=${encodeURIComponent(name)}` : ""
-    }`,
-    { noStore: true, responseShape: "page" },
+  fetchAPI<Paginated<Game>>(
+    "/games?page=" +
+      page +
+      "&size=" +
+      size +
+      (name ? "&name=" + encodeURIComponent(name) : ""),
   );
 
 export const getAdminGameById = (id: number): Promise<Game> =>
-  fetchAPI(`/games/${id}`, { noStore: true });
+  fetchAPI<Game>("/games/" + id);
 
 export const getManageGames = (
   page = 0,
   size = 10,
   name?: string,
 ): Promise<Paginated<Game>> =>
-  fetchAPI(
-    `/manage/games?page=${page}&size=${size}${
-      name ? `&name=${encodeURIComponent(name)}` : ""
-    }`,
-    { auth: true, noStore: true, responseShape: "page" },
+  fetchAPI<Paginated<Game>>(
+    "/manage/games?page=" +
+      page +
+      "&size=" +
+      size +
+      (name ? "&name=" + encodeURIComponent(name) : ""),
+    { auth: true },
   );
 
 export const getManageGameById = (id: number): Promise<Game> =>
-  fetchAPI(`/manage/games/${id}`, { auth: true, noStore: true });
+  fetchAPI<Game>("/manage/games/" + id, { auth: true });
 
 export const getManageOrders = (
   page = 0,
   size = 10,
 ): Promise<Paginated<Purchase>> =>
-  fetchAPI(`/manage/orders?page=${page}&size=${size}`, {
-    auth: true,
-    noStore: true,
-    responseShape: "page",
-  });
+  fetchAPI<Paginated<Purchase>>(
+    "/manage/orders?page=" + page + "&size=" + size,
+    {
+      auth: true,
+    },
+  );
 
 export const getManageOrder = (id: number): Promise<Purchase> =>
-  fetchAPI(`/manage/orders/${id}`, { auth: true, noStore: true });
+  fetchAPI<Purchase>("/manage/orders/" + id, { auth: true });
 
 export const updateAdminUser = (
   id: number,
   input: AdminUserUpdateInput,
 ): Promise<User> =>
-  fetchAPI(`/users/${id}`, {
+  fetchAPI<User>("/users/" + id, {
     method: "PUT",
     body: input,
     auth: true,
@@ -139,7 +165,7 @@ export const updateAdminUserProfile = (
     address?: string;
   },
 ): Promise<AdminUser> =>
-  fetchAPI(`/profile/${id}`, {
+  fetchAPI<AdminUser>("/profile/" + id, {
     method: "PATCH",
     body: input,
     auth: true,
@@ -149,7 +175,7 @@ export const updateAdminGame = (
   id: number,
   input: GameUpdateInput,
 ): Promise<Game> =>
-  fetchAPI(`/games/${id}`, {
+  fetchAPI<Game>("/games/" + id, {
     method: "PUT",
     body: {
       name: input.name,
@@ -161,5 +187,4 @@ export const updateAdminGame = (
       categoryNames: input.categoryNames,
     },
     auth: true,
-    noStore: true,
   });
