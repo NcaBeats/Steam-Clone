@@ -3,7 +3,7 @@ import { Input } from "@/components/ui";
 import { ControllerRenderProps, FieldPath, FieldValues } from "react-hook-form";
 
 interface PasswordInputProps<T extends FieldValues = FieldValues> {
-  readonly name: string;
+  readonly name?: string;
   readonly placeholder: string;
   readonly show: boolean;
   readonly onToggle: () => void;
@@ -31,15 +31,16 @@ export function PasswordInput<T extends FieldValues = FieldValues>({
   field,
 }: PasswordInputProps<T>) {
   const isRHF = !!field;
+  const inputName = isRHF ? field.name : name;
 
   return (
     <label
-      htmlFor={name}
+      htmlFor={inputName}
       className={`flex relative items-center font-medium text-sm ${className}`}
     >
       <Input
-        id={name}
-        name={name}
+        id={inputName}
+        name={inputName}
         type={show ? "text" : "password"}
         placeholder={placeholder}
         required={required}
