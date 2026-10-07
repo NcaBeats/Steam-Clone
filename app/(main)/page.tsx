@@ -13,6 +13,7 @@ import {
   getComingSoonGames,
   getCategories,
   getGames,
+  getRecentGames,
 } from "@/lib/api/games";
 
 const FEATURED_CATEGORIES = [
@@ -32,14 +33,14 @@ const FEATURED_CATEGORIES = [
 
 export default async function Home() {
   const [
-    bannerGames,
+    recentGames,
     discountedGames,
     freeToPlayGames,
     comingSoonGames,
     categories,
     allGames,
   ] = await Promise.all([
-    getBannerGames(),
+    getRecentGames(),
     getDiscountedGames(),
     getFreeToPlayGames(),
     getComingSoonGames(),
@@ -49,7 +50,7 @@ export default async function Home() {
 
   return (
     <div className="flex flex-col p-2 gap-8 w-full max-w-6xl mx-auto min-h-screen">
-      <BannerCarousel games={bannerGames} />
+      <BannerCarousel games={recentGames} />
       <section className="flex flex-col">
         <h2 className="text-3xl text-[#EDEDED] ml-1">Discounts and Offers</h2>
         <DiscountCarouselFeatured games={discountedGames} />

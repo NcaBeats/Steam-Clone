@@ -44,6 +44,11 @@ export const getBannerGames = async (): Promise<Game[]> => {
   return page.content;
 };
 
+export const getRecentGames = async (): Promise<Game[]> => {
+  const page = await fetchAPI<{ content: Game[] }>("/games/recent");
+  return page.content;
+};
+
 export const getFreeToPlayGames = async (): Promise<Game[]> => {
   const page = await fetchAPI<{ content: Game[] }>(
     "/games/free-to-play?size=12",
