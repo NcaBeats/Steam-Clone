@@ -40,7 +40,7 @@ export default async function Home() {
     categories,
     allGames,
   ] = await Promise.all([
-    getRecentGames(4),
+    getRecentGames(8),
     getDiscountedGames(),
     getFreeToPlayGames(),
     getComingSoonGames(),

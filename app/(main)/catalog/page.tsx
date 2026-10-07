@@ -29,11 +29,13 @@ const CatalogPage = async ({ searchParams }: Props) => {
       <div className="flex flex-col xl:flex-row gap-6">
         <div className="flex flex-col gap-2 flex-1 min-w-0 ">
           <CatalogList games={games} />
-          <Pagination
-            page={page}
-            totalPages={pageInfo.totalPages}
-            basePath="/catalog"
-          />
+          <div className="flex justify-center">
+            <Pagination
+              page={page}
+              totalPages={pageInfo.totalPages}
+              basePath="/catalog"
+            />
+          </div>
         </div>
         {featured && (
           <aside className="hidden xl:flex flex-col w-80 shrink-0 self-start sticky top-20 gap-3">

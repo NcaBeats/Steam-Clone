@@ -30,7 +30,6 @@ export const Pagination = ({ page, totalPages, basePath }: Props) => {
         className={pageLinkCls(page === 0)}
       >
         <ChevronLeftIcon />
-        Previous
       </Link>
       {Array.from({ length: totalPages }, (_, i) => (
         <Link
@@ -52,7 +51,6 @@ export const Pagination = ({ page, totalPages, basePath }: Props) => {
         aria-disabled={page === totalPages - 1}
         className={pageLinkCls(page === totalPages - 1)}
       >
-        Next
         <ChevronRightIcon />
       </Link>
     </ButtonGroup>
