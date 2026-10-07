@@ -1,6 +1,6 @@
 import {
   BannerCarousel,
-  DiscountCarousel,
+  DiscountCarouselFeatured,
   CategoryChips,
   FreeToPlaySection,
   ComingSoonSection,
@@ -52,7 +52,7 @@ export default async function Home() {
       <BannerCarousel games={bannerGames} />
       <section className="flex flex-col">
         <h2 className="text-xl text-[#EDEDED] ml-1">Discounts and Offers</h2>
-        <DiscountCarousel games={discountedGames} />
+        <DiscountCarouselFeatured games={discountedGames} />
       </section>
       <CategoryChips categories={categories} />
       <FreeToPlaySection games={freeToPlayGames} />
