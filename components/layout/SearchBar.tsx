@@ -8,7 +8,7 @@ import {
   DrawerClose,
   DrawerContent,
   DrawerTrigger,
-} from "@/components/ui/drawer";
+} from "@/components/feedback/drawer";
 import { Input } from "@/components/ui/input";
 import { SearchGameCard } from "@/components/games/SearchGameCard";
 import { searchGamesClient } from "@/lib/api/search";

@@ -10,7 +10,7 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "@/components/ui/carousel";
+} from "@/components/media/carousel";
 import { formatPrice } from "@/lib";
 import {
   addToCart,
@@ -19,7 +19,7 @@ import {
   subscribeCart,
 } from "@/lib/cart";
 import { useHydrated } from "@/lib/use-hydrated";
-import { useAlert } from "@/components/ui";
+import { useAlert } from "@/components/feedback";
 import { GameVideo } from "@/components/games/GameVideo";
 import type { Game } from "@/types";
 

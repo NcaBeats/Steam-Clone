@@ -14,9 +14,10 @@ const Library = async () => {
 
   const [library, allGames] = await Promise.all([getMyLibrary(), getGames()]);
 
-  const ownedGames = library
-    .map((entry) => allGames.find((g) => g.id === entry.gameId))
-    .filter((g): g is NonNullable<typeof g> => g !== undefined);
+  const libraryIds = new Set(library.map((entry) => entry.gameId));
+  const ownedGames = allGames.filter((g): g is NonNullable<typeof g> =>
+    libraryIds.has(g.id),
+  );
 
   return (
     <div className="flex flex-col p-2 gap-6 w-full max-w-7xl mx-auto min-h-screen">

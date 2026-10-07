@@ -22,7 +22,7 @@ import { getMyWalletAction } from "@/actions/wallet";
 import { createPurchaseAction } from "@/actions/purchase";
 import { WALLET_UPDATE_EVENT } from "@/components/layout/WalletBalance";
 import type { Wallet } from "@/types";
-import { useAlert } from "@/components/ui";
+import { useAlert } from "@/components/feedback";
 import { formatPrice } from "@/lib";
 
 type Status = "loading" | "ready" | "submitting" | "success" | "error";

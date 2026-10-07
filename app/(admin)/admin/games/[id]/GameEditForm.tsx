@@ -2,14 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  useAlert,
-  Input,
-  Select,
-  Textarea,
-  FileDropzone,
-  SpecsEditor,
-} from "@/components/ui";
+import { Input, Textarea } from "@/components/ui";
+import { useAlert } from "@/components/feedback";
+import { FileDropzone, SpecsEditor, Select } from "@/components/inputs";
 import {
   presignGameImageAction,
   presignGameVideoAction,

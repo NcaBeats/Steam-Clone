@@ -9,7 +9,7 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "@/components/ui/carousel";
+} from "@/components/media/carousel";
 import type { Game } from "@/types";
 
 interface BannerCarouselProps {

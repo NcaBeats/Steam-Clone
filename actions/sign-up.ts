@@ -1,4 +1,4 @@
-"use server";
+﻿"use server";
 
 import { redirect } from "next/navigation";
 import { fetchAPI } from "@/lib/api/fetch";
@@ -37,7 +37,7 @@ function validateSignUp(formData: FormData) {
   const result = schema.safeParse(parsed);
 
   if (!result.success) {
-    // Sólo aquí, al devolver error, sacamos password/confirmPassword para safeFields
+    // SÃ³lo aquÃ­, al devolver error, sacamos password/confirmPassword para safeFields
     const { password, confirmPassword, ...safeFields } = entries as Record<
       string,
       string
@@ -107,3 +107,4 @@ export async function signUpAction(
 
   redirect("/log-in");
 }
+

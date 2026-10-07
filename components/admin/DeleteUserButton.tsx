@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { deleteUserByIdAction } from "@/actions/admin";
-import { ConfirmOverlay } from "@/components/ui/ConfirmOverlay";
+import { ConfirmOverlay } from "@/components/feedback/ConfirmOverlay";
 
 type Props = Readonly<{ id: number; email: string }>;
 

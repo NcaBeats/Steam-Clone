@@ -1,13 +1,12 @@
 import Link from "next/link";
 import Image from "next/image";
+import { FoldText, TextType } from "@/components/feedback";
 import {
-  FoldText,
   Marquee,
   MarqueeContent,
   MarqueeFade,
   MarqueeItem,
-  TextType,
-} from "@/components/ui";
+} from "@/components/media";
 
 const cardCls = "font-semibold text-center rounded-lg";
 

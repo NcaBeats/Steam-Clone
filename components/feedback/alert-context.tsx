@@ -8,7 +8,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "@/components/feedback/alert";
 import { CheckCircle2, AlertCircle, X } from "lucide-react";
 
 export type AlertVariant = "default" | "destructive";

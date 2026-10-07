@@ -6,7 +6,7 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "@/components/ui/carousel";
+} from "@/components/media/carousel";
 import { GameCard } from "@/components/games/GameCard";
 import type { Game } from "@/types";
 

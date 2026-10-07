@@ -1,4 +1,4 @@
-"use server";
+﻿"use server";
 
 import { fetchAPI } from "@/lib/api/fetch";
 import {
@@ -55,3 +55,4 @@ export async function sendContactAction(
     };
   }
 }
+

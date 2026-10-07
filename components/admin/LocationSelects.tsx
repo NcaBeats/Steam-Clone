@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useEffect } from "react";
-import { Select } from "@/components/ui";
+import { Select } from "@/components/inputs";
 import regiones from "@/data/regiones.json";
 
 const COMUNAS_BY_REGION: Record<string, string[]> = regiones.reduce(

@@ -1,4 +1,4 @@
-"use server";
+﻿"use server";
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -84,3 +84,4 @@ export async function loginAction(
     role === "ADMIN" ? "/admin" : role === "VENTEDOR" ? "/studio/games" : "/",
   );
 }
+

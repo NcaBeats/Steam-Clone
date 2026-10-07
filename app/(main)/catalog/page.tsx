@@ -1,6 +1,6 @@
 import { CatalogList } from "@/components/games";
 import { GameImage } from "@/components/games/GameImage";
-import { Pagination } from "@/components/ui";
+import { Pagination } from "@/components/navigation";
 import { getGamesPaginated, getBannerGames } from "@/lib/api/games";
 import Link from "next/link";
 import { formatPrice } from "@/lib";

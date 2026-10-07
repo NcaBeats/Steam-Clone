@@ -1,8 +1,11 @@
-import { fetchAPI } from "./fetch";
+﻿import { fetchAPI } from "./fetch";
 import type { Blog } from "@/types";
 
-export const getBlogs = (): Promise<Blog[]> =>
-  fetchAPI("/blogs?size=20", { noStore: true, responseShape: "list" });
+export const getBlogs = async (): Promise<Blog[]> => {
+  const page = await fetchAPI<{ content: Blog[] }>("/blogs?size=20");
+  return page.content;
+};
 
 export const getBlogById = (id: number): Promise<Blog> =>
-  fetchAPI(`/blogs/${id}`, { noStore: true });
+  fetchAPI<Blog>(`/blogs/${id}`);
+

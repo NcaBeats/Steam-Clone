@@ -1,4 +1,4 @@
-"use server";
+﻿"use server";
 
 import { fetchAPI } from "@/lib/api/fetch";
 import type { User } from "@/types";
@@ -11,3 +11,4 @@ export async function getCurrentUserAction(): Promise<User | null> {
     return null;
   }
 }
+

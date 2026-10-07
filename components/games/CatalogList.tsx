@@ -1,15 +1,12 @@
 import { GameListItem } from "@/components/games";
-import { getGames } from "@/lib/api";
 import type { Game } from "@/types";
 
-type Props = Readonly<{ games?: Game[] }>;
+type Props = Readonly<{ games: Game[] }>;
 
-export const CatalogList = async ({ games }: Props = {}) => {
-  const list = games ?? (await getGames());
-
+export const CatalogList = ({ games }: Props) => {
   return (
     <div className="flex flex-col gap-2">
-      {list.map((game) => (
+      {games.map((game) => (
         <GameListItem
           key={game.id}
           id={game.id}

@@ -12,23 +12,31 @@ export default async function GamePage({
   const { id } = await params;
   const gameId = Number(id);
 
-  let game;
-  try {
-    game = await getGameById(gameId);
-  } catch (error) {
+  if (Number.isNaN(gameId)) {
+    notFound();
+  }
+
+  const [gameResult, libraryResult] = await Promise.allSettled([
+    getGameById(gameId),
+    getMyLibraryAction(),
+  ]);
+
+  if (gameResult.status === "rejected") {
+    const error = gameResult.reason;
     if (error instanceof ApiError && error.status === 404) {
       notFound();
     }
     throw error;
   }
 
-  // El estado de biblioteca es un dato adjunto, no el motivo de la pagina: si
-  // falla, se muestra el juego igual y se deja el boton en su estado inicial.
-  // Se degrada a proposito, pero sin tragarse el error en silencio.
-  const library = await getMyLibraryAction().catch((error: unknown) => {
-    console.error("[getGamePage] library lookup failed:", error);
-    return [];
-  });
+  const game = gameResult.value;
+
+  let library: Awaited<ReturnType<typeof getMyLibraryAction>> = [];
+  if (libraryResult.status === "fulfilled") {
+    library = libraryResult.value;
+  } else {
+    console.error("[getGamePage] library lookup failed:", libraryResult.reason);
+  }
 
   const alreadyInLibrary = library.some((item) => item.gameId === gameId);
 

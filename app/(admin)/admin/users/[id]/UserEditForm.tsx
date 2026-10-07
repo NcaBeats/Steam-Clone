@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAlert, Input, Select, Textarea } from "@/components/ui";
+import { useAlert } from "@/components/feedback";
+import { Input, Textarea } from "@/components/ui";
+import { Select } from "@/components/inputs";
 import { PasswordInput } from "@/components/auth";
 import {
   ComunaSelect,

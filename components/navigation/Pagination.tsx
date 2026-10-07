@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { buttonVariants } from "@/components/ui/Button";
-import { ButtonGroup } from "@/components/ui/button-group";
+import { ButtonGroup } from "@/components/navigation/button-group";
 import { cn } from "@/lib/utils";
 
 type Props = Readonly<{

@@ -32,7 +32,7 @@ export const GameCard = ({
       <div className="relative aspect-3/4 ">
         <GameImage
           src={imageUrl}
-          alt=""
+          alt="Game cover"
           fill
           sizes="(min-width: 640px) 18vw, 50vw"
           className="snap-start

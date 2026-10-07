@@ -1,26 +1,17 @@
-import type { Game } from "@/types";
-
-const API_BASE =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:9090/api/v1";
+﻿import type { Game } from "@/types";
+import { ApiError } from "./errors";
+import { API_BASE } from "./config";
 
 export async function searchGamesClient(name: string): Promise<Game[]> {
-  const res = await fetch(
-    `${API_BASE}/games?name=${encodeURIComponent(name)}&size=10`,
-  );
+  const res = await fetch(`${API_BASE}/games?name=${encodeURIComponent(name)}&size=10`);
   if (!res.ok) {
-    throw new Error(`Search failed: ${res.status}`);
+    const text = await res.text().catch(() => "");
+    throw new ApiError(res.status, text || `Search failed: ${res.status}`);
   }
   const data = await res.json();
-  // Same contract as fetchAPI's responseShape: "list". /games returns
-  // Page<GameResponse>; failing loudly beats coercing whatever arrived.
-  if (
-    typeof data !== "object" ||
-    data === null ||
-    !Array.isArray((data as { content?: unknown }).content)
-  ) {
-    throw new Error(
-      "Search expected a paginated response from /games but got an unexpected shape.",
-    );
+  if (typeof data !== "object" || data === null || !("content" in data) || !Array.isArray((data as any).content)) {
+    throw new ApiError(res.status, "Unexpected response shape from search endpoint");
   }
   return (data as { content: Game[] }).content;
 }
+

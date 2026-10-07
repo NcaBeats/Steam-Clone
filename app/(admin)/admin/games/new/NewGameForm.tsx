@@ -3,14 +3,9 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import {
-  Input,
-  Select,
-  Textarea,
-  FileDropzone,
-  SpecsEditor,
-  useAlert,
-} from "@/components/ui";
+import { Input, Textarea } from "@/components/ui";
+import { FileDropzone, SpecsEditor, Select } from "@/components/inputs";
+import { useAlert } from "@/components/feedback";
 import {
   createGameWithUrlsAction,
   presignGameImageAction,

@@ -1,4 +1,4 @@
-"use server";
+﻿"use server";
 
 import { revalidatePath, updateTag } from "next/cache";
 import { fetchAPI } from "@/lib/api/fetch";
@@ -13,8 +13,7 @@ import type {
   PresignedUploadResponse,
   Profile,
   User,
-  UserCreateInput,
-} from "@/types";
+  UserCreateInput} from "@/types";
 import type { PresignResult } from "@/lib/game-upload";
 import type { ZodError } from "zod";
 
@@ -69,8 +68,7 @@ function readRawUserProfile(formData: FormData) {
     birthDate: formData.get("birthDate")?.toString(),
     region: formData.get("region")?.toString(),
     comuna: formData.get("comuna")?.toString(),
-    address: formData.get("address")?.toString(),
-  };
+    address: formData.get("address")?.toString()};
 }
 
 export async function deleteUserAction(): Promise<{
@@ -79,7 +77,7 @@ export async function deleteUserAction(): Promise<{
 }> {
   return runMutation(
     () =>
-      fetchAPI<void>("/users", { method: "DELETE", auth: true, noStore: true }),
+      fetchAPI<void>("/users", { method: "DELETE", auth: true}),
     ["/admin/users", "/admin"],
   );
 }
@@ -91,9 +89,7 @@ export async function deleteUserByIdAction(
     () =>
       fetchAPI<void>(`/users/${id}`, {
         method: "DELETE",
-        auth: true,
-        noStore: true,
-      }),
+        auth: true}),
     ["/admin/users", "/admin"],
   );
 }
@@ -114,11 +110,8 @@ export async function createUserAction(
           birthDate: input.birthDate ?? null,
           region: input.region ?? null,
           comuna: input.comuna ?? null,
-          address: input.address,
-        },
-        auth: true,
-        noStore: true,
-      }),
+          address: input.address},
+        auth: true}),
     ["/admin/users", "/admin"],
   );
   return result.ok ? { ok: true, user: result.data } : result;
@@ -141,8 +134,7 @@ export async function createUserFromFormAction(
     birthDate: parsed.data.birthDate || null,
     region: parsed.data.region || null,
     comuna: parsed.data.comuna || null,
-    address: parsed.data.address,
-  });
+    address: parsed.data.address});
   if (!created.ok || !created.user) {
     return { ok: false, error: created.error };
   }
@@ -157,9 +149,7 @@ export async function deleteGameAction(
     () =>
       fetchAPI<void>(`/games/${id}`, {
         method: "DELETE",
-        auth: true,
-        noStore: true,
-      }),
+        auth: true}),
     [
       "/admin/games",
       `/admin/games/${id}`,
@@ -196,11 +186,8 @@ export async function presignGameVideoAction(
         {
           method: "POST",
           body: { name, contentType },
-          auth: true,
-          noStore: true,
-        },
-      ),
-    };
+          auth: true},
+      )};
   } catch (e) {
     return { ok: false, error: errorMessage(e) };
   }
@@ -219,11 +206,8 @@ export async function presignGameImageAction(
         {
           method: "POST",
           body: { name, kind, contentType },
-          auth: true,
-          noStore: true,
-        },
-      ),
-    };
+          auth: true},
+      )};
   } catch (e) {
     return { ok: false, error: errorMessage(e) };
   }
@@ -243,9 +227,7 @@ export async function createGameWithUrlsAction(
       fetchAPI<Game>("/games", {
         method: "POST",
         body: { ...parsed.data, ...compactMedia(media) },
-        auth: true,
-        noStore: true,
-      }),
+        auth: true}),
     ["/admin/games", "/studio/games", "/admin", "/studio"],
   );
 }
@@ -265,9 +247,7 @@ export async function updateGameWithUrlsAction(
       fetchAPI<Game>(`/games/${id}`, {
         method: "PUT",
         body: { ...parsed.data, ...compactMedia(media) },
-        auth: true,
-        noStore: true,
-      }),
+        auth: true}),
     [
       "/admin/games",
       `/admin/games/${id}`,
@@ -285,8 +265,7 @@ export async function updateUserAction(
 ): Promise<{ ok: boolean; user?: User; error?: string }> {
   const body: Record<string, unknown> = {
     email: input.email,
-    role: input.role,
-  };
+    role: input.role};
   if (input.password && input.password.length > 0) {
     body.password = input.password;
   }
@@ -296,9 +275,7 @@ export async function updateUserAction(
       fetchAPI<User>(`/users/${id}`, {
         method: "PUT",
         body,
-        auth: true,
-        noStore: true,
-      }),
+        auth: true}),
     ["/admin/users", `/admin/users/${id}`, "/admin"],
   );
   return result.ok ? { ok: true, user: result.data } : result;
@@ -313,10 +290,11 @@ export async function updateUserProfileAction(
       fetchAPI<AdminUser>(`/profile/${id}`, {
         method: "PATCH",
         body: input,
-        auth: true,
-        noStore: true,
-      }),
+        auth: true}),
     ["/admin/users", `/admin/users/${id}`],
   );
   return result.ok ? { ok: true, user: result.data } : result;
 }
+
+
+
