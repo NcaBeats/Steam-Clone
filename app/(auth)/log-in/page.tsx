@@ -58,7 +58,7 @@ export default function LogInPage() {
             control={form.control}
             name="email"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="flex flex-col items-stretch gap-1">
                 <FormLabel className="text-xs font-medium">Email</FormLabel>
                 <FormControl>
                   <Input
@@ -78,7 +78,7 @@ export default function LogInPage() {
             control={form.control}
             name="password"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="flex flex-col items-stretch gap-1">
                 <FormLabel className="text-xs font-medium">Password</FormLabel>
                 <FormControl>
                   <PasswordInput

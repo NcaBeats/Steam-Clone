@@ -68,7 +68,7 @@ export default function SignUpPage() {
         control={form.control}
         name="region"
         render={({ field }) => (
-          <FormItem>
+          <FormItem className="flex flex-col items-stretch gap-1">
             <FormLabel className="text-xs font-medium">Region</FormLabel>
             <FormControl>
               <Select
@@ -104,7 +104,7 @@ export default function SignUpPage() {
         control={form.control}
         name="comuna"
         render={({ field }) => (
-          <FormItem>
+          <FormItem className="flex flex-col items-stretch gap-1">
             <FormLabel className="text-xs font-medium">Municipality</FormLabel>
             <FormControl>
               <Select
@@ -150,7 +150,7 @@ export default function SignUpPage() {
             control={form.control}
             name="run"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="flex flex-col items-stretch gap-1">
                 <FormLabel className="text-xs font-medium">RUN</FormLabel>
                 <FormControl>
                   <Input
@@ -169,7 +169,7 @@ export default function SignUpPage() {
             control={form.control}
             name="email"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="flex flex-col items-stretch gap-1">
                 <FormLabel className="text-xs font-medium">Email</FormLabel>
                 <FormControl>
                   <Input
@@ -190,7 +190,7 @@ export default function SignUpPage() {
               control={form.control}
               name="password"
               render={({ field }) => (
-                <FormItem className="flex-1">
+                <FormItem className="flex-1 flex flex-col items-stretch gap-1">
                   <FormLabel className="text-xs font-medium">
                     Password
                   </FormLabel>
@@ -212,7 +212,7 @@ export default function SignUpPage() {
               control={form.control}
               name="confirmPassword"
               render={({ field }) => (
-                <FormItem className="flex-1">
+                <FormItem className="flex-1 flex flex-col items-stretch gap-1">
                   <FormLabel className="text-xs font-medium">
                     Confirm Password
                   </FormLabel>
@@ -238,7 +238,7 @@ export default function SignUpPage() {
               control={form.control}
               name="name"
               render={({ field }) => (
-                <FormItem className="flex-1">
+                <FormItem className="flex-1 flex flex-col items-stretch gap-1">
                   <FormLabel className="text-xs font-medium">
                     First Name
                   </FormLabel>
@@ -258,7 +258,7 @@ export default function SignUpPage() {
               control={form.control}
               name="lastName"
               render={({ field }) => (
-                <FormItem className="flex-1">
+                <FormItem className="flex-1 flex flex-col items-stretch gap-1">
                   <FormLabel className="text-xs font-medium">
                     Last Name
                   </FormLabel>
@@ -285,7 +285,7 @@ export default function SignUpPage() {
                   ? field.value.toISOString().split("T")[0]
                   : field.value;
               return (
-                <FormItem>
+                <FormItem className="flex flex-col items-stretch gap-1">
                   <FormLabel className="text-xs font-medium">
                     Birthdate (Optional)
                   </FormLabel>
@@ -317,7 +317,7 @@ export default function SignUpPage() {
             control={form.control}
             name="direccion"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="flex flex-col items-stretch gap-1">
                 <FormLabel className="text-xs font-medium">Address</FormLabel>
                 <FormControl>
                   <Input
