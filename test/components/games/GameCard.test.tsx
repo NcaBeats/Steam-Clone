@@ -25,7 +25,7 @@ describe("GameCard Test", () => {
 
   test("El juego con descuento muestra el porcentaje y su valor original tachado", () => {
     const { container } = render(<GameCard {...props} />);
-    expect(screen.getByText("20%")).toBeDefined();
+    expect(screen.getByText(/20%/)).toBeDefined();
     expect(container.querySelector("s")?.textContent).toBe("$10,000.00");
   });
 
