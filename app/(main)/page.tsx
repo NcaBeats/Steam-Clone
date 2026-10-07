@@ -12,6 +12,7 @@ import {
   getFreeToPlayGames,
   getComingSoonGames,
   getCategories,
+  getGames,
 } from "@/lib/api/games";
 
 const FEATURED_CATEGORIES = [
@@ -36,12 +37,14 @@ export default async function Home() {
     freeToPlayGames,
     comingSoonGames,
     categories,
+    allGames,
   ] = await Promise.all([
     getBannerGames(),
     getDiscountedGames(),
     getFreeToPlayGames(),
     getComingSoonGames(),
     getCategories(),
+    getGames(),
   ]);
 
   return (
@@ -55,7 +58,7 @@ export default async function Home() {
       <FreeToPlaySection games={freeToPlayGames} />
       <ComingSoonSection games={comingSoonGames} />
       <CategoryCarouselsGrid
-        games={freeToPlayGames}
+        games={allGames}
         categoriesToShow={FEATURED_CATEGORIES}
       />
     </div>
