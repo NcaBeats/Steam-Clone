@@ -8,6 +8,7 @@ import {
   CarouselPrevious,
 } from "@/components/media/carousel";
 import { GameCard } from "@/components/games/GameCard";
+import { GameCardBig } from "@/components/games/GameCardBig";
 import type { Game } from "@/types";
 
 interface DiscountCarouselProps {
@@ -53,7 +54,7 @@ export const DiscountCarouselFeatured = ({ games }: DiscountCarouselProps) => {
             key={game.id}
             className="basis-1/6 sm:basis-1/2 md:basis-5/16 pl-2 md:pl-4 py-2"
           >
-            <GameCard
+            <GameCardBig
               id={game.id}
               name={game.name}
               price={game.price}

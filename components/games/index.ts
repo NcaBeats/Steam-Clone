@@ -10,3 +10,4 @@ export * from "./GameDetail";
 export * from "./GameListItem";
 export * from "./LibraryCard";
 export * from "./SearchGameCard";
+export * from "./GameCardBig";
