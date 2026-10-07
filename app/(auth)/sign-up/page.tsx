@@ -13,7 +13,6 @@ import {
   Form,
   FormField,
   FormItem,
-  FormLabel,
   FormControl,
   FormMessage,
   FormDescription,
@@ -69,7 +68,6 @@ export default function SignUpPage() {
         name="region"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Region</FormLabel>
             <FormControl>
               <Select
                 value={field.value}
@@ -105,7 +103,6 @@ export default function SignUpPage() {
         name="comuna"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Municipality</FormLabel>
             <FormControl>
               <Select
                 value={field.value}
@@ -151,7 +148,6 @@ export default function SignUpPage() {
             name="run"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>RUN</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="12.345.678-9"
@@ -170,7 +166,6 @@ export default function SignUpPage() {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
                 <FormControl>
                   <Input
                     type="email"
@@ -191,7 +186,6 @@ export default function SignUpPage() {
               name="password"
               render={({ field }) => (
                 <FormItem className="flex-1">
-                  <FormLabel>Password</FormLabel>
                   <FormControl>
                     <PasswordInput
                       placeholder="Password"
@@ -211,7 +205,6 @@ export default function SignUpPage() {
               name="confirmPassword"
               render={({ field }) => (
                 <FormItem className="flex-1">
-                  <FormLabel>Confirm Password</FormLabel>
                   <FormControl>
                     <PasswordInput
                       placeholder="Confirm password"
@@ -235,7 +228,6 @@ export default function SignUpPage() {
               name="name"
               render={({ field }) => (
                 <FormItem className="flex-1">
-                  <FormLabel>First Name</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="First name"
@@ -253,7 +245,6 @@ export default function SignUpPage() {
               name="lastName"
               render={({ field }) => (
                 <FormItem className="flex-1">
-                  <FormLabel>Last Name</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="Last name"
@@ -278,7 +269,6 @@ export default function SignUpPage() {
                   : field.value;
               return (
                 <FormItem>
-                  <FormLabel>Birthdate (Optional)</FormLabel>
                   <FormControl>
                     <Input
                       type="date"
@@ -308,7 +298,6 @@ export default function SignUpPage() {
             name="direccion"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Address</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Address"
@@ -326,7 +315,7 @@ export default function SignUpPage() {
           <Button
             type="submit"
             disabled={form.formState.isSubmitting}
-            className="w-full rounded-full py-3 font-semibold"
+            className="flex items-center gap-1 justify-center bg-[#007aff] hover:bg-[#26bbff] text-white rounded-full py-3 font-semibold disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-colors duration-200 ease-in-out focus-visible:ring-[#26BBFF]"
           >
             {form.formState.isSubmitting ? "Loading..." : "Sign Up"}
           </Button>

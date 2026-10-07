@@ -13,7 +13,6 @@ import {
   Form,
   FormField,
   FormItem,
-  FormLabel,
   FormControl,
   FormMessage,
 } from "@/components/ui/form";
@@ -59,7 +58,6 @@ export default function LogInPage() {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
                 <FormControl>
                   <Input
                     type="email"
@@ -79,7 +77,6 @@ export default function LogInPage() {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Password</FormLabel>
                 <FormControl>
                   <PasswordInput
                     name="password"
@@ -98,7 +95,7 @@ export default function LogInPage() {
           <Button
             type="submit"
             disabled={form.formState.isSubmitting}
-            className="w-full rounded-full py-3 font-semibold"
+            className="flex items-center gap-1 justify-center bg-[#007aff] hover:bg-[#26bbff] text-white rounded-full py-3 font-semibold disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-colors duration-200 ease-in-out focus-visible:ring-[#26BBFF]"
           >
             {form.formState.isSubmitting ? "Loading..." : "Log In"}
           </Button>
