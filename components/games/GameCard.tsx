@@ -56,7 +56,7 @@ export const GameCard = ({
            group-active:bg-[#007AFF] group-hover:text-white group-active:text-white
             font-semibold bg-[#A1CD44] text-black px-2 py-0.5 rounded-md"
             >
-              {discountPercent}%
+              -{discountPercent}%
             </span>
           ) : (
             <span />
