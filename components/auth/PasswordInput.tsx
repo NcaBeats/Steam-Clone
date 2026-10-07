@@ -1,7 +1,8 @@
 import { Eye, EyeOff } from "lucide-react";
 import { Input } from "@/components/ui";
+import { ControllerRenderProps, FieldPath, FieldValues } from "react-hook-form";
 
-interface PasswordInputProps {
+interface PasswordInputProps<T extends FieldValues = FieldValues> {
   readonly name: string;
   readonly placeholder: string;
   readonly show: boolean;
@@ -12,9 +13,11 @@ interface PasswordInputProps {
   readonly maxLength?: number;
   readonly className?: string;
   readonly inputClassName?: string;
+  // RHF field support
+  readonly field?: ControllerRenderProps<T, FieldPath<T>>;
 }
 
-export const PasswordInput = ({
+export function PasswordInput<T extends FieldValues = FieldValues>({
   name,
   placeholder,
   show,
@@ -25,7 +28,10 @@ export const PasswordInput = ({
   maxLength,
   className,
   inputClassName,
-}: PasswordInputProps) => {
+  field,
+}: PasswordInputProps<T>) {
+  const isRHF = !!field;
+
   return (
     <label
       htmlFor={name}
@@ -37,7 +43,10 @@ export const PasswordInput = ({
         type={show ? "text" : "password"}
         placeholder={placeholder}
         required={required}
-        defaultValue={defaultValue}
+        defaultValue={isRHF ? undefined : defaultValue}
+        value={isRHF ? field.value : undefined}
+        onChange={isRHF ? field.onChange : undefined}
+        ref={isRHF ? field.ref : undefined}
         minLength={minLength}
         maxLength={maxLength}
         className={`pr-10 ${inputClassName ?? ""}`}
@@ -51,4 +60,4 @@ export const PasswordInput = ({
       </button>
     </label>
   );
-};
+}
