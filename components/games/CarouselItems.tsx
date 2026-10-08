@@ -13,13 +13,30 @@ import type { Game } from "@/types";
 
 interface DiscountCarouselProps {
   readonly games: Game[];
+  readonly title?: string;
+  readonly titleClassName?: string;
 }
 
-export const DiscountCarousel = ({ games }: DiscountCarouselProps) => {
+const DEFAULT_TITLE_CLASS = "text-xl text-[#EDEDED] ml-1";
+
+export const DiscountCarousel = ({
+  games,
+  title,
+  titleClassName = DEFAULT_TITLE_CLASS,
+}: DiscountCarouselProps) => {
   if (games.length === 0) return null;
 
   return (
     <Carousel opts={{ dragFree: true }} className="w-full">
+      {title ? (
+        <div className="mb-2 flex items-center justify-between">
+          <h2 className={titleClassName}>{title}</h2>
+          <div className="flex gap-2">
+            <CarouselPrevious className="static left-auto right-auto top-auto my-0 size-8" />
+            <CarouselNext className="static left-auto right-auto top-auto my-0 size-8" />
+          </div>
+        </div>
+      ) : null}
       <CarouselContent className="touch-manipulation">
         {games.map((game) => (
           <CarouselItem
@@ -37,17 +54,34 @@ export const DiscountCarousel = ({ games }: DiscountCarouselProps) => {
           </CarouselItem>
         ))}
       </CarouselContent>
-      <CarouselPrevious className="left-2" />
-      <CarouselNext className="right-2" />
+      {!title ? (
+        <>
+          <CarouselPrevious className="left-2" />
+          <CarouselNext className="right-2" />
+        </>
+      ) : null}
     </Carousel>
   );
 };
 
-export const DiscountCarouselFeatured = ({ games }: DiscountCarouselProps) => {
+export const DiscountCarouselFeatured = ({
+  games,
+  title,
+  titleClassName = DEFAULT_TITLE_CLASS,
+}: DiscountCarouselProps) => {
   if (games.length === 0) return null;
 
   return (
     <Carousel opts={{ dragFree: true, align: "start" }} className="w-full">
+      {title ? (
+        <div className="mb-2 flex items-center justify-between">
+          <h2 className={titleClassName}>{title}</h2>
+          <div className="flex gap-2">
+            <CarouselPrevious className="static left-auto right-auto top-auto my-0 size-8" />
+            <CarouselNext className="static left-auto right-auto top-auto my-0 size-8" />
+          </div>
+        </div>
+      ) : null}
       <CarouselContent className="touch-manipulation -ml-2 md:-ml-4">
         {games.map((game) => (
           <CarouselItem
@@ -65,8 +99,12 @@ export const DiscountCarouselFeatured = ({ games }: DiscountCarouselProps) => {
           </CarouselItem>
         ))}
       </CarouselContent>
-      <CarouselPrevious className="left-2" />
-      <CarouselNext className="right-2" />
+      {!title ? (
+        <>
+          <CarouselPrevious className="left-2" />
+          <CarouselNext className="right-2" />
+        </>
+      ) : null}
     </Carousel>
   );
 };

@@ -8,8 +8,7 @@ export const FreeToPlaySection = ({ games }: Props) => {
 
   return (
     <section className="flex flex-col">
-      <h2 className="text-xl text-[#EDEDED] ml-1">Free to Play</h2>
-      <DiscountCarousel games={games} />
+      <DiscountCarousel games={games} title="Free to Play" />
     </section>
   );
 };

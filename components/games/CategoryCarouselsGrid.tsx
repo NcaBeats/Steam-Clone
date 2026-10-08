@@ -31,8 +31,7 @@ export const CategoryCarouselsGrid = ({ games, categoriesToShow }: Props) => {
           id={`category-${cat}`}
           className="flex flex-col scroll-mt-20"
         >
-          <h2 className="text-xl text-[#EDEDED] ml-1">{cat}</h2>
-          <DiscountCarousel games={list} />
+          <DiscountCarousel games={list} title={cat} />
         </section>
       ))}
     </div>

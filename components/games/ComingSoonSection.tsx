@@ -8,8 +8,7 @@ export const ComingSoonSection = ({ games }: Props) => {
 
   return (
     <section className="flex flex-col">
-      <h2 className="text-xl text-[#EDEDED] ml-1">Coming Soon</h2>
-      <DiscountCarousel games={games} />
+      <DiscountCarousel games={games} title="Coming Soon" />
     </section>
   );
 };
