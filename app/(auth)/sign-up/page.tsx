@@ -215,6 +215,7 @@ export default function SignUp() {
                           type="email"
                           {...field}
                           placeholder="john@gmail.com"
+                          className="border-0"
                         />
                       </FormControl>
 
