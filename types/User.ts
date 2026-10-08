@@ -3,7 +3,7 @@
  * `UserRole` se deriva de la lista, asi que agregar un rol no puede dejar el
  * tipo y los <select> desincronizados.
  */
-export const USER_ROLES = ["ADMIN", "VENTEDOR", "CLIENTE"] as const;
+export const USER_ROLES = ["ADMIN", "VENDEDOR", "CLIENTE"] as const;
 
 export type UserRole = (typeof USER_ROLES)[number];
 

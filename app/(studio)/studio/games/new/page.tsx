@@ -4,7 +4,7 @@ import { getCategories } from "@/lib/api/games";
 import { NewGameForm } from "@/components/studio/NewGameForm";
 
 const StudioNewGamePage = async () => {
-  await requireRole(["VENTEDOR"], "/admin");
+  await requireRole(["VENDEDOR"], "/admin");
   const categories = await getCategories();
 
   return (

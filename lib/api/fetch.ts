@@ -8,23 +8,18 @@ function parseError(status: number, raw: string): ApiError {
       const body = JSON.parse(raw);
       if (body && typeof body === "object") {
         let detail: string;
-        const b: any = body;
+        const b: Record<string, unknown> = body;
         if (typeof b.detail === "string") detail = b.detail;
         else if (typeof b.message === "string") detail = b.message;
         else detail = "Request failed with status " + status;
         const code = typeof b.code === "string" ? b.code : undefined;
         return new ApiError(status, detail, code);
       }
-    } catch {
-      // Response body was not JSON; fall back to raw text below.
-    }
+    } catch {}
   }
-  return new ApiError(status, raw || ("Request failed with status " + status));
+  return new ApiError(status, raw || "Request failed with status " + status);
 }
 
-/**
- * Fetch helper: devuelve el JSON tal cual llega del backend.
- */
 export async function fetchAPI<T>(
   endpoint: string,
   options: {
@@ -51,7 +46,6 @@ export async function fetchAPI<T>(
   }
 
   if (body instanceof FormData) {
-    // El navegador agrega el boundary automáticamente
   } else if (body) {
     reqHeaders["Content-Type"] = "application/json";
   }
@@ -59,7 +53,8 @@ export async function fetchAPI<T>(
   const res = await fetch(API_BASE + endpoint, {
     method,
     headers: reqHeaders,
-    body: body instanceof FormData ? body : body ? JSON.stringify(body) : undefined,
+    body:
+      body instanceof FormData ? body : body ? JSON.stringify(body) : undefined,
     cache: "no-store",
   });
 

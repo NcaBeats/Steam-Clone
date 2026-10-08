@@ -7,7 +7,6 @@ import {
   CategoryCarouselsGrid,
 } from "@/components/games";
 import {
-  getBannerGames,
   getDiscountedGames,
   getFreeToPlayGames,
   getComingSoonGames,

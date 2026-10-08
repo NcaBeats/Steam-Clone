@@ -15,7 +15,7 @@ export default async function StudioLayout({
 }: {
   readonly children: React.ReactNode;
 }) {
-  await requireRole(["VENTEDOR"], "/admin");
+  await requireRole(["VENDEDOR"], "/admin");
 
   return (
     <div className="flex min-h-screen bg-[#18181C]">

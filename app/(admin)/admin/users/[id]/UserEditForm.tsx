@@ -147,7 +147,7 @@ export function UserEditForm({ user }: Props) {
             </label>
             <Select id="role" name="role" defaultValue={user.role}>
               <option value="ADMIN">ADMIN</option>
-              <option value="VENTEDOR">VENTEDOR</option>
+              <option value="VENDEDOR">VENDEDOR</option>
               <option value="CLIENTE">CLIENTE</option>
             </Select>
           </div>

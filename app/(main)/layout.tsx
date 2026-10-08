@@ -9,7 +9,7 @@ export default async function MainLayout({
 }) {
   const user = await getCurrentUserAction();
 
-  if (user?.role === "VENTEDOR") {
+  if (user?.role === "VENDEDOR") {
     redirect("/studio/games");
   }
 

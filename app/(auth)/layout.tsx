@@ -8,7 +8,7 @@ export default async function AuthLayout({
 }) {
   const user = await getCurrentUserAction();
 
-  if (user?.role === "VENTEDOR") {
+  if (user?.role === "VENDEDOR") {
     redirect("/studio/games");
   }
 
