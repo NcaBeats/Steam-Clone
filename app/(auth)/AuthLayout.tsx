@@ -16,16 +16,17 @@ const ericaOne = Erica_One({
 
 export const AuthLayout = ({ children }: AuthLayoutProps) => {
   return (
-    <div className="bg-[#101014] flex justify-center items-center min-h-screen p-4 relative">
+    <div className="relative flex min-h-screen items-center justify-center bg-[#101014] p-4">
       <Link
-        className="md:fixed absolute left-4 top-4 text-[#EDEDED] hover:bg-[#28282C] p-2 rounded-md transition-colors duration-200 ease-out"
+        className="absolute left-4 top-4 rounded-md p-2 text-[#EDEDED] transition-colors duration-200 ease-out hover:bg-[#28282C] md:fixed"
         href="/"
       >
         <CornerUpLeft />
       </Link>
 
-      <div className="flex flex-col gap-5 w-full max-w-md p-8 rounded-3xl bg-[#202024] border border-white/6 text-center">
+      <div className="flex w-full flex-col items-center gap-5 p-8 text-center">
         <h1 className={`text-6xl ${ericaOne.className} text-white`}>MBR</h1>
+
         {children}
       </div>
     </div>

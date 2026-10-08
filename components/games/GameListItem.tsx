@@ -59,7 +59,7 @@ export const GameListItem = ({
           <div
             className="transition-colors ease-in group-active:bg-[#007AFF]
            group-hover:bg-[#007AFF] rounded-lg ml-2.5 justify-center relative
-            flex text-[#3b2b00] bg-[#FCE100] items-center"
+            flex text-black bg-[#A1CD44] items-center"
           >
             <span
               className="group-active:text-[#EDEDED] group-hover:text-[#EDEDED]

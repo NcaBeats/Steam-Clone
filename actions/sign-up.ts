@@ -1,68 +1,25 @@
 ﻿"use server";
 
 import { redirect } from "next/navigation";
+import { format } from "date-fns";
+import * as z from "zod";
+
 import { fetchAPI } from "@/lib/api/fetch";
 import type { AuthToken } from "@/types";
 import { createSignUpSchema } from "@/schemas/auth/sign-up.schema";
 import regiones from "@/data/regiones.json";
-import * as z from "zod";
 
-export interface SignUpFormState {
-  success: boolean;
-  fields?: Record<string, string>;
-  errors: {
-    run?: string[];
-    name?: string[];
-    lastName?: string[];
-    email?: string[];
-    birthdate?: string[];
-    region?: string[];
-    comuna?: string[];
-    direccion?: string[];
-    password?: string[];
-    global?: string[];
-  } | null;
-}
+const signUpSchema = createSignUpSchema(regiones);
 
-function validateSignUp(formData: FormData) {
-  const entries = Object.fromEntries(formData);
-  const { birthdate, ...rest } = entries;
-
-  const parsed: Record<string, unknown> = { ...rest };
-  if (typeof birthdate === "string" && birthdate) {
-    parsed.birthdate = new Date(birthdate);
-  }
-
-  const schema = createSignUpSchema(regiones);
-  const result = schema.safeParse(parsed);
+export async function signUpAction(values: z.infer<typeof signUpSchema>) {
+  const result = signUpSchema.safeParse(values);
 
   if (!result.success) {
-    // SÃ³lo aquÃ­, al devolver error, sacamos password/confirmPassword para safeFields
-    const { password, confirmPassword, ...safeFields } = entries as Record<
-      string,
-      string
-    >;
     return {
       success: false as const,
-      fields: safeFields as Record<string, string>,
       errors: z.flattenError(result.error).fieldErrors,
     };
   }
-
-  return {
-    success: true as const,
-    data: result.data,
-    errors: null,
-  };
-}
-
-export async function signUpAction(
-  _prevState: SignUpFormState | null,
-  formData: FormData,
-): Promise<SignUpFormState> {
-  const validation = validateSignUp(formData);
-
-  if (!validation.success) return validation;
 
   const {
     run,
@@ -74,7 +31,7 @@ export async function signUpAction(
     region,
     comuna,
     direccion,
-  } = validation.data;
+  } = result.data;
 
   try {
     await fetchAPI<AuthToken>("/auth/register", {
@@ -85,26 +42,22 @@ export async function signUpAction(
         lastName,
         email,
         password,
-        birthDate:
-          birthdate instanceof Date
-            ? birthdate.toISOString().split("T")[0]
-            : undefined,
+
+        birthDate: birthdate ? format(birthdate, "yyyy-MM-dd") : undefined,
+
         region,
         comuna,
         address: direccion,
       },
     });
   } catch {
-    const fields = Object.fromEntries(formData) as Record<string, string>;
-    delete fields.password;
-    delete fields.confirmPassword;
     return {
-      success: false,
-      fields,
-      errors: { global: ["Registration failed. Please try again."] },
+      success: false as const,
+      errors: {
+        global: ["Registration failed. Please try again."],
+      },
     };
   }
 
   redirect("/log-in");
 }
-

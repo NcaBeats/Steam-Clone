@@ -37,15 +37,17 @@ export default function LogIn() {
 
   return (
     <AuthLayout>
-      <Card>
+      <Card className="[--card-spacing:--spacing(8)] w-full max-w-sm ring-0">
         <CardHeader>
-          <CardTitle>Sign In to Get Started</CardTitle>
+          <CardTitle className="text-xl font-bold">
+            Sign In to Get Started
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="flex flex-col gap-2"
+              className="flex flex-col gap-4"
             >
               <FormField
                 name="email"
@@ -58,9 +60,10 @@ export default function LogIn() {
                         type="email"
                         {...field}
                         placeholder="user@gmail.com"
+                        className="py-5 border-0"
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-left" />
                   </FormItem>
                 )}
               />
@@ -75,15 +78,36 @@ export default function LogIn() {
                       <Input
                         type="password"
                         {...field}
-                        placeholder="password"
+                        placeholder="••••••••"
+                        className="py-5 border-0"
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-left" />
                   </FormItem>
                 )}
               />
 
-              <Button type="submit">Log In</Button>
+              <Button
+                type="submit"
+                className={
+                  "bg-[#007AFF] font-semibold text-white hover:bg-[#2e92ff] py-5"
+                }
+                size={"lg"}
+              >
+                Log In
+              </Button>
+
+              <p className="text-[#8A8A8A] flex justify-center text-sm items-center-safe gap-2 font-medium">
+                {"Don't have an account?"}
+                <span>
+                  <a
+                    className="text-white hover:text-[#007AFF] hover:underline active:underline active:text-[#007AFF]"
+                    href="/sign-up"
+                  >
+                    Sign up
+                  </a>
+                </span>
+              </p>
             </form>
           </Form>
         </CardContent>
