@@ -11,15 +11,10 @@ type Props = Readonly<{
   title?: string | null;
 }>;
 
-function videoType(src: string): string {
-  const ext = src.split("?")[0].split("#")[0].split(".").pop()?.toLowerCase();
-  if (ext === "webm") return "video/webm";
-  if (ext === "mov") return "video/quicktime";
-  return "video/mp4";
-}
-
 export function GameVideo({ src, poster, title }: Props) {
   const absoluteSrc = resolveVideoUrl(src);
+
+  if (!absoluteSrc) return null;
 
   return (
     <div className="w-full aspect-video rounded-full  bg-black">
@@ -29,8 +24,8 @@ export function GameVideo({ src, poster, title }: Props) {
             style={{ borderRadius: "inherit" }}
             src={absoluteSrc}
             playsInline
+            preload="metadata"
           />
-          <source src={absoluteSrc} type={videoType(src)} />
         </VideoSkin>
       </VideoPlayer>
     </div>
