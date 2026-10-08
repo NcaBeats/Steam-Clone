@@ -60,7 +60,7 @@ export default function LogIn() {
                         type="email"
                         {...field}
                         placeholder="user@gmail.com"
-                        className="py-5 border-0"
+                        className="border-0"
                       />
                     </FormControl>
                     <FormMessage className="text-left" />
@@ -79,7 +79,7 @@ export default function LogIn() {
                         type="password"
                         {...field}
                         placeholder="••••••••"
-                        className="py-5 border-0"
+                        className="border-0"
                       />
                     </FormControl>
                     <FormMessage className="text-left" />

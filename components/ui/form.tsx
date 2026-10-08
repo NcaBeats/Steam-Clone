@@ -130,18 +130,14 @@ function FormMessage({
   const { error, formMessageId } = useFormField();
   const body = error ? String(error?.message ?? "") : children;
 
-  if (!body) {
-    return null;
-  }
-
   return (
     <p
       data-slot="form-message"
       id={formMessageId}
-      className={cn("text-sm text-destructive", className)}
+      className={cn("min-h-5 text-sm text-destructive", className)}
       {...props}
     >
-      {body}
+      {body || "\u00A0"}{" "}
     </p>
   );
 }

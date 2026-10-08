@@ -24,6 +24,15 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
+import {
+  Combobox,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+} from "@/components/ui/combobox";
+
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
@@ -88,7 +97,7 @@ export default function SignUp() {
 
   return (
     <AuthLayout>
-      <Card className="[--card-spacing:--spacing(8)] ring-0 w-full max-w-xl ">
+      <Card className="[--card-spacing:--spacing(8)] ring-0 w-full max-w-2xl ">
         <CardHeader>
           <CardTitle className="text-2xl font-bold">
             Create an Account
@@ -180,7 +189,7 @@ export default function SignUp() {
                                 type="button"
                                 variant="outline"
                                 className={cn(
-                                  "w-full justify-start text-left font-normal border-0",
+                                  "w-full justify-start text-left font-normal border-0 h-10",
                                   !field.value && "text-muted-foreground",
                                 )}
                               />
@@ -245,38 +254,47 @@ export default function SignUp() {
                   <FormField
                     name="region"
                     control={form.control}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Region</FormLabel>
+                    render={({ field }) => {
+                      const regionNames = regiones.map(
+                        (region) => region.nombre,
+                      );
 
-                        <Select
-                          value={field.value}
-                          onValueChange={(value) => {
-                            field.onChange(value);
-                            form.setValue("comuna", "");
-                          }}
-                        >
-                          <FormControl>
-                            <SelectTrigger className="w-full border-0">
-                              <SelectValue placeholder="Select a region" />
-                            </SelectTrigger>
-                          </FormControl>
+                      return (
+                        <FormItem>
+                          <FormLabel>Region</FormLabel>
 
-                          <SelectContent>
-                            {regiones.map((region) => (
-                              <SelectItem
-                                key={region.nombre}
-                                value={region.nombre}
-                              >
-                                {region.nombre}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                          <Combobox
+                            items={regionNames}
+                            value={field.value}
+                            onValueChange={(value) => {
+                              field.onChange(value);
+                              form.setValue("comuna", "");
+                            }}
+                          >
+                            <FormControl>
+                              <ComboboxInput
+                                placeholder="Select a region"
+                                className="w-full border-0 h-10"
+                              />
+                            </FormControl>
 
-                        <FormMessage className="text-left" />
-                      </FormItem>
-                    )}
+                            <ComboboxContent>
+                              <ComboboxEmpty>No region found.</ComboboxEmpty>
+
+                              <ComboboxList>
+                                {(item) => (
+                                  <ComboboxItem key={item} value={item}>
+                                    {item}
+                                  </ComboboxItem>
+                                )}
+                              </ComboboxList>
+                            </ComboboxContent>
+                          </Combobox>
+
+                          <FormMessage className="text-left" />
+                        </FormItem>
+                      );
+                    }}
                   />
 
                   <FormField
@@ -286,25 +304,33 @@ export default function SignUp() {
                       <FormItem className="min-w-0">
                         <FormLabel>Municipality</FormLabel>
 
-                        <Select
+                        <Combobox
+                          items={selectedRegion?.comunas ?? []}
                           value={field.value}
                           onValueChange={field.onChange}
                           disabled={!selectedRegion}
                         >
                           <FormControl>
-                            <SelectTrigger className="w-full min-w-0 border-0">
-                              <SelectValue placeholder="Select a municipality" />
-                            </SelectTrigger>
+                            <ComboboxInput
+                              placeholder="Select a municipality"
+                              className="w-full min-w-0 border-0 h-10"
+                            />
                           </FormControl>
 
-                          <SelectContent>
-                            {selectedRegion?.comunas.map((comuna) => (
-                              <SelectItem key={comuna} value={comuna}>
-                                {comuna}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                          <ComboboxContent>
+                            <ComboboxEmpty>
+                              No municipality found.
+                            </ComboboxEmpty>
+
+                            <ComboboxList>
+                              {(item) => (
+                                <ComboboxItem key={item} value={item}>
+                                  {item}
+                                </ComboboxItem>
+                              )}
+                            </ComboboxList>
+                          </ComboboxContent>
+                        </Combobox>
 
                         <FormMessage className="text-left" />
                       </FormItem>
@@ -382,7 +408,7 @@ export default function SignUp() {
 
               <Button
                 type="submit"
-                className="w-full font-semibold py-5"
+                className="w-full max-w-xs font-semibold self-center py-5"
                 disabled={isLoading}
               >
                 {isLoading ? "Creating account..." : "Create account"}

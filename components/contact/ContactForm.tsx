@@ -1,135 +1,178 @@
 "use client";
 
-import { useActionState } from "react";
+import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { Loader2, Send, CheckCircle2 } from "lucide-react";
-import { Input, Textarea } from "@/components/ui";
-import { sendContactAction, type ContactFormState } from "@/actions/contact";
 
-const inputCls =
-  "rounded-[4px] bg-[#28282C] hover:bg-[#303036] placeholder:text-white/55";
+import { sendContactAction } from "@/actions/contact";
+import {
+  ContactSchema,
+  type ContactInput,
+} from "@/schemas/contact/contact.schema";
 
-const initialState: ContactFormState = {
-  success: false,
-  errors: null,
-  timestamp: Date.now(),
-};
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { FieldGroup } from "@/components/ui/field"; // Se añade el FieldGroup de tus componentes
 
 export const ContactForm = () => {
-  const [state, formAction, pending] = useActionState(
-    sendContactAction,
-    initialState,
-  );
+  const [success, setSuccess] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
 
-  if (state.success) {
+  const form = useForm<ContactInput>({
+    resolver: zodResolver(ContactSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      comment: "",
+    },
+  });
+
+  const onSubmit = async (values: ContactInput) => {
+    setServerError(null);
+
+    try {
+      const result = await sendContactAction(values);
+
+      if (!result.success) {
+        setServerError(result.error);
+        return;
+      }
+
+      form.reset();
+      setSuccess(true);
+    } catch {
+      setServerError("Could not send your message. Please try again.");
+    }
+  };
+
+  if (success) {
     return (
-      <div className="bg-[#202024] border border-white/[0.06] rounded-lg p-8 flex flex-col items-center text-center gap-3">
+      <Card className="items-center gap-3 rounded-lg border border-white/6 bg-[#202024] p-8 text-center text-[#FAFAFA]">
         <CheckCircle2 size={56} className="text-[#26BBFF]" />
-        <h2 className="text-xl font-bold tracking-[0.4px] text-[#FAFAFA]">
-          Message sent
-        </h2>
+
+        <h2 className="text-xl font-bold tracking-[0.4px]">Message sent</h2>
+
         <p className="text-sm text-[#8A8A8A]">
           Thank you for reaching out. We will get back to you soon.
         </p>
-      </div>
+      </Card>
     );
   }
 
   return (
-    <form
-      key={state.timestamp}
-      action={formAction}
-      className="bg-[#202024] border border-white/[0.06] rounded-lg p-6 flex flex-col gap-4 text-[#FAFAFA]"
-      noValidate
-    >
-      <div className="flex flex-col gap-1">
-        <label htmlFor="name" className="text-xs font-medium">
-          Name
-        </label>
-        <Input
-          id="name"
-          name="name"
-          placeholder="Name"
-          type="text"
-          required
-          defaultValue={state?.fields?.name}
-          className={inputCls}
-        />
-        <div className="min-h-5">
-          {state?.errors?.name && (
-            <p className="text-red-500 text-xs mt-1 italic">
-              {state.errors.name[0]}
-            </p>
-          )}
-        </div>
-      </div>
+    <Card className="gap-4 ring-0 rounded-lg bg-[#202024] p-6 text-[#FAFAFA]">
+      <CardContent className="p-0">
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            noValidate
+            className="flex flex-col gap-6" // Se cambia gap-4 a gap-6 para igualar el ritmo visual de SignUp
+          >
+            {/* Se envuelven los campos dentro de FieldGroup para unificar el espaciado */}
+            <FieldGroup>
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
 
-      <div className="flex flex-col gap-1">
-        <label htmlFor="email" className="text-xs font-medium">
-          Email
-        </label>
-        <Input
-          id="email"
-          name="email"
-          placeholder="Email"
-          type="email"
-          required
-          defaultValue={state?.fields?.email}
-          className={inputCls}
-        />
-        <div className="min-h-5">
-          {state?.errors?.email && (
-            <p className="text-red-500 text-xs mt-1 italic">
-              {state.errors.email[0]}
-            </p>
-          )}
-        </div>
-      </div>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        placeholder="Jhon"
+                        className="border-0"
+                      />
+                    </FormControl>
 
-      <div className="flex flex-col gap-1">
-        <label htmlFor="comment" className="text-xs font-medium">
-          Message
-        </label>
-        <Textarea
-          id="comment"
-          name="comment"
-          placeholder="Your message"
-          required
-          rows={5}
-          defaultValue={state?.fields?.comment}
-          className={`${inputCls} min-h-32`}
-        />
-        <div className="min-h-5">
-          {state?.errors?.comment && (
-            <p className="text-red-500 text-xs mt-1 italic">
-              {state.errors.comment[0]}
-            </p>
-          )}
-        </div>
-      </div>
+                    <FormMessage className="text-left" />
+                  </FormItem>
+                )}
+              />
 
-      {state?.errors?.global && (
-        <div className="bg-[#2A1A1A] border border-[#5C2A2A] rounded-md p-3 text-sm text-[#FF6B6B]">
-          {state.errors.global[0]}
-        </div>
-      )}
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
 
-      <button
-        type="submit"
-        disabled={pending}
-        className="bg-[#007aff] hover:bg-[#2e92ff] text-[#FAFAFA] font-semibold py-2.5 rounded-lg transition-colors cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:ring-[#26BBFF]"
-      >
-        {pending ? (
-          <>
-            <Loader2 className="animate-spin" size={18} />
-            Sending...
-          </>
-        ) : (
-          <>
-            <Send size={18} />
-            Send message
-          </>
-        )}
-      </button>
-    </form>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="email"
+                        placeholder="user@gmail.com"
+                        className="border-0"
+                      />
+                    </FormControl>
+
+                    <FormMessage className="text-left" />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="comment"
+                render={({ field }) => (
+                  <FormItem>
+                    {" "}
+                    <FormLabel>Message</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        {...field}
+                        placeholder="Your message"
+                        rows={5}
+                        className="min-h-32 rounded-lg border-0 bg-[#28282C] hover:bg-[#303036] placeholder:text-white/55"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-left" />
+                  </FormItem>
+                )}
+              />
+            </FieldGroup>
+
+            {serverError && (
+              <div
+                role="alert"
+                className="rounded-md border border-[#5C2A2A] bg-[#2A1A1A] p-3 text-sm text-[#FF6B6B]"
+              >
+                {serverError}
+              </div>
+            )}
+
+            <Button
+              type="submit"
+              disabled={form.formState.isSubmitting}
+              size="lg"
+              className="cursor-pointer gap-2 bg-[#007aff] py-5 font-semibold text-white hover:bg-[#2e92ff] focus-visible:ring-[#26BBFF]"
+            >
+              {form.formState.isSubmitting ? (
+                <>
+                  <Loader2 size={18} className="animate-spin" />
+                  Sending...
+                </>
+              ) : (
+                <>
+                  <Send size={18} />
+                  Send message
+                </>
+              )}
+            </Button>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
   );
 };

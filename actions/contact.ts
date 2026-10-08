@@ -6,31 +6,22 @@ import {
   type ContactInput,
 } from "@/schemas/contact/contact.schema";
 
-export type ContactFormState = {
-  success: boolean;
-  fields?: ContactInput;
-  errors: {
-    name?: string[];
-    email?: string[];
-    comment?: string[];
-    global?: string[];
-  } | null;
-  timestamp?: number;
-};
+type ContactActionResult =
+  | { success: true }
+  | {
+      success: false;
+      error: string;
+    };
 
 export async function sendContactAction(
-  _prevState: ContactFormState | null,
-  formData: FormData,
-): Promise<ContactFormState> {
-  const rawFields = Object.fromEntries(formData);
-  const result = ContactSchema.safeParse(rawFields);
+  data: ContactInput,
+): Promise<ContactActionResult> {
+  const result = ContactSchema.safeParse(data);
 
   if (!result.success) {
     return {
       success: false,
-      fields: rawFields as ContactInput,
-      errors: result.error.flatten().fieldErrors,
-      timestamp: Date.now(),
+      error: "Invalid contact information.",
     };
   }
 
@@ -39,20 +30,15 @@ export async function sendContactAction(
       method: "POST",
       body: result.data,
     });
-    return { success: true, errors: null, timestamp: Date.now() };
-  } catch (e) {
+
+    return { success: true };
+  } catch (error) {
     return {
       success: false,
-      fields: rawFields as ContactInput,
-      errors: {
-        global: [
-          e instanceof Error
-            ? e.message
-            : "Could not send your message. Please try again.",
-        ],
-      },
-      timestamp: Date.now(),
+      error:
+        error instanceof Error
+          ? error.message
+          : "Could not send your message. Please try again.",
     };
   }
 }
-
