@@ -23,8 +23,6 @@ export const Nav = async () => {
   const cookieStore = await cookies();
   const isLoggedIn = !!cookieStore.get("token")?.value;
   const user = isLoggedIn ? await getCurrentUserAction() : null;
-  // El saldo es cromado: si la API falla no queremos que el error tumbe la
-  // pagina entera, solo que el saldo no aparezca.
   const wallet = isLoggedIn
     ? await getMyWalletAction().catch(() => null)
     : null;
@@ -64,7 +62,7 @@ export const Nav = async () => {
       <div className="">
         <Link href="/" className="block items-center min-h-full">
           <h1
-            className={`text-3xl hover:text-[#a5a5a5] transition-colors ease-in-out duration-100 ${ericaOne.className}`}
+            className={`text-3xl hover:text-[#a5a5a5] transition-colors ease-in-out duration-200 ${ericaOne.className}`}
           >
             MBR
           </h1>
@@ -80,7 +78,7 @@ export const Nav = async () => {
         {wallet && <WalletBalance initialBalance={wallet.balance} />}
         <Link
           href="/cart"
-          className="hover:bg-[#28282C] active:bg-[#28282C] rounded-full p-2.5"
+          className="hover:bg-[#28282C] active:bg-[#28282C] rounded-full p-2.5 transition-colors ease-in-out duration-200"
           aria-label="Cart"
         >
           <ShoppingCart size={20} />
@@ -104,7 +102,7 @@ export const Nav = async () => {
             </Link>
             <Link
               href={"/log-in"}
-              className="bg-[#EDEDED] text-[#0A0A0A] border hover:bg-[#b0b0b0] px-4 py-1.5 font-medium text-sm text-center rounded-full cursor-pointer transition-colors duration-200 ease-out"
+              className="bg-[#EDEDED] text-[#0A0A0A] hover:bg-[#b0b0b0] px-4 py-1.5 font-medium text-sm text-center rounded-full cursor-pointer transition-colors duration-200 ease-out"
             >
               Log In
             </Link>

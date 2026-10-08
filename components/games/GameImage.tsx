@@ -14,16 +14,6 @@ type Props = {
   /** Carga la imagen antes del resto: para la portada del detalle de juego. */
   priority?: boolean;
 };
-
-/**
- * Imagen de portada de un juego con respaldo cuando falta la URL.
- *
- * La columna `image_url` es nullable en el backend y la API la devuelve como
- * `null` cuando el juego se creo por JSON sin subir portada. `next/image`
- * exige un `src`, asi que sin este componente un solo juego sin imagen
- * rompia la pagina completa: el error se dispara dentro del `.map()` del
- * listado, no solo en esa card.
- */
 export function GameImage({
   src,
   alt = "",

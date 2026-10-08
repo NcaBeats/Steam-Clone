@@ -39,8 +39,8 @@ export default function LogIn() {
     <AuthLayout>
       <Card className="[--card-spacing:--spacing(8)] w-full max-w-sm ring-0">
         <CardHeader>
-          <CardTitle className="text-xl font-bold">
-            Sign In to Get Started
+          <CardTitle className="text-2xl text-left font-bold">
+            Sign In to continue
           </CardTitle>
         </CardHeader>
         <CardContent>

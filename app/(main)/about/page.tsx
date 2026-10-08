@@ -149,13 +149,13 @@ To become the digital meeting point where any player, regardless of location or 
         <div className="flex flex-col sm:flex-row gap-3 mt-2">
           <Link
             href="/catalog"
-            className="bg-[#007aff] hover:bg-[#78d3ff] text-[#FAFAFA] font-semibold px-6 py-2.5 rounded-full transition-colors duration-150 ease-out"
+            className="bg-[#007aff] hover:bg-[#2e92ff] text-[#FAFAFA] font-semibold px-6 py-2.5 rounded-full transition-colors duration-200 ease-in-out"
           >
             Browse the catalog
           </Link>
           <Link
             href="/"
-            className="bg-[#101014] text-[#EDEDED] border border-[#404044] hover:bg-[#28282C] px-6 py-2.5 font-semibold rounded-full transition-colors duration-150 ease-out"
+            className="bg-[#101014] text-[#EDEDED] border-0 hover:bg-[#28282C] px-6 py-2.5 font-semibold rounded-full transition-colors duration-200 ease-in-out"
           >
             Back to home
           </Link>

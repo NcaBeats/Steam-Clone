@@ -66,7 +66,7 @@ const CatalogPage = async ({ searchParams }: Props) => {
               <div className="flex items-center justify-between mt-1">
                 {featured.discountPercent > 0 ? (
                   <div className="flex items-center gap-2">
-                    <span className="bg-[#A1CD44] text-black text-xs font-bold px-2 py-1 rounded">
+                    <span className="bg-[#A1CD44] text-black text-xs font-bold px-2 py-1 rounded-lg">
                       -{featured.discountPercent}%
                     </span>
                     <s className="text-xs text-[#8A8A8A]">

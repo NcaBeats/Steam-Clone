@@ -39,7 +39,7 @@ export const GameListItem = ({
            group-active:text-black group-hover:text-black duration-200 ease-in
           "
       >
-        <h3 className="text-sm font-medium">{name}</h3>
+        <h3 className="text-md font-medium">{name}</h3>
         <h4 className="text-xs">
           {categories.map((cat) => cat.name).join(", ")}
         </h4>

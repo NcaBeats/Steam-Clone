@@ -90,7 +90,9 @@ export default function SignUp() {
     <AuthLayout>
       <Card className="[--card-spacing:--spacing(8)] ring-0 w-full max-w-xl ">
         <CardHeader>
-          <CardTitle className="text-xl font-bold">Create an Account</CardTitle>
+          <CardTitle className="text-2xl font-bold">
+            Create an Account
+          </CardTitle>
         </CardHeader>
 
         <CardContent>
@@ -110,7 +112,11 @@ export default function SignUp() {
                         <FormLabel>First name</FormLabel>
 
                         <FormControl>
-                          <Input {...field} placeholder="John" />
+                          <Input
+                            {...field}
+                            placeholder="John"
+                            className="border-0"
+                          />
                         </FormControl>
 
                         <FormMessage className="text-left" />
@@ -126,7 +132,11 @@ export default function SignUp() {
                         <FormLabel>Last name</FormLabel>
 
                         <FormControl>
-                          <Input {...field} placeholder="Doe" />
+                          <Input
+                            {...field}
+                            placeholder="Doe"
+                            className="border-0"
+                          />
                         </FormControl>
 
                         <FormMessage className="text-left" />
@@ -144,7 +154,11 @@ export default function SignUp() {
                         <FormLabel>RUN</FormLabel>
 
                         <FormControl>
-                          <Input {...field} placeholder="12.345.678-9" />
+                          <Input
+                            {...field}
+                            placeholder="12.345.678-9"
+                            className="border-0"
+                          />
                         </FormControl>
 
                         <FormMessage className="text-left" />
@@ -166,7 +180,7 @@ export default function SignUp() {
                                 type="button"
                                 variant="outline"
                                 className={cn(
-                                  "w-full justify-start text-left font-normal",
+                                  "w-full justify-start text-left font-normal border-0",
                                   !field.value && "text-muted-foreground",
                                 )}
                               />

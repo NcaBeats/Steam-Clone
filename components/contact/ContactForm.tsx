@@ -116,7 +116,7 @@ export const ContactForm = () => {
       <button
         type="submit"
         disabled={pending}
-        className="bg-[#007aff] hover:bg-[#26bbff] text-[#FAFAFA] font-semibold py-2.5 rounded-full transition-colors cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:ring-[#26BBFF]"
+        className="bg-[#007aff] hover:bg-[#2e92ff] text-[#FAFAFA] font-semibold py-2.5 rounded-lg transition-colors cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed focus-visible:ring-[#26BBFF]"
       >
         {pending ? (
           <>
