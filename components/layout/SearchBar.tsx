@@ -90,7 +90,7 @@ export const SearchBar = () => {
 
   return (
     <Drawer swipeDirection="up" open={open} onOpenChange={setOpen}>
-      <DrawerTrigger className="flex items-center gap-2 bg-[#28282C] hover:bg-[#303036] active:bg-[#303036] rounded-full px-3 h-9 text-sm text-[#EDEDED] transition-colors duration-150 ease-out cursor-pointer w-36 min-[400px]:w-48 md:w-64 nav:max-w-44 2xl:max-w-none">
+      <DrawerTrigger className="flex items-center gap-2 bg-[#28282C] hover:bg-[#303036] active:bg-[#303036] rounded-full px-3 h-9 text-sm text-[#EDEDED] transition-colors duration-150 ease-out cursor-pointer w-36 md:w-64 nav:max-w-44 2xl:max-w-none">
         <Search className="size-4" />
         <span className="hidden md:inline">Search</span>
         <kbd className="hidden md:inline-flex items-center gap-0.5 ml-auto text-[10px] text-[#5A5A5A] border border-[#404044] rounded px-1.5 py-0.5">
