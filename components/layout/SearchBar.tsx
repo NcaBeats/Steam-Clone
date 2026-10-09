@@ -3,13 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Search, Loader2, SearchIcon } from "lucide-react";
-import { Kbd, KbdGroup } from "@/components/ui/kbd";
+import { Kbd } from "@/components/ui/kbd";
 import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerTrigger,
-} from "@/components/feedback/drawer";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   InputGroup,
   InputGroupAddon,
@@ -95,11 +94,19 @@ export const SearchBar = () => {
   const showResults = trimmedQuery.length > 0;
 
   return (
-    <Drawer swipeDirection="up" open={open} onOpenChange={setOpen}>
-      <DrawerTrigger className="w-36 sm:flex-1 sm:max-w-64 nav:max-w-56 2xl:max-w-64 !bg-transparent !p-0 !border-0 !shadow-none">
-        <div className="w-full max-w-xs">
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger
+        render={
+          <button
+            type="button"
+            aria-label="Search games"
+            className="w-36 sm:flex-1 sm:max-w-64 nav:max-w-56 2xl:max-w-64 cursor-pointer bg-transparent p-0 border-0 shadow-none"
+          />
+        }
+      >
+        <div className="w-full max-w-xs pointer-events-none">
           <InputGroup>
-            <InputGroupInput placeholder="Search..." readOnly />
+            <InputGroupInput placeholder="Search..." readOnly tabIndex={-1} />
             <InputGroupAddon>
               <SearchIcon />
             </InputGroupAddon>
@@ -109,10 +116,15 @@ export const SearchBar = () => {
             </InputGroupAddon>
           </InputGroup>
         </div>
-      </DrawerTrigger>
-      <DrawerContent>
-        <div className="space-y-4 p-4">
-          <div className="relative max-w-3xl mx-auto">
+      </PopoverTrigger>
+      <PopoverContent
+        align="start"
+        side="bottom"
+        sideOffset={8}
+        className="w-[min(42rem,calc(100vw-2rem))] p-4"
+      >
+        <div className="space-y-4">
+          <div className="relative w-full">
             <Search className="-translate-y-1/2 absolute top-1/2 left-3 size-5 text-muted-foreground" />
             <Input
               ref={inputRef}
@@ -131,7 +143,7 @@ export const SearchBar = () => {
           </div>
 
           {showResults && (
-            <div className="max-w-3xl mx-auto max-h-[60vh] overflow-y-auto px-1 py-3">
+            <div className="w-full max-h-[60vh] overflow-y-auto px-1 py-3">
               {!loading && results.length === 0 ? (
                 <div className="py-6 text-center text-sm text-[#8A8A8A]">
                   No results for &quot;{trimmedQuery}&quot;
@@ -154,23 +166,25 @@ export const SearchBar = () => {
                       />
                     ))}
                   </div>
-                  <DrawerClose
+                  <button
+                    type="button"
                     className="w-full text-left px-3 py-2 mt-3 text-xs text-[#007AFF] hover:bg-[#1A1A1A] active:bg-[#1A1A1A] rounded-full cursor-pointer border-t border-[#2A2A2A]"
                     onClick={() => {
                       router.push(
                         `/search?q=${encodeURIComponent(trimmedQuery)}`,
                       );
+                      setOpen(false);
                     }}
                   >
                     View all results for &quot;{trimmedQuery}&quot; →
-                  </DrawerClose>
+                  </button>
                 </>
               )}
             </div>
           )}
 
           {!showResults && (
-            <div className="max-w-3xl mx-auto">
+            <div className="w-full">
               <h4 className="font-medium text-muted-foreground text-xs uppercase mb-2">
                 Quick tips
               </h4>
@@ -182,7 +196,7 @@ export const SearchBar = () => {
             </div>
           )}
         </div>
-      </DrawerContent>
-    </Drawer>
+      </PopoverContent>
+    </Popover>
   );
 };
