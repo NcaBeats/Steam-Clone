@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Search, Loader2, Command } from "lucide-react";
+import { Search, Loader2, SearchIcon } from "lucide-react";
 import { Kbd, KbdGroup } from "@/components/ui/kbd";
 import {
   Drawer,
@@ -10,6 +10,11 @@ import {
   DrawerContent,
   DrawerTrigger,
 } from "@/components/feedback/drawer";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
 import { Input } from "@/components/ui/input";
 import { SearchGameCard } from "@/components/games/SearchGameCard";
 import { searchGamesClient } from "@/lib/api/search";
@@ -91,14 +96,19 @@ export const SearchBar = () => {
 
   return (
     <Drawer swipeDirection="up" open={open} onOpenChange={setOpen}>
-      <DrawerTrigger className="flex items-center gap-2 bg-[#28282C] hover:bg-[#303036] active:bg-[#303036] rounded-full px-3 h-9 text-sm text-[#EDEDED] transition-colors duration-150 ease-out cursor-pointer w-36 sm:flex-1 sm:max-w-64 nav:max-w-56 2xl:max-w-64">
-        <Search className="size-4" />
-        <span className="hidden md:inline">Search</span>
-        <KbdGroup>
-          <Kbd>Ctrl</Kbd>
-          <span>+</span>
-          <Kbd>B</Kbd>
-        </KbdGroup>
+      <DrawerTrigger className="w-36 sm:flex-1 sm:max-w-64 nav:max-w-56 2xl:max-w-64 !bg-transparent !p-0 !border-0 !shadow-none">
+        <div className="w-full max-w-xs">
+          <InputGroup>
+            <InputGroupInput placeholder="Search..." readOnly />
+            <InputGroupAddon>
+              <SearchIcon />
+            </InputGroupAddon>
+            <InputGroupAddon align="inline-end">
+              <Kbd>⌘</Kbd>
+              <Kbd>K</Kbd>
+            </InputGroupAddon>
+          </InputGroup>
+        </div>
       </DrawerTrigger>
       <DrawerContent>
         <div className="space-y-4 p-4">
