@@ -226,26 +226,48 @@ export default function SignUp() {
 
               {/* Contact */}
               <FieldGroup>
-                <FormField
-                  name="email"
-                  control={form.control}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <FormField
+                    name="email"
+                    control={form.control}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email</FormLabel>
 
-                      <FormControl>
-                        <Input
-                          type="email"
-                          {...field}
-                          placeholder="john@gmail.com"
-                          className="border-0"
-                        />
-                      </FormControl>
+                        <FormControl>
+                          <Input
+                            type="email"
+                            {...field}
+                            placeholder="john@gmail.com"
+                            className="border-0"
+                          />
+                        </FormControl>
 
-                      <FormMessage className="text-left" />
-                    </FormItem>
-                  )}
-                />
+                        <FormMessage className="text-left" />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    name="direccion"
+                    control={form.control}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Address</FormLabel>
+
+                        <FormControl>
+                          <Input
+                            {...field}
+                            placeholder="123 Main Street"
+                            className="border-0"
+                          />
+                        </FormControl>
+
+                        <FormMessage className="text-left" />
+                      </FormItem>
+                    )}
+                  />
+                </div>
               </FieldGroup>
 
               {/* Location */}
@@ -337,26 +359,6 @@ export default function SignUp() {
                     )}
                   />
                 </div>
-
-                <FormField
-                  name="direccion"
-                  control={form.control}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Address</FormLabel>
-
-                      <FormControl>
-                        <Input
-                          {...field}
-                          placeholder="123 Main Street"
-                          className="border-0"
-                        />
-                      </FormControl>
-
-                      <FormMessage className="text-left" />
-                    </FormItem>
-                  )}
-                />
               </FieldGroup>
 
               {/* Security */}
