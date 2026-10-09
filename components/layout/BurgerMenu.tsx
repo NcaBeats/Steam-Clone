@@ -105,7 +105,7 @@ export const BurgerMenu = ({
       swipeDirection={side === "left" ? "left" : "right"}
     >
       <div
-        className={`min-[960px]:hidden flex items-center ${
+        className={`nav:hidden flex items-center ${
           side === "left" ? "mr-auto" : "ml-auto"
         }`}
       >

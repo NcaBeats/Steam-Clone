@@ -74,7 +74,7 @@ export const Nav = async () => {
         staffHref={staffHref}
       />
       <SearchBar />
-      <div className="hidden min-[960px]:flex justify-end items-center gap-4 ml-auto">
+      <div className="hidden nav:flex justify-end items-center gap-4 ml-auto">
         {wallet && <WalletBalance initialBalance={wallet.balance} />}
         <Link
           href="/cart"
