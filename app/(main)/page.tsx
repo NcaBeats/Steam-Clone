@@ -48,22 +48,26 @@ export default async function Home() {
   ]);
 
   return (
-    <div className="flex flex-col p-2 gap-8 w-full max-w-6xl mx-auto min-h-screen">
-      <BannerCarousel games={recentGames} />
-      <section className="flex flex-col">
-        <DiscountCarouselFeatured
-          games={discountedGames}
-          title="Discounts and Offers"
-          titleClassName="text-3xl text-[#EDEDED] ml-1"
-        />
+    <div className="flex flex-col gap-8 w-full min-h-screen">
+      <section className="w-full">
+        <BannerCarousel games={recentGames} />
       </section>
-      <CategoryChips categories={categories} />
-      <FreeToPlaySection games={freeToPlayGames} />
-      <ComingSoonSection games={comingSoonGames} />
-      <CategoryCarouselsGrid
-        games={allGames}
-        categoriesToShow={FEATURED_CATEGORIES}
-      />
+      <div className="flex flex-col gap-8 w-full max-w-6xl mx-auto p-2">
+        <section className="flex flex-col">
+          <DiscountCarouselFeatured
+            games={discountedGames}
+            title="Discounts and Offers"
+            titleClassName="text-3xl text-[#EDEDED] ml-1"
+          />
+        </section>
+        <CategoryChips categories={categories} />
+        <FreeToPlaySection games={freeToPlayGames} />
+        <ComingSoonSection games={comingSoonGames} />
+        <CategoryCarouselsGrid
+          games={allGames}
+          categoriesToShow={FEATURED_CATEGORIES}
+        />
+      </div>
     </div>
   );
 }

@@ -28,7 +28,7 @@ export const BannerCarousel = ({ games }: BannerCarouselProps) => {
       <CarouselContent>
         {games.map((game) => (
           <CarouselItem key={game.id}>
-            <div className="relative aspect-video overflow-hidden rounded-lg">
+            <div className="relative aspect-video overflow-hidden">
               <Link href={`/games/${game.id}`}>
                 <Image
                   src={game.bannerUrl!}
