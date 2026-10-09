@@ -132,7 +132,7 @@ export const BurgerMenu = ({
         className={`
     p-1.5 overflow-y-auto z-50 fixed top-[72px] bottom-0 bg-[#101014] border-solid w-2/3 ${sideClasses}
     transition-transform duration-300 ease-in-out
-    ${isOpen ? "translate-x-0 pointer-events-auto visible" : `${hiddenClass} pointer-events-none invisible`}
+    ${isOpen ? "translate-x-0 pointer-events-auto" : `${hiddenClass} pointer-events-none`}
 `}
       >
         <ul
