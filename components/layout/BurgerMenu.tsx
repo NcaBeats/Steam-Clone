@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 
 const ICONS: Record<string, LucideIcon> = {
   house: House,
@@ -59,6 +60,13 @@ export const BurgerMenu = ({
   activePath,
 }: BurgerMenuProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  // Portal SSR-safe: solo existe document en el cliente.
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (isOpen) {
@@ -124,29 +132,37 @@ export const BurgerMenu = ({
       >
         {isOpen ? <X size={24} /> : <Menu size={24} />}
       </button>
-      <div
-        className={`inset-0 fixed bg-black/50 top-[72px] z-40  transition-opacity duration-300 ease-in-out
+      {mounted &&
+        createPortal(
+          <>
+            <div
+              className={`inset-0 fixed bg-black/50 top-[72px] z-40  transition-opacity duration-300 ease-in-out
       ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
-      />
-      <nav
-        className={`
+            />
+            <nav
+              className={`
     p-1.5 overflow-y-auto z-50 fixed top-[72px] bottom-0 bg-[#101014] border-solid w-2/3 ${sideClasses}
     transition-transform duration-300 ease-in-out
     ${isOpen ? "translate-x-0 pointer-events-auto" : `${hiddenClass} pointer-events-none`}
 `}
-      >
-        <ul
-          className="[&_a]:items-center [&_button]:items-center flex flex-col text-[#FAFAFA] [&_li]:rounded-md
+            >
+              <ul
+                className="[&_a]:items-center [&_button]:items-center flex flex-col text-[#FAFAFA] [&_li]:rounded-md
         [&_a]:flex [&_a]:gap-2 [&_a]:py-4 [&_li]:px-4 [&_a]:hover:text-white [&_a]:active:text-white
         [&_a]:hover:underline [&_a]:active:underline [&_li]:hover:bg-[#28282C] [&_li]:active:bg-[#28282C]"
-        >
-          {items.map((item) => (
-            <li key={`${item.label}-${item.href ?? item.action?.name ?? ""}`}>
-              {renderItem(item)}
-            </li>
-          ))}
-        </ul>
-      </nav>
+              >
+                {items.map((item) => (
+                  <li
+                    key={`${item.label}-${item.href ?? item.action?.name ?? ""}`}
+                  >
+                    {renderItem(item)}
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </>,
+          document.body,
+        )}
     </div>
   );
 };
