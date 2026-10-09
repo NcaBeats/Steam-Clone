@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import Link from "next/link";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, LogOut } from "lucide-react";
 import {
   NavBarLinks,
   SearchBar,
@@ -87,9 +87,11 @@ export const Nav = async () => {
           <form action={logoutAction}>
             <button
               type="submit"
-              className="bg-[#28282C] hover:bg-[#404044] text-[#FAFAFA] rounded-full px-4 py-1.5 font-medium cursor-pointer transition-colors duration-200 ease-out"
+              aria-label="Log out"
+              title="Log out"
+              className="hover:bg-[#28282C] active:bg-[#28282C] rounded-full p-2.5 transition-colors ease-in-out duration-200 cursor-pointer text-[#EDEDED]"
             >
-              Log out
+              <LogOut size={20} />
             </button>
           </form>
         ) : (
