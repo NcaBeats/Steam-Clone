@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
+  Newspaper,
   Receipt,
   ShoppingBag,
   Users,
@@ -21,6 +22,7 @@ export const AdminBurgerMenu = () => {
   const items: BurgerMenuItem[] = [
     { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
     { href: "/admin/games", label: "Products", icon: ShoppingBag },
+    { href: "/admin/blogs", label: "Blogs", icon: Newspaper },
     { href: "/admin/orders", label: "Orders", icon: Receipt },
     { href: "/admin/users", label: "Users", icon: Users },
     { href: "/", label: "Back to site", icon: House },

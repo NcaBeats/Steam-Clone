@@ -3,17 +3,20 @@
 import { revalidatePath, updateTag } from "next/cache";
 import { fetchAPI } from "@/lib/api/fetch";
 import { GameMetadataSchema } from "@/schemas/admin/game.schema";
+import { BlogSchema } from "@/schemas/admin/blog.schema";
 import { AdminUserCreateSchema } from "@/schemas/admin/user.schema";
 import type {
   AdminUser,
   AdminUserUpdateInput,
+  Blog,
   Game,
   GameMediaUrls,
   MediaKind,
   PresignedUploadResponse,
   Profile,
   User,
-  UserCreateInput} from "@/types";
+  UserCreateInput,
+} from "@/types";
 import type { PresignResult } from "@/lib/game-upload";
 import type { ZodError } from "zod";
 
@@ -68,7 +71,8 @@ function readRawUserProfile(formData: FormData) {
     birthDate: formData.get("birthDate")?.toString(),
     region: formData.get("region")?.toString(),
     comuna: formData.get("comuna")?.toString(),
-    address: formData.get("address")?.toString()};
+    address: formData.get("address")?.toString(),
+  };
 }
 
 export async function deleteUserAction(): Promise<{
@@ -76,8 +80,7 @@ export async function deleteUserAction(): Promise<{
   error?: string;
 }> {
   return runMutation(
-    () =>
-      fetchAPI<void>("/users", { method: "DELETE", auth: true}),
+    () => fetchAPI<void>("/users", { method: "DELETE", auth: true }),
     ["/admin/users", "/admin"],
   );
 }
@@ -89,7 +92,8 @@ export async function deleteUserByIdAction(
     () =>
       fetchAPI<void>(`/users/${id}`, {
         method: "DELETE",
-        auth: true}),
+        auth: true,
+      }),
     ["/admin/users", "/admin"],
   );
 }
@@ -110,8 +114,10 @@ export async function createUserAction(
           birthDate: input.birthDate ?? null,
           region: input.region ?? null,
           comuna: input.comuna ?? null,
-          address: input.address},
-        auth: true}),
+          address: input.address,
+        },
+        auth: true,
+      }),
     ["/admin/users", "/admin"],
   );
   return result.ok ? { ok: true, user: result.data } : result;
@@ -134,7 +140,8 @@ export async function createUserFromFormAction(
     birthDate: parsed.data.birthDate || null,
     region: parsed.data.region || null,
     comuna: parsed.data.comuna || null,
-    address: parsed.data.address});
+    address: parsed.data.address,
+  });
   if (!created.ok || !created.user) {
     return { ok: false, error: created.error };
   }
@@ -149,7 +156,8 @@ export async function deleteGameAction(
     () =>
       fetchAPI<void>(`/games/${id}`, {
         method: "DELETE",
-        auth: true}),
+        auth: true,
+      }),
     [
       "/admin/games",
       `/admin/games/${id}`,
@@ -186,8 +194,10 @@ export async function presignGameVideoAction(
         {
           method: "POST",
           body: { name, contentType },
-          auth: true},
-      )};
+          auth: true,
+        },
+      ),
+    };
   } catch (e) {
     return { ok: false, error: errorMessage(e) };
   }
@@ -206,8 +216,10 @@ export async function presignGameImageAction(
         {
           method: "POST",
           body: { name, kind, contentType },
-          auth: true},
-      )};
+          auth: true,
+        },
+      ),
+    };
   } catch (e) {
     return { ok: false, error: errorMessage(e) };
   }
@@ -227,7 +239,8 @@ export async function createGameWithUrlsAction(
       fetchAPI<Game>("/games", {
         method: "POST",
         body: { ...parsed.data, ...compactMedia(media) },
-        auth: true}),
+        auth: true,
+      }),
     ["/admin/games", "/studio/games", "/admin", "/studio"],
   );
 }
@@ -247,7 +260,8 @@ export async function updateGameWithUrlsAction(
       fetchAPI<Game>(`/games/${id}`, {
         method: "PUT",
         body: { ...parsed.data, ...compactMedia(media) },
-        auth: true}),
+        auth: true,
+      }),
     [
       "/admin/games",
       `/admin/games/${id}`,
@@ -265,7 +279,8 @@ export async function updateUserAction(
 ): Promise<{ ok: boolean; user?: User; error?: string }> {
   const body: Record<string, unknown> = {
     email: input.email,
-    role: input.role};
+    role: input.role,
+  };
   if (input.password && input.password.length > 0) {
     body.password = input.password;
   }
@@ -275,7 +290,8 @@ export async function updateUserAction(
       fetchAPI<User>(`/users/${id}`, {
         method: "PUT",
         body,
-        auth: true}),
+        auth: true,
+      }),
     ["/admin/users", `/admin/users/${id}`, "/admin"],
   );
   return result.ok ? { ok: true, user: result.data } : result;
@@ -290,11 +306,108 @@ export async function updateUserProfileAction(
       fetchAPI<AdminUser>(`/profile/${id}`, {
         method: "PATCH",
         body: input,
-        auth: true}),
+        auth: true,
+      }),
     ["/admin/users", `/admin/users/${id}`],
   );
   return result.ok ? { ok: true, user: result.data } : result;
 }
 
+/**
+ * Firma para subir la portada de un blog (flujo presignado: el archivo no
+ * pasa por el server de Next). El Content-Type queda firmado, asi que el PUT
+ * a R2 debe enviarlo verbatim.
+ */
+export async function presignBlogCoverAction(
+  title: string,
+  contentType: string,
+): Promise<PresignResult<PresignedUploadResponse>> {
+  try {
+    return {
+      ok: true,
+      data: await fetchAPI<PresignedUploadResponse>(
+        "/blogs/media/cover/presign",
+        {
+          method: "POST",
+          body: { title, contentType },
+          auth: true,
+        },
+      ),
+    };
+  } catch (e) {
+    return { ok: false, error: errorMessage(e) };
+  }
+}
 
+const BLOG_REVALIDATE_PATHS = ["/admin/blogs", "/blog", "/"];
 
+/**
+ * Crea un blog (`POST /blogs`, 201). `coverImage` y `category` son
+ * opcionales: si no vienen, se omiten y el backend los deja sin portada.
+ */
+export async function createBlogAction(
+  input: unknown,
+): Promise<{ ok: boolean; error?: string }> {
+  const parsed = BlogSchema.safeParse(input);
+  if (!parsed.success) {
+    return { ok: false, error: firstZodError(parsed.error) };
+  }
+
+  const { coverImage, category, ...rest } = parsed.data;
+  const body: Record<string, unknown> = { ...rest };
+  if (coverImage) body.coverImage = coverImage;
+  if (category) body.category = category;
+
+  return runMutation(
+    () =>
+      fetchAPI<Blog>("/blogs", {
+        method: "POST",
+        body,
+        auth: true,
+      }),
+    BLOG_REVALIDATE_PATHS,
+  );
+}
+
+/**
+ * Actualiza un blog (`PUT /blogs/{id}`, 200). El PUT es completo salvo el
+ * cover: si no hay portada nueva se omite `coverImage` para que el backend
+ * conserve la actual.
+ */
+export async function updateBlogAction(
+  id: number,
+  input: unknown,
+): Promise<{ ok: boolean; error?: string }> {
+  const parsed = BlogSchema.safeParse(input);
+  if (!parsed.success) {
+    return { ok: false, error: firstZodError(parsed.error) };
+  }
+
+  const { coverImage, category, ...rest } = parsed.data;
+  const body: Record<string, unknown> = { ...rest };
+  if (coverImage) body.coverImage = coverImage;
+  if (category) body.category = category;
+
+  return runMutation(
+    () =>
+      fetchAPI<Blog>(`/blogs/${id}`, {
+        method: "PUT",
+        body,
+        auth: true,
+      }),
+    [...BLOG_REVALIDATE_PATHS, `/admin/blogs/${id}`, `/blog/${id}`],
+  );
+}
+
+export async function deleteBlogByIdAction(
+  id: number,
+): Promise<{ ok: boolean; error?: string }> {
+  return runMutation(
+    () =>
+      fetchAPI<void>(`/blogs/${id}`, {
+        method: "DELETE",
+        auth: true,
+      }),
+    BLOG_REVALIDATE_PATHS,
+  );
+}
