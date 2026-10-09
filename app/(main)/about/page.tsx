@@ -1,12 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { FoldText, TextType } from "@/components/feedback";
-import {
-  Marquee,
-  MarqueeContent,
-  MarqueeFade,
-  MarqueeItem,
-} from "@/components/media";
+import { Marquee, MarqueeContent, MarqueeItem } from "@/components/media";
 
 const cardCls = "font-semibold text-center rounded-lg";
 
@@ -94,8 +89,7 @@ To become the digital meeting point where any player, regardless of location or 
           </p>
         </div>
         <div className="py-5">
-          <Marquee>
-            <MarqueeFade side="left" className="from-[#18181C]" />
+          <Marquee className="[mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]">
             <MarqueeContent speed={40} pauseOnHover>
               {[
                 "Activision.svg",
@@ -120,7 +114,6 @@ To become the digital meeting point where any player, regardless of location or 
                 </MarqueeItem>
               ))}
             </MarqueeContent>
-            <MarqueeFade side="right" className="from-[#18181C]" />
           </Marquee>
         </div>
       </section>
