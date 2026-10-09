@@ -105,7 +105,7 @@ export const BurgerMenu = ({
       swipeDirection={side === "left" ? "left" : "right"}
     >
       <div
-        className={`sm:hidden flex items-center ${
+        className={`lg:hidden flex items-center ${
           side === "left" ? "mr-auto" : "ml-auto"
         }`}
       >
@@ -117,7 +117,7 @@ export const BurgerMenu = ({
         </DrawerTrigger>
       </div>
       <DrawerContent className="[--drawer-content-width:66.6667%] bg-[#101014] text-[#FAFAFA] border-[#2D2D2D]">
-        <div className="flex items-center justify-between p-4 pb-0">
+        <div className="flex items-center justify-between p-4 pb-0 ml-2">
           <span className="font-semibold text-[#FAFAFA]">Menu</span>
           <DrawerClose
             aria-label="Close menu"
