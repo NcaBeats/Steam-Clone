@@ -60,7 +60,8 @@
   html {
     @apply font-sans;
   }
-  button:not(:disabled), [role="button"]:not(:disabled) {
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
     cursor: pointer;
   }
 }
@@ -75,7 +76,7 @@ body {
   font-family: var(--font-sans);
 }
 
-h2{
+h2 {
   width: fit-content;
   font-weight: 600;
 }
