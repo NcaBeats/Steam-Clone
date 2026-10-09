@@ -23,7 +23,7 @@ export const GameCard = ({
   return (
     <Link
       href={`/games/${id}`}
-      className="select-none cursor-pointer shadow-md shadow-[#00000089] group
+      className="select-none cursor-pointer group
         transition-all bg-[#161617] flex flex-col relative shrink-0
         active:bg-[#EDEDED] hover:bg-[#EDEDED]
         active:text-black hover:text-black duration-300 ease-in rounded-lg overflow-hidden w-full"
@@ -50,7 +50,7 @@ export const GameCard = ({
             <span
               className="transition-colors ease-in group-hover:bg-[#007AFF]
               group-active:bg-[#007AFF] group-hover:text-white group-active:text-white
-              font-semibold bg-[#A1CD44] text-black px-2 py-0.5 rounded-md"
+              font-semibold bg-[#fcaf17] text-black px-2 py-0.5 rounded-md"
             >
               -{discountPercent}%
             </span>

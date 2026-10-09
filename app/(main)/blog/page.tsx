@@ -7,7 +7,7 @@ const BlogPage = async () => {
   return (
     <div className="flex flex-col gap-8 w-full max-w-6xl mx-auto py-12 px-4">
       <section className="flex flex-col items-center text-center gap-3">
-        <h1 className="text-2xl sm:text-4xl font-bold text-[#FAFAFA]">Blogs</h1>
+        <h1 className="text-4xl md:text-6xl font-bold text-[#FAFAFA]">Blogs</h1>
         <p className="text-sm sm:text-base text-[#8A8A8A] max-w-xl">
           Latest news, updates, and insights about games and our platform.
         </p>

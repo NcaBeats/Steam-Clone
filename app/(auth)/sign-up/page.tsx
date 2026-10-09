@@ -37,14 +37,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
-import {
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -97,7 +89,7 @@ export default function SignUp() {
 
   return (
     <AuthLayout>
-      <Card className="[--card-spacing:--spacing(8)] ring-0 w-full max-w-2xl ">
+      <Card className="[--card-spacing:--spacing(8)] ring-0 w-full max-w-xl ">
         <CardHeader>
           <CardTitle className="text-2xl font-bold">
             Create an Account

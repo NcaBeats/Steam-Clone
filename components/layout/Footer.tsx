@@ -15,7 +15,7 @@ const NAV_LINKS = [
 
 export function Footer() {
   return (
-    <footer className="w-full bg-[#101014] text-[#a8a8ad] text-sm border-t border-[#404044]/40 mt-auto">
+    <footer className="w-full  text-[#a8a8ad] text-sm border-t border-[#404044]/40 mt-auto">
       <div className="max-w-6xl mx-auto px-4 py-8">
         <div className="flex flex-col md:flex-row items-start justify-between gap-6">
           <div className="space-y-3">

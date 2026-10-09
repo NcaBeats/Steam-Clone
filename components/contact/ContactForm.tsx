@@ -19,7 +19,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -58,7 +58,7 @@ export const ContactForm = () => {
 
   if (success) {
     return (
-      <Card className="items-center gap-3 rounded-lg border border-white/6 bg-[#202024] p-8 text-center text-[#FAFAFA]">
+      <Card className="items-center gap-3 w-full max-w-lg rounded-lg border border-white/6 bg-[#202024] p-8 text-center text-[#FAFAFA]">
         <CheckCircle2 size={56} className="text-[#26BBFF]" />
 
         <h2 className="text-xl font-bold tracking-[0.4px]">Message sent</h2>
@@ -71,7 +71,12 @@ export const ContactForm = () => {
   }
 
   return (
-    <Card className="gap-4 ring-0 rounded-lg bg-[#202024] p-6 text-[#FAFAFA]">
+    <Card className="gap-4 w-full max-w-lg ring-0 rounded-lg bg-[#171717] p-6 text-[#FAFAFA]">
+      <CardHeader className="p-0 mb-2">
+        <CardTitle className="text-2xl font-bold text-left">
+          Contact Us
+        </CardTitle>
+      </CardHeader>
       <CardContent className="p-0">
         <Form {...form}>
           <form
@@ -89,11 +94,7 @@ export const ContactForm = () => {
                     <FormLabel>Name</FormLabel>
 
                     <FormControl>
-                      <Input
-                        {...field}
-                        placeholder="Jhon"
-                        className="border-0"
-                      />
+                      <Input {...field} placeholder="Jhon" className="" />
                     </FormControl>
 
                     <FormMessage className="text-left" />
@@ -113,7 +114,7 @@ export const ContactForm = () => {
                         {...field}
                         type="email"
                         placeholder="user@gmail.com"
-                        className="border-0"
+                        className=""
                       />
                     </FormControl>
 
@@ -134,7 +135,7 @@ export const ContactForm = () => {
                         {...field}
                         placeholder="Your message"
                         rows={5}
-                        className="min-h-32 rounded-lg border-0 bg-[#28282C] hover:bg-[#303036] placeholder:text-white/55"
+                        className="min-h-32 rounded-lg  bg-[#28282C] hover:bg-[#303036] placeholder:text-white/55"
                       />
                     </FormControl>
                     <FormMessage className="text-left" />
@@ -156,7 +157,7 @@ export const ContactForm = () => {
               type="submit"
               disabled={form.formState.isSubmitting}
               size="lg"
-              className="cursor-pointer gap-2 bg-[#007aff] py-5 font-semibold text-white hover:bg-[#2e92ff] focus-visible:ring-[#26BBFF]"
+              className="bg-[#007AFF] font-semibold text-white hover:bg-[#2e92ff] py-5"
             >
               {form.formState.isSubmitting ? (
                 <>
@@ -164,10 +165,7 @@ export const ContactForm = () => {
                   Sending...
                 </>
               ) : (
-                <>
-                  <Send size={18} />
-                  Send message
-                </>
+                <>Send message</>
               )}
             </Button>
           </form>

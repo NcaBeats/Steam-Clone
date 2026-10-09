@@ -12,14 +12,14 @@ const run = z
   .pipe(
     z
       .string()
-      .min(7, "The minimum amount of characters is 7")
-      .max(9, "The maximum amount of characters is 9")
+      .min(7, "Minimum of 7 characters")
+      .max(9, "Maximum of 9 characters")
       .refine((val) => validate(val), { message: "RUN is not valid" }),
   );
 
-const name = z.string().max(50, "The maximum amount of characters is 50");
+const name = z.string().max(50, "Maximun of 50 characters");
 
-const lastName = z.string().max(50, "The maximum amount of characters is 50");
+const lastName = z.string().max(50, "Maximun of 50 characters");
 
 const email = z
   .string()

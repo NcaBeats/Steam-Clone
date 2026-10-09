@@ -23,7 +23,7 @@ export const GameCardBig = ({
   return (
     <Link
       href={`/games/${id}`}
-      className="select-none cursor-pointer shadow-md shadow-[#00000089] group
+      className="select-none cursor-pointer group
         bg-[#161617] flex flex-col relative shrink-0 rounded-lg overflow-hidden w-full"
     >
       <div className="relative aspect-3/4 w-full">
@@ -55,7 +55,7 @@ export const GameCardBig = ({
                 className="transition-colors duration-300 ease-in-out
                 group-hover:bg-[#007AFF] group-active:bg-[#007AFF]
                 group-hover:text-white group-active:text-white
-                font-bold bg-[#A1CD44] text-black px-2 py-0.5 rounded-md mb-0.5 text-sm md:text-lg"
+                font-bold bg-[#fcaf17] text-black px-2 py-0.5 rounded-md mb-0.5 text-sm md:text-lg"
               >
                 -{discountPercent}%
               </span>

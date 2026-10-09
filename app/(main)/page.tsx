@@ -1,5 +1,4 @@
 import {
-  BannerCarousel,
   DiscountCarouselFeatured,
   CategoryChips,
   FreeToPlaySection,
@@ -75,7 +74,7 @@ export default async function Home() {
 
             <Link
               href="/catalog"
-              className="mt-2 ease-out duration-200 rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-black transition-colors hover:bg-white/80 sm:mt-3 sm:px-4 sm:py-2 sm:text-sm md:mt-5 md:px-6 md:py-3 md:text-base"
+              className="mt-2 ease-out duration-200 rounded-full bg-[#fcaf17] px-3 py-1.5 text-xs font-semibold text-black transition-colors hover:bg-[#fcc456] sm:mt-3 sm:px-4 sm:py-2 sm:text-sm md:mt-5 md:px-6 md:py-3 md:text-base"
             >
               Browse Catalog
             </Link>
