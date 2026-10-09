@@ -58,7 +58,7 @@ export const Nav = async () => {
   ];
 
   return (
-    <nav className="text-sm flex items-center h-full px-4 gap-6 ">
+    <nav className="text-sm flex items-center h-full px-4 gap-3 sm:gap-6 ">
       <div className="">
         <Link href="/" className="block items-center min-h-full">
           <h1
