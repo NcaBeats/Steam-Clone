@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Search, Loader2, SearchIcon } from "lucide-react";
+import { Loader2, SearchIcon } from "lucide-react";
 import { Kbd } from "@/components/ui/kbd";
 import {
   Popover,
@@ -14,7 +14,6 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
-import { Input } from "@/components/ui/input";
 import { SearchGameCard } from "@/components/games/SearchGameCard";
 import { searchGamesClient } from "@/lib/api/search";
 import type { Game } from "@/types";
@@ -30,7 +29,9 @@ export const SearchBar = () => {
 
   useEffect(() => {
     if (open) {
-      setTimeout(() => inputRef.current?.focus(), 100);
+      if (document.activeElement !== inputRef.current) {
+        setTimeout(() => inputRef.current?.focus(), 100);
+      }
     } else {
       /* eslint-disable react-hooks/set-state-in-effect */
       setQuery("");
@@ -86,33 +87,48 @@ export const SearchBar = () => {
       if (trimmed) {
         router.push(`/search?q=${encodeURIComponent(trimmed)}`);
         setOpen(false);
+        inputRef.current?.blur();
       }
     }
   };
 
   const trimmedQuery = query.trim();
   const showResults = trimmedQuery.length > 0;
+  const showHint = !loading && trimmedQuery.length === 0;
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger
         render={
-          <button
-            type="button"
-            aria-label="Search games"
-            className="w-36 sm:flex-1 sm:max-w-64 nav:max-w-56 2xl:max-w-64 cursor-pointer bg-transparent p-0 border-0 shadow-none"
-          />
+          <div className="w-36 sm:flex-1 sm:max-w-64 nav:max-w-56 2xl:max-w-64" />
         }
       >
-        <div className="w-full max-w-xs pointer-events-none">
+        <div className="w-full max-w-xs">
           <InputGroup>
-            <InputGroupInput placeholder="Search..." readOnly tabIndex={-1} />
+            <InputGroupInput
+              ref={inputRef}
+              placeholder="Search..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onFocus={() => setOpen(true)}
+              onKeyDown={handleKeyDown}
+              aria-expanded={open}
+              aria-label="Search games"
+            />
             <InputGroupAddon>
               <SearchIcon />
             </InputGroupAddon>
             <InputGroupAddon align="inline-end">
-              <Kbd>⌘</Kbd>
-              <Kbd>K</Kbd>
+              {loading ? (
+                <Loader2 className="animate-spin" size={16} />
+              ) : (
+                showHint && (
+                  <>
+                    <Kbd>⌘</Kbd>
+                    <Kbd>K</Kbd>
+                  </>
+                )
+              )}
             </InputGroupAddon>
           </InputGroup>
         </div>
@@ -124,24 +140,6 @@ export const SearchBar = () => {
         className="w-[min(42rem,calc(100vw-2rem))] p-4"
       >
         <div className="space-y-4">
-          <div className="relative w-full">
-            <Search className="-translate-y-1/2 absolute top-1/2 left-3 size-5 text-muted-foreground" />
-            <Input
-              ref={inputRef}
-              className="h-12 pl-10 text-base rounded-full"
-              placeholder="Search for games..."
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onKeyDown={handleKeyDown}
-            />
-            {loading && (
-              <Loader2
-                className="-translate-y-1/2 absolute top-1/2 right-3 animate-spin text-muted-foreground"
-                size={18}
-              />
-            )}
-          </div>
-
           {showResults && (
             <div className="w-full max-h-[60vh] overflow-y-auto px-1 py-3">
               {!loading && results.length === 0 ? (
