@@ -78,6 +78,10 @@ body {
 }
 
 body {
+  position: relative;
+}
+
+body {
   font-family: var(--font-sans);
 }
 

@@ -19,8 +19,13 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { useState, useEffect, type ReactNode } from "react";
-import { createPortal } from "react-dom";
+import { useState, type ReactNode } from "react";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerTrigger,
+} from "@/components/feedback/drawer";
 
 const ICONS: Record<string, LucideIcon> = {
   house: House,
@@ -60,32 +65,8 @@ export const BurgerMenu = ({
   activePath,
 }: BurgerMenuProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  // Portal SSR-safe: solo existe document en el cliente.
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "clip";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [isOpen]);
 
   const close = () => setIsOpen(false);
-
-  const sideClasses =
-    side === "left"
-      ? "left-0 rounded-tr-xl border-r border-t border-r-[#2D2D2D] border-t-[#2D2D2D]"
-      : "right-0 rounded-tl-xl border-l border-t border-l-[#2D2D2D] border-t-[#2D2D2D]";
-
-  const hiddenClass =
-    side === "left" ? "-translate-x-full" : "translate-x-full";
 
   const renderItem = (item: BurgerMenuItem): ReactNode => {
     const Icon = resolveIcon(item.icon);
@@ -118,51 +99,45 @@ export const BurgerMenu = ({
   };
 
   return (
-    <div
-      className={`sm:hidden flex items-center ${
-        side === "left" ? "mr-auto" : "ml-auto"
-      }`}
+    <Drawer
+      open={isOpen}
+      onOpenChange={setIsOpen}
+      swipeDirection={side === "left" ? "left" : "right"}
     >
-      <button
-        type="button"
-        onClick={() => setIsOpen(!isOpen)}
-        aria-label={isOpen ? "Close menu" : "Open menu"}
-        aria-expanded={isOpen}
-        className="hover:bg-[#28282C] active:bg-[#28282C] rounded-md p-1"
+      <div
+        className={`sm:hidden flex items-center ${
+          side === "left" ? "mr-auto" : "ml-auto"
+        }`}
       >
-        {isOpen ? <X size={24} /> : <Menu size={24} />}
-      </button>
-      {mounted &&
-        createPortal(
-          <>
-            <div
-              className={`inset-0 fixed bg-black/50 top-[72px] z-40  transition-opacity duration-300 ease-in-out
-      ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
-            />
-            <nav
-              className={`
-    p-1.5 overflow-y-auto z-50 fixed top-[72px] bottom-0 bg-[#101014] border-solid w-2/3 ${sideClasses}
-    transition-transform duration-300 ease-in-out
-    ${isOpen ? "translate-x-0 pointer-events-auto" : `${hiddenClass} pointer-events-none`}
-`}
-            >
-              <ul
-                className="[&_a]:items-center [&_button]:items-center flex flex-col text-[#FAFAFA] [&_li]:rounded-md
+        <DrawerTrigger
+          aria-label="Open menu"
+          className="hover:bg-[#28282C] active:bg-[#28282C] rounded-md p-1"
+        >
+          <Menu size={24} />
+        </DrawerTrigger>
+      </div>
+      <DrawerContent className="[--drawer-content-width:66.6667%] bg-[#101014] text-[#FAFAFA] border-[#2D2D2D]">
+        <div className="flex items-center justify-between p-4 pb-0">
+          <span className="font-semibold text-[#FAFAFA]">Menu</span>
+          <DrawerClose
+            aria-label="Close menu"
+            className="hover:bg-[#28282C] active:bg-[#28282C] rounded-md p-1 cursor-pointer"
+          >
+            <X size={24} />
+          </DrawerClose>
+        </div>
+        <ul
+          className="[&_a]:items-center [&_button]:items-center flex flex-col text-[#FAFAFA] [&_li]:rounded-md
         [&_a]:flex [&_a]:gap-2 [&_a]:py-4 [&_li]:px-4 [&_a]:hover:text-white [&_a]:active:text-white
-        [&_a]:hover:underline [&_a]:active:underline [&_li]:hover:bg-[#28282C] [&_li]:active:bg-[#28282C]"
-              >
-                {items.map((item) => (
-                  <li
-                    key={`${item.label}-${item.href ?? item.action?.name ?? ""}`}
-                  >
-                    {renderItem(item)}
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          </>,
-          document.body,
-        )}
-    </div>
+        [&_a]:hover:underline [&_a]:active:underline [&_li]:hover:bg-[#28282C] [&_li]:active:bg-[#28282C] p-1.5 overflow-y-auto"
+        >
+          {items.map((item) => (
+            <li key={`${item.label}-${item.href ?? item.action?.name ?? ""}`}>
+              {renderItem(item)}
+            </li>
+          ))}
+        </ul>
+      </DrawerContent>
+    </Drawer>
   );
 };
