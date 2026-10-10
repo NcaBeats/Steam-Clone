@@ -32,11 +32,17 @@ function AutocompleteContent({
   align = "start",
   alignOffset = 0,
   anchor,
+  positionMethod = "fixed",
   ...props
 }: AutocompletePrimitive.Popup.Props &
   Pick<
     AutocompletePrimitive.Positioner.Props,
-    "side" | "align" | "sideOffset" | "alignOffset" | "anchor"
+    | "side"
+    | "align"
+    | "sideOffset"
+    | "alignOffset"
+    | "anchor"
+    | "positionMethod"
   >) {
   return (
     <AutocompletePrimitive.Portal>
@@ -46,6 +52,7 @@ function AutocompleteContent({
         align={align}
         alignOffset={alignOffset}
         anchor={anchor}
+        positionMethod={positionMethod}
         className="isolate z-50"
       >
         <AutocompletePrimitive.Popup
