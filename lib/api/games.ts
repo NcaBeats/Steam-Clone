@@ -77,12 +77,19 @@ export const getMyLibrary = async (): Promise<Library[]> => {
   return page.content;
 };
 
-export const searchGames = async (name: string): Promise<Game[]> => {
-  const page = await fetchAPI<{ content: Game[] }>(
-    "/games?name=" + encodeURIComponent(name) + "&size=10",
+export const searchGamesPaginated = (
+  name: string,
+  page = 0,
+  size = 10,
+): Promise<Paginated<Game>> =>
+  fetchAPI<Paginated<Game>>(
+    "/games?name=" +
+      encodeURIComponent(name) +
+      "&page=" +
+      page +
+      "&size=" +
+      size,
   );
-  return page.content;
-};
 
 export const getAdminUsers = (
   page = 0,

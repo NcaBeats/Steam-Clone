@@ -169,7 +169,6 @@ export async function deleteGameAction(
       `/games/${id}`,
       "/catalog",
       "/",
-      "/search",
       "/library",
     ],
   );

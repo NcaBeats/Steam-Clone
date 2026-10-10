@@ -8,6 +8,7 @@ type Props = Readonly<{
   page: number;
   totalPages: number;
   basePath: string;
+  query?: Readonly<Record<string, string>>;
 }>;
 
 const pageLinkCls = (disabled: boolean) =>
@@ -16,10 +17,11 @@ const pageLinkCls = (disabled: boolean) =>
     disabled && "pointer-events-none opacity-50",
   );
 
-export const Pagination = ({ page, totalPages, basePath }: Props) => {
+export const Pagination = ({ page, totalPages, basePath, query }: Props) => {
   if (totalPages <= 1) return null;
 
-  const hrefFor = (p: number) => `${basePath}?page=${p}`;
+  const extra = query ? new URLSearchParams(query).toString() + "&" : "";
+  const hrefFor = (p: number) => `${basePath}?${extra}page=${p}`;
 
   return (
     <ButtonGroup aria-label="Pagination" className="mt-2">

@@ -86,7 +86,7 @@ describe("SearchBar", () => {
     await typeQuery("hollow");
     await screen.findByText("Hollow Knight");
     fireEvent.keyDown(getInput(), { key: "Enter", code: "Enter" });
-    expect(push).toHaveBeenCalledWith("/search?q=hollow");
+    expect(push).toHaveBeenCalledWith("/catalog?q=hollow");
   });
 
   test("flecha + Enter navega al detalle del juego resaltado", async () => {

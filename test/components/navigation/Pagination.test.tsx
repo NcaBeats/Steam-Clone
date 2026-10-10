@@ -39,4 +39,19 @@ describe("Pagination", () => {
       "/catalog?page=2",
     );
   });
+
+  test("preserva query params extra en los links", () => {
+    render(
+      <Pagination
+        page={0}
+        totalPages={3}
+        basePath="/catalog"
+        query={{ q: "f" }}
+      />,
+    );
+    expect(screen.getByRole("link", { name: "2" })).toHaveAttribute(
+      "href",
+      "/catalog?q=f&page=1",
+    );
+  });
 });

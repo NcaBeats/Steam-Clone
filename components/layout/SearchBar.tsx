@@ -101,7 +101,7 @@ export const SearchBar = () => {
     e.preventDefault();
     const trimmed = query.trim();
     if (trimmed) {
-      router.push(`/search?q=${encodeURIComponent(trimmed)}`);
+      router.push(`/catalog?q=${encodeURIComponent(trimmed)}`);
       setOpen(false);
       inputRef.current?.blur();
     }
@@ -182,7 +182,7 @@ export const SearchBar = () => {
           </AutocompleteEmpty>
           {!loading && results.length > 0 && (
             <Link
-              href={`/search?q=${encodeURIComponent(trimmedQuery)}`}
+              href={`/catalog?q=${encodeURIComponent(trimmedQuery)}`}
               onClick={() => setOpen(false)}
               className="inline-block text-left px-3 py-2 mt-1 text-sm text-[#A1A1A1] rounded-md cursor-pointer hover:text-white hover:underline"
             >
