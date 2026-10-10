@@ -26,7 +26,7 @@ export const GameListItem = ({
   return (
     <Link
       href={`/games/${id}`}
-      className="overflow-hidden rounded-lg select-none shadow-md shadow-[#00000089] cursor-pointer group flex relative transition-transform hover:scale-101 active:scale-101"
+      className="overflow-hidden rounded-lg select-none shadow-sm shadow-[#00000089] cursor-pointer group flex relative transition-transform hover:scale-101 active:scale-101"
     >
       <GameImage
         src={bannerUrl ?? imageUrl}
@@ -36,9 +36,8 @@ export const GameListItem = ({
         className="aspect-video object-cover w-40 sm:w-48 shrink-0"
       />
       <div
-        className="flex flex-col p-2 bg-[#161617] gap-1 w-full justify-center
-          group-active:bg-[#EDEDED] group-hover:bg-[#EDEDED] active:transition-colors
-           group-active:text-black group-hover:text-black duration-200 ease-in
+        className="flex flex-col p-2 hover:bg-[#161617] gap-1 w-full justify-center
+           duration-200 ease-in
           "
       >
         <h3 className="text-md font-medium">{name}</h3>
@@ -58,7 +57,7 @@ export const GameListItem = ({
             </li>
           </ul>
           <p className="text-xs text-[#8A8A8A] mx-auto">
-            Lanzamiento: {launchDate}
+            Launch Date: {launchDate}
           </p>
           <span className="text-sm font-semibold text-white whitespace-nowrap">
             {formatPrice(price)}

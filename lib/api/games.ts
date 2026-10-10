@@ -16,12 +16,6 @@ export const getGames = async (): Promise<Game[]> => {
   return page.content;
 };
 
-export const getGamesPaginated = (
-  page = 0,
-  size = 10,
-): Promise<Paginated<Game>> =>
-  fetchAPI<Paginated<Game>>("/games?page=" + page + "&size=" + size);
-
 export const getGameById = (id: number): Promise<Game> =>
   fetchAPI<Game>("/games/" + id);
 
@@ -77,19 +71,29 @@ export const getMyLibrary = async (): Promise<Library[]> => {
   return page.content;
 };
 
-export const searchGamesPaginated = (
-  name: string,
+export type GamesFilter = {
+  name?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  page?: number;
+  size?: number;
+};
+
+export const getGamesFiltered = ({
+  name,
+  minPrice,
+  maxPrice,
   page = 0,
   size = 10,
-): Promise<Paginated<Game>> =>
-  fetchAPI<Paginated<Game>>(
-    "/games?name=" +
-      encodeURIComponent(name) +
-      "&page=" +
-      page +
-      "&size=" +
-      size,
-  );
+}: GamesFilter): Promise<Paginated<Game>> => {
+  const params = new URLSearchParams();
+  if (name) params.set("name", name);
+  if (minPrice !== undefined) params.set("minPrice", String(minPrice));
+  if (maxPrice !== undefined) params.set("maxPrice", String(maxPrice));
+  params.set("page", String(page));
+  params.set("size", String(size));
+  return fetchAPI<Paginated<Game>>("/games?" + params.toString());
+};
 
 export const getAdminUsers = (
   page = 0,

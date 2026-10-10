@@ -35,7 +35,7 @@ describe("GameListItem", () => {
     expect(screen.getByText("Minecraft")).toBeInTheDocument();
     expect(screen.getByText("$29.99")).toBeInTheDocument();
     expect(screen.getByText("Mundo Abierto, Aventura")).toBeInTheDocument();
-    expect(screen.getByText("Lanzamiento: 2011-11-18")).toBeInTheDocument();
+    expect(screen.getByText("Launch Date: 2011-11-18")).toBeInTheDocument();
   });
 
   test("redirige al detalle del juego con el ID correcto", () => {
