@@ -74,7 +74,7 @@ export const SearchBar = () => {
         (e.key === "k" || e.key === "K" || e.key === "ñ" || e.key === "Ñ")
       ) {
         e.preventDefault();
-        setOpen((prev) => !prev);
+        inputRef.current?.focus();
       }
     };
     window.addEventListener("keydown", handleKey);
@@ -101,8 +101,7 @@ export const SearchBar = () => {
   };
 
   const trimmedQuery = query.trim();
-  const showTips = trimmedQuery.length === 0;
-  const showHint = !loading && showTips;
+  const showHint = !loading && trimmedQuery.length === 0;
 
   return (
     <div
@@ -114,7 +113,10 @@ export const SearchBar = () => {
         filteredItems={results}
         itemToStringValue={(game) => game.name}
         value={query}
-        onValueChange={(value) => setQuery(value)}
+        onValueChange={(value) => {
+          setQuery(value);
+          setOpen(value.trim().length > 0);
+        }}
         open={open}
         onOpenChange={(value) => setOpen(value)}
         onItemHighlighted={(value) => {
@@ -127,7 +129,6 @@ export const SearchBar = () => {
           placeholder="Search..."
           autoComplete="off"
           aria-label="Search games"
-          onFocus={() => setOpen(true)}
           onKeyDown={handleKeyDown}
         >
           <InputGroupAddon>
@@ -153,56 +154,39 @@ export const SearchBar = () => {
           sideOffset={8}
           className="w-(--anchor-width) min-w-60 p-1.5 sm:w-[min(calc(var(--anchor-width)*2),calc(100vw-2rem))]"
         >
-          {showTips ? (
-            <div className="px-2 py-1.5">
-              <h4 className="font-medium text-muted-foreground text-xs uppercase mb-2">
-                Quick tips
-              </h4>
-              <ul className="text-xs text-[#8A8A8A] space-y-1">
-                <li>Type at least 1 character to search</li>
-                <li>Press Enter to see all results</li>
-                <li>Press Esc to close</li>
-              </ul>
-            </div>
-          ) : (
-            <>
-              <AutocompleteList>
-                {(game: Game, index: number) => (
-                  <AutocompleteItem
-                    key={game.id}
-                    index={index}
-                    value={game}
-                    onClick={() => goToGame(game.id)}
-                    className="cursor-pointer py-1 pr-2 pl-1 data-highlighted:bg-[#28282C] data-highlighted:text-foreground"
-                  >
-                    <SearchGameRow
-                      name={game.name}
-                      price={game.price}
-                      originalPrice={game.originalPrice}
-                      discountPercent={game.discountPercent}
-                      imageUrl={game.imageUrl}
-                    />
-                  </AutocompleteItem>
-                )}
-              </AutocompleteList>
-              <AutocompleteEmpty className="px-2 py-6 text-center text-sm text-[#8A8A8A]">
-                {!loading ? `No results for "${trimmedQuery}"` : null}
-              </AutocompleteEmpty>
-              {!loading && results.length > 0 && (
-                <button
-                  type="button"
-                  className="w-full text-left px-3 py-2 mt-1 text-xs text-[#007AFF] hover:bg-[#1A1A1A] active:bg-[#1A1A1A] rounded-md cursor-pointer border-t border-[#2A2A2A]"
-                  onClick={() => {
-                    router.push(
-                      `/search?q=${encodeURIComponent(trimmedQuery)}`,
-                    );
-                    setOpen(false);
-                  }}
-                >
-                  View all results for &quot;{trimmedQuery}&quot; →
-                </button>
-              )}
-            </>
+          <AutocompleteList>
+            {(game: Game, index: number) => (
+              <AutocompleteItem
+                key={game.id}
+                index={index}
+                value={game}
+                onClick={() => goToGame(game.id)}
+                className="cursor-pointer py-1 pr-2 pl-1 data-highlighted:bg-[#28282C] data-highlighted:text-foreground"
+              >
+                <SearchGameRow
+                  name={game.name}
+                  price={game.price}
+                  originalPrice={game.originalPrice}
+                  discountPercent={game.discountPercent}
+                  imageUrl={game.imageUrl}
+                />
+              </AutocompleteItem>
+            )}
+          </AutocompleteList>
+          <AutocompleteEmpty className="px-2 py-6 text-center text-sm text-[#8A8A8A]">
+            {!loading ? `No results for "${trimmedQuery}"` : null}
+          </AutocompleteEmpty>
+          {!loading && results.length > 0 && (
+            <button
+              type="button"
+              className="w-full text-left px-3 py-2 mt-1 text-xs text-[#007AFF] hover:bg-[#1A1A1A] active:bg-[#1A1A1A] rounded-md cursor-pointer border-t border-[#2A2A2A]"
+              onClick={() => {
+                router.push(`/search?q=${encodeURIComponent(trimmedQuery)}`);
+                setOpen(false);
+              }}
+            >
+              View all results for &quot;{trimmedQuery}&quot; →
+            </button>
           )}
         </AutocompleteContent>
       </Autocomplete>

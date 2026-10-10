@@ -44,10 +44,13 @@ afterEach(() => {
 });
 
 describe("SearchBar", () => {
-  test("al enfocar muestra los tips", async () => {
+  test("enfocar sin escribir no abre nada", () => {
     render(<SearchBar />);
     fireEvent.focus(getInput());
-    expect(await screen.findByText("Quick tips")).toBeInTheDocument();
+    expect(screen.queryByText("Quick tips")).toBeNull();
+    expect(
+      document.querySelector('[data-slot="autocomplete-content"]'),
+    ).toBeNull();
   });
 
   test("mientras escribe muestra los juegos que devuelve el servidor", async () => {
@@ -84,6 +87,17 @@ describe("SearchBar", () => {
     fireEvent.keyDown(getInput(), { key: "Enter", code: "Enter" });
     expect(push).toHaveBeenCalledWith("/games/7");
     expect(getInput()).toHaveValue("");
+  });
+
+  test("borrar el texto cierra el panel", async () => {
+    mockedSearch.mockResolvedValue([game]);
+    render(<SearchBar />);
+    await typeQuery("hollow");
+    await screen.findByText("Hollow Knight");
+    fireEvent.change(getInput(), { target: { value: "" } });
+    expect(
+      document.querySelector('[data-slot="autocomplete-content"]'),
+    ).toBeNull();
   });
 
   test("click en una opción navega al juego sin dejar JSON en el input", async () => {
