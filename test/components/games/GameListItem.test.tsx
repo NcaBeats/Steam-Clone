@@ -3,6 +3,7 @@ import { cleanup, render, screen } from "@testing-library/react";
 import { GameListItem } from "@/components/games/GameListItem";
 
 vi.mock("@/components/games/GameImage", () => ({
+  // eslint-disable-next-line @next/next/no-img-element
   GameImage: () => <img alt="Game image" />,
 }));
 
@@ -11,6 +12,7 @@ const props = {
   name: "Minecraft",
   price: 29.99,
   imageUrl: "/minecraft.png",
+  bannerUrl: "/minecraft-banner.jpg",
   categories: [
     {
       id: 1,

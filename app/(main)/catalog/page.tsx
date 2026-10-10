@@ -1,13 +1,8 @@
 import { CatalogList } from "@/components/games";
-import { GameImage } from "@/components/games/GameImage";
 import { Pagination } from "@/components/navigation";
-import {
-  getGamesPaginated,
-  getBannerGames,
-  searchGamesPaginated,
-} from "@/lib/api/games";
+import { PriceFilter } from "@/components/catalog/PriceFilter";
+import { getGamesPaginated, searchGamesPaginated } from "@/lib/api/games";
 import Link from "next/link";
-import { formatPrice } from "@/lib";
 
 const PAGE_SIZE = 10;
 
@@ -20,15 +15,13 @@ const CatalogPage = async ({ searchParams }: Props) => {
   const page = Math.max(0, Number(pageParam ?? 0));
   const query = qParam?.trim() ?? "";
 
-  const [data, bannerGames] = await Promise.all([
+  const [data] = await Promise.all([
     query
       ? searchGamesPaginated(query, page, PAGE_SIZE)
       : getGamesPaginated(page, PAGE_SIZE),
-    getBannerGames(),
   ]);
 
   const { content: games, page: pageInfo } = data;
-  const featured = query ? (games[0] ?? null) : (bannerGames[0] ?? games[0]);
 
   return (
     <div className="flex flex-col p-2 gap-4 w-full max-w-6xl mx-auto min-h-screen">
@@ -69,52 +62,9 @@ const CatalogPage = async ({ searchParams }: Props) => {
             </>
           )}
         </div>
-        {featured && (
-          <aside className="hidden xl:flex flex-col w-80 shrink-0 self-start sticky top-20 gap-3">
-            <Link
-              href={`/games/${featured.id}`}
-              className="bg-[#1A1A1A] rounded-lg p-4 flex flex-col gap-3 hover:bg-[#272727] transition-colors"
-            >
-              <h2 className="text-lg font-bold text-[#FAFAFA]">
-                {featured.name}
-              </h2>
-              <p className="text-xs text-[#8A8A8A]">
-                {featured.categories.map((c) => c.name).join(", ")}
-              </p>
-              <div className="relative w-full aspect-video rounded overflow-hidden">
-                <GameImage
-                  src={featured.bannerUrl ?? featured.imageUrl}
-                  alt={featured.name}
-                  fill
-                  sizes="320px"
-                  className="object-cover"
-                />
-              </div>
-              {featured.description && (
-                <p className="text-xs text-[#C0C0C0] line-clamp-4">
-                  {featured.description}
-                </p>
-              )}
-              <div className="flex items-center justify-between mt-1">
-                {featured.discountPercent > 0 ? (
-                  <div className="flex items-center gap-2">
-                    <span className="bg-[#FCAF17] text-black text-xs font-bold px-2 py-1 rounded-lg">
-                      -{featured.discountPercent}%
-                    </span>
-                    <s className="text-xs text-[#8A8A8A]">
-                      {formatPrice(featured.originalPrice)}
-                    </s>
-                  </div>
-                ) : (
-                  <span />
-                )}
-                <span className="text-base font-bold text-[#FAFAFA]">
-                  {formatPrice(featured.price)}
-                </span>
-              </div>
-            </Link>
-          </aside>
-        )}
+        <aside className="hidden xl:flex flex-col w-80 shrink-0 self-start sticky top-20 gap-3">
+          <PriceFilter />
+        </aside>
       </div>
     </div>
   );

@@ -15,6 +15,7 @@ export const CatalogList = ({ games }: Props) => {
           categories={game.categories}
           launchDate={game.launchDate}
           imageUrl={game.imageUrl}
+          bannerUrl={game.bannerUrl}
         />
       ))}
     </div>
