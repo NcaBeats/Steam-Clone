@@ -5,13 +5,13 @@ import { useRouter } from "next/navigation";
 import { Loader2, SearchIcon } from "lucide-react";
 import { Kbd } from "@/components/ui/kbd";
 import {
-  Combobox,
-  ComboboxContent,
-  ComboboxEmpty,
-  ComboboxInput,
-  ComboboxItem,
-  ComboboxList,
-} from "@/components/ui/combobox";
+  Autocomplete,
+  AutocompleteContent,
+  AutocompleteEmpty,
+  AutocompleteInput,
+  AutocompleteItem,
+  AutocompleteList,
+} from "@/components/ui/autocomplete";
 import { InputGroupAddon } from "@/components/ui/input-group";
 import { SearchGameRow } from "@/components/games/SearchGameRow";
 import { searchGamesClient } from "@/lib/api/search";
@@ -80,9 +80,15 @@ export const SearchBar = () => {
     return () => window.removeEventListener("keydown", handleKey);
   }, []);
 
+  const goToGame = (id: number) => {
+    setOpen(false);
+    inputRef.current?.blur();
+    router.push(`/games/${id}`);
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key !== "Enter") return;
-    // Con item resaltado el Combobox resuelve la selección (navega al juego).
+    // Con item resaltado el Autocomplete resuelve el commit (navega al juego).
     if (highlightedRef.current) return;
     e.preventDefault();
     const trimmed = query.trim();
@@ -99,31 +105,24 @@ export const SearchBar = () => {
 
   return (
     <div className="w-36 sm:flex-1 sm:max-w-64 nav:max-w-56 2xl:max-w-64">
-      <Combobox<Game>
+      <Autocomplete<Game>
         items={results}
         filteredItems={results}
         itemToStringValue={(game) => game.name}
-        inputValue={query}
-        onInputValueChange={(value) => setQuery(value)}
+        value={query}
+        onValueChange={(value) => setQuery(value)}
         open={open}
         onOpenChange={(value) => setOpen(value)}
-        onValueChange={(value) => {
-          if (!value) return;
-          setOpen(false);
-          inputRef.current?.blur();
-          router.push(`/games/${value.id}`);
-        }}
         onItemHighlighted={(value) => {
           highlightedRef.current = value ?? null;
         }}
       >
-        <ComboboxInput
+        <AutocompleteInput
           ref={inputRef}
           className="w-full"
           placeholder="Search..."
           autoComplete="off"
           aria-label="Search games"
-          showTrigger={false}
           onFocus={() => setOpen(true)}
           onKeyDown={handleKeyDown}
         >
@@ -142,8 +141,8 @@ export const SearchBar = () => {
               )
             )}
           </InputGroupAddon>
-        </ComboboxInput>
-        <ComboboxContent
+        </AutocompleteInput>
+        <AutocompleteContent
           align="start"
           side="bottom"
           sideOffset={8}
@@ -162,13 +161,13 @@ export const SearchBar = () => {
             </div>
           ) : (
             <>
-              <ComboboxList>
+              <AutocompleteList>
                 {(game: Game, index: number) => (
-                  <ComboboxItem
+                  <AutocompleteItem
                     key={game.id}
                     index={index}
                     value={game}
-                    showIndicator={false}
+                    onClick={() => goToGame(game.id)}
                     className="cursor-pointer py-1 pr-2 pl-1 data-highlighted:bg-[#28282C] data-highlighted:text-foreground"
                   >
                     <SearchGameRow
@@ -178,12 +177,12 @@ export const SearchBar = () => {
                       discountPercent={game.discountPercent}
                       imageUrl={game.imageUrl}
                     />
-                  </ComboboxItem>
+                  </AutocompleteItem>
                 )}
-              </ComboboxList>
-              <ComboboxEmpty className="px-2 py-6 text-center text-sm text-[#8A8A8A]">
+              </AutocompleteList>
+              <AutocompleteEmpty className="px-2 py-6 text-center text-sm text-[#8A8A8A]">
                 {!loading ? `No results for "${trimmedQuery}"` : null}
-              </ComboboxEmpty>
+              </AutocompleteEmpty>
               {!loading && results.length > 0 && (
                 <button
                   type="button"
@@ -200,8 +199,8 @@ export const SearchBar = () => {
               )}
             </>
           )}
-        </ComboboxContent>
-      </Combobox>
+        </AutocompleteContent>
+      </Autocomplete>
     </div>
   );
 };

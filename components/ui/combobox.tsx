@@ -137,11 +137,8 @@ function ComboboxList({ className, ...props }: ComboboxPrimitive.List.Props) {
 function ComboboxItem({
   className,
   children,
-  showIndicator = true,
   ...props
-}: ComboboxPrimitive.Item.Props & {
-  showIndicator?: boolean;
-}) {
+}: ComboboxPrimitive.Item.Props) {
   return (
     <ComboboxPrimitive.Item
       data-slot="combobox-item"
@@ -152,15 +149,13 @@ function ComboboxItem({
       {...props}
     >
       {children}
-      {showIndicator && (
-        <ComboboxPrimitive.ItemIndicator
-          render={
-            <span className="pointer-events-none absolute right-2 flex size-4 items-center justify-center" />
-          }
-        >
-          <CheckIcon className="pointer-events-none" />
-        </ComboboxPrimitive.ItemIndicator>
-      )}
+      <ComboboxPrimitive.ItemIndicator
+        render={
+          <span className="pointer-events-none absolute right-2 flex size-4 items-center justify-center" />
+        }
+      >
+        <CheckIcon className="pointer-events-none" />
+      </ComboboxPrimitive.ItemIndicator>
     </ComboboxPrimitive.Item>
   );
 }

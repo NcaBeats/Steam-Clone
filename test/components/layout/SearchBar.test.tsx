@@ -83,5 +83,15 @@ describe("SearchBar", () => {
     fireEvent.keyDown(getInput(), { key: "ArrowDown", code: "ArrowDown" });
     fireEvent.keyDown(getInput(), { key: "Enter", code: "Enter" });
     expect(push).toHaveBeenCalledWith("/games/7");
+    expect(getInput()).toHaveValue("");
+  });
+
+  test("click en una opción navega al juego sin dejar JSON en el input", async () => {
+    mockedSearch.mockResolvedValue([game]);
+    render(<SearchBar />);
+    await typeQuery("hollow");
+    fireEvent.click(await screen.findByText("Hollow Knight"));
+    expect(push).toHaveBeenCalledWith("/games/7");
+    expect(getInput()).toHaveValue("");
   });
 });
