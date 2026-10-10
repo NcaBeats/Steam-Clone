@@ -12,9 +12,10 @@ export const PRICE_MAX = 100;
 type Props = Readonly<{
   min: number;
   max: number;
+  showTitle?: boolean;
 }>;
 
-export const PriceFilter = ({ min, max }: Props) => {
+export const PriceFilter = ({ min, max, showTitle = true }: Props) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -41,7 +42,9 @@ export const PriceFilter = ({ min, max }: Props) => {
 
   return (
     <div className="rounded-lg p-4 flex flex-col gap-3">
-      <h2 className="text-lg font-bold text-[#FAFAFA]">Filters</h2>
+      {showTitle && (
+        <h2 className="text-lg font-bold text-[#FAFAFA]">Filters</h2>
+      )}
       <div className="flex flex-col gap-2">
         <p className="text-xs text-[#8A8A8A]">
           Price range:{" "}

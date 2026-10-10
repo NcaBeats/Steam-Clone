@@ -39,16 +39,16 @@ export const GameCard = ({
         />
       </div>
 
-      <div className="flex flex-col p-2 gap-1 h-16">
-        <h3 className="text-sm font-medium whitespace-nowrap text-ellipsis overflow-hidden">
+      <div className="flex flex-col p-2 sm:p-2.5 gap-1 min-h-16">
+        <h3 className="text-xs sm:text-sm font-medium whitespace-nowrap text-ellipsis overflow-hidden">
           {name}
         </h3>
 
-        <div className="items-center flex justify-between text-sm font-semibold">
+        <div className="items-center flex justify-between text-xs sm:text-sm font-semibold">
           {hasDiscount ? (
             <span
               className="
-              font-semibold bg-[#fcaf17] text-black px-2 py-0.5 rounded-md"
+              font-semibold bg-[#fcaf17] text-black px-1.5 sm:px-2 py-0.5 rounded-md text-[11px] sm:text-xs"
             >
               -{discountPercent}%
             </span>

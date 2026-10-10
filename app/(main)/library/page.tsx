@@ -20,7 +20,7 @@ const Library = async () => {
   );
 
   return (
-    <div className="flex flex-col p-2 gap-6 w-full max-w-7xl mx-auto min-h-screen">
+    <div className="flex flex-col px-4 py-2 sm:px-6 gap-6 w-full max-w-7xl mx-auto min-h-screen">
       <h1 className="text-4xl font-bold text-[#FAFAFA] ml-1 mt-4">
         Your Library
       </h1>

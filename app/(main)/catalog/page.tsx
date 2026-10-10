@@ -7,6 +7,7 @@ import {
 } from "@/components/catalog/PriceFilter";
 import { getGamesFiltered } from "@/lib/api/games";
 import Link from "next/link";
+import { ChevronDownIcon } from "lucide-react";
 
 const PAGE_SIZE = 10;
 
@@ -72,6 +73,20 @@ const CatalogPage = async ({ searchParams }: Props) => {
           {pageInfo.totalElements !== 1 ? "s" : ""}
         </p>
       )}
+      <details className="group xl:hidden">
+        <summary className="flex cursor-pointer list-none items-center justify-between rounded-lg bg-[#1A1A1A] px-4 py-3 text-sm font-bold text-[#FAFAFA]">
+          Filters
+          <ChevronDownIcon className="size-4 transition-transform group-open:rotate-180" />
+        </summary>
+        <div className="pt-2">
+          <PriceFilter
+            key={`${minPrice ?? "all"}-${maxPrice ?? "all"}`}
+            min={minPrice ?? PRICE_MIN}
+            max={maxPrice ?? PRICE_MAX}
+            showTitle={false}
+          />
+        </div>
+      </details>
       <div className="flex flex-col xl:flex-row gap-6">
         <div className="flex flex-col gap-2 flex-1 min-w-0 ">
           {games.length === 0 && (query || priceFiltered) ? (
