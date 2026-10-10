@@ -64,7 +64,7 @@ export default async function Home() {
           <div className="absolute inset-0 bg-black/40" />
 
           <div className="absolute inset-0 flex items-end">
-            <div className="mx-auto flex h-full w-full max-w-6xl flex-col items-start justify-end px-2 pb-6 sm:pb-10 xl:pb-14">
+            <div className="mx-auto flex h-full w-full max-w-6xl flex-col items-start justify-end px-2 pb-8 sm:pb-14 lg:pb-20 xl:pb-24">
               <h1 className="text-base font-bold leading-tight text-white sm:text-xl md:text-3xl lg:text-4xl xl:text-6xl">
                 Your next adventure begins here.
               </h1>
