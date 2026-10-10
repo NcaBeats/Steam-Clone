@@ -44,7 +44,7 @@ export function SearchInput({
     <form onSubmit={handleSubmit} className="relative w-full max-w-sm">
       <Search
         size={14}
-        className="absolute left-3 top-1/2 -translate-y-1/2 text-[#5A5A5A] pointer-events-none"
+        className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none"
       />
       <Input
         type="text"

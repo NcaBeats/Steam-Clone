@@ -12,12 +12,12 @@ const NewGamePage = async () => {
       <header className="flex flex-col gap-1">
         <Link
           href="/admin/games"
-          className="text-sm text-[#8A8A8A] hover:text-white self-start"
+          className="text-sm text-muted-foreground hover:text-foreground self-start"
         >
           ← Back to products
         </Link>
-        <h1 className="text-2xl font-bold text-[#FAFAFA]">New product</h1>
-        <p className="text-sm text-[#8A8A8A]">
+        <h1 className="text-2xl font-bold text-foreground">New product</h1>
+        <p className="text-sm text-muted-foreground">
           Create a new game entry. You can upload images afterwards from the
           edit page.
         </p>

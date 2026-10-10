@@ -26,13 +26,13 @@ const StudioGamesPage = async ({
   return (
     <div className="flex flex-col gap-6">
       <header className="flex flex-col gap-1">
-        <p className="text-xs font-bold uppercase tracking-[0.5px] text-[#8A8A8A]">
+        <p className="text-xs font-bold uppercase tracking-[0.5px] text-muted-foreground">
           Products
         </p>
-        <h1 className="text-xl font-bold tracking-[0.4px] text-[#FAFAFA]">
+        <h1 className="text-xl font-bold tracking-[0.4px] text-foreground">
           Productos
         </h1>
-        <p className="text-sm text-[#8A8A8A]">
+        <p className="text-sm text-muted-foreground">
           {pageInfo.totalElements} game
           {pageInfo.totalElements !== 1 ? "s" : ""} in your catalog
         </p>
@@ -44,24 +44,24 @@ const StudioGamesPage = async ({
           {searchName && (
             <Link
               href="/studio/games"
-              className="text-sm text-[#8A8A8A] hover:text-white whitespace-nowrap"
+              className="text-sm text-muted-foreground hover:text-foreground whitespace-nowrap"
             >
               Limpiar filtro
             </Link>
           )}
           <Link
             href="/studio/games/new"
-            className="bg-[#28282C] hover:bg-[#404044] text-[#FAFAFA] text-sm font-semibold px-4 py-2 rounded-full transition-colors whitespace-nowrap"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-semibold px-4 py-2 rounded-full transition-colors whitespace-nowrap"
           >
             + Nuevo producto
           </Link>
         </div>
       </div>
 
-      <div className="bg-[#202024] border border-white/[0.06] rounded-lg overflow-x-auto">
+      <div className="bg-card border border-border rounded-lg overflow-x-auto">
         <table className="w-full text-sm table-fixed">
           <thead>
-            <tr className="bg-[#18181C] text-left text-[#8A8A8A] text-xs font-bold uppercase tracking-[0.5px]">
+            <tr className="bg-muted/50 text-left text-muted-foreground text-xs font-bold uppercase tracking-[0.5px]">
               <th className="px-3 py-3 w-16 hidden md:table-cell">ID</th>
               <th className="px-3 py-3 w-12 hidden sm:table-cell">Cover</th>
               <th className="px-3 py-3">Name</th>
@@ -76,7 +76,7 @@ const StudioGamesPage = async ({
               <tr>
                 <td
                   colSpan={7}
-                  className="px-3 py-8 text-center text-[#8A8A8A]"
+                  className="px-3 py-8 text-center text-muted-foreground"
                 >
                   {searchName
                     ? `No games found matching "${searchName}"`
@@ -87,9 +87,9 @@ const StudioGamesPage = async ({
               games.map((g) => (
                 <tr
                   key={g.id}
-                  className="border-t border-white/[0.06] hover:bg-[#28282C] transition-colors"
+                  className="border-t border-border hover:bg-muted/50 transition-colors"
                 >
-                  <td className="px-3 py-3 text-[#8A8A8A] hidden md:table-cell">
+                  <td className="px-3 py-3 text-muted-foreground hidden md:table-cell">
                     #{g.id}
                   </td>
                   <td className="px-3 py-3 hidden sm:table-cell">
@@ -106,7 +106,7 @@ const StudioGamesPage = async ({
                   <td className="px-3 py-3">
                     <Link
                       href={`/studio/games/${g.id}`}
-                      className="text-[#FAFAFA] hover:underline truncate block"
+                      className="text-foreground hover:underline truncate block"
                     >
                       {g.name}
                     </Link>
@@ -115,14 +115,14 @@ const StudioGamesPage = async ({
                     <span
                       className={`px-2.5 py-1 rounded text-xs font-semibold inline-block ${
                         g.state === "AVAILABLE"
-                          ? "bg-[#28282C] text-[#FAFAFA]"
-                          : "bg-[#101014] text-[#8A8A8A]"
+                          ? "bg-muted text-foreground"
+                          : "bg-muted text-muted-foreground"
                       }`}
                     >
                       {g.state}
                     </span>
                   </td>
-                  <td className="px-3 py-3 text-[#FAFAFA] whitespace-nowrap">
+                  <td className="px-3 py-3 text-foreground whitespace-nowrap">
                     ${g.price.toFixed(2)}
                   </td>
                   <td className="px-3 py-3 hidden sm:table-cell">
@@ -131,7 +131,7 @@ const StudioGamesPage = async ({
                         -{g.discountPercent}%
                       </span>
                     ) : (
-                      <span className="text-[#5A5A5A] text-xs whitespace-nowrap">
+                      <span className="text-muted-foreground text-xs whitespace-nowrap">
                         —
                       </span>
                     )}
@@ -140,13 +140,13 @@ const StudioGamesPage = async ({
                     <div className="flex items-center justify-end gap-3">
                       <Link
                         href={`/studio/games/${g.id}`}
-                        className="text-[#8A8A8A] hover:text-white text-sm font-medium"
+                        className="text-muted-foreground hover:text-foreground text-sm font-medium"
                       >
                         View
                       </Link>
                       <Link
                         href={`/studio/games/${g.id}/edit`}
-                        className="text-[#8A8A8A] hover:text-white text-sm font-medium"
+                        className="text-muted-foreground hover:text-foreground text-sm font-medium"
                       >
                         Edit
                       </Link>
@@ -161,7 +161,7 @@ const StudioGamesPage = async ({
 
       {totalPages > 1 && (
         <nav className="flex flex-wrap items-center justify-between gap-3 text-sm">
-          <span className="text-[#8A8A8A]">
+          <span className="text-muted-foreground">
             Showing {start}-{end} of {pageInfo.totalElements}
           </span>
           <div className="flex items-center gap-1">
@@ -175,8 +175,8 @@ const StudioGamesPage = async ({
                   href={href}
                   className={`size-8 flex items-center justify-center rounded-md text-sm ${
                     i === page
-                      ? "bg-[#28282C] text-white"
-                      : "text-[#8A8A8A] hover:bg-[#28282C] hover:text-white"
+                      ? "bg-muted text-foreground"
+                      : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
                   }`}
                 >
                   {i + 1}

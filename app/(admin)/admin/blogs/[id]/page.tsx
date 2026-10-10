@@ -31,7 +31,7 @@ const BlogDetailPage = async ({
 const BackLink = () => (
   <Link
     href="/admin/blogs"
-    className="flex items-center gap-1 text-sm text-[#8A8A8A] hover:text-white self-start"
+    className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground self-start"
   >
     <ArrowLeft size={16} />
     Back to blogs
@@ -41,8 +41,8 @@ const BackLink = () => (
 const BlogSummary = ({ blog }: { blog: Blog }) => (
   <header className="flex items-center gap-4">
     <div className="flex flex-col gap-1">
-      <h1 className="text-2xl font-bold text-[#FAFAFA]">Edit blog</h1>
-      <div className="flex items-center gap-2 text-sm text-[#8A8A8A]">
+      <h1 className="text-2xl font-bold text-foreground">Edit blog</h1>
+      <div className="flex items-center gap-2 text-sm text-muted-foreground">
         {blog.category && (
           <span className="px-2 py-0.5 rounded text-xs font-semibold bg-[#A1CD44] text-black">
             {blog.category}

@@ -27,20 +27,20 @@ const BlogsPage = async ({
     <div className="flex flex-col gap-6">
       <header className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-col gap-1">
-          <p className="text-xs font-bold uppercase tracking-[0.5px] text-[#8A8A8A]">
+          <p className="text-xs font-bold uppercase tracking-[0.5px] text-muted-foreground">
             Content
           </p>
-          <h1 className="text-xl font-bold tracking-[0.4px] text-[#FAFAFA]">
+          <h1 className="text-xl font-bold tracking-[0.4px] text-foreground">
             Blogs
           </h1>
-          <p className="text-sm text-[#8A8A8A]">
+          <p className="text-sm text-muted-foreground">
             {pageInfo.totalElements} blog
             {pageInfo.totalElements !== 1 ? "s" : ""} published
           </p>
         </div>
         <Link
           href="/admin/blogs/new"
-          className="bg-[#28282C] hover:bg-[#404044] text-[#FAFAFA] text-sm font-semibold px-4 py-2 rounded-full transition-colors"
+          className="bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-semibold px-4 py-2 rounded-full transition-colors"
         >
           + Nuevo blog
         </Link>
@@ -51,17 +51,17 @@ const BlogsPage = async ({
         {searchQuery && (
           <Link
             href="/admin/blogs"
-            className="text-sm text-[#8A8A8A] hover:text-white whitespace-nowrap"
+            className="text-sm text-muted-foreground hover:text-foreground whitespace-nowrap"
           >
             Limpiar filtro
           </Link>
         )}
       </div>
 
-      <div className="bg-[#202024] border border-white/[0.06] rounded-lg overflow-x-auto">
+      <div className="bg-card border border-border rounded-lg overflow-x-auto">
         <table className="w-full text-sm table-fixed">
           <thead>
-            <tr className="bg-[#18181C] text-left text-[#8A8A8A] text-xs font-bold uppercase tracking-[0.5px]">
+            <tr className="bg-muted/50 text-left text-muted-foreground text-xs font-bold uppercase tracking-[0.5px]">
               <th className="px-3 py-3 w-16 hidden md:table-cell">ID</th>
               <th className="px-3 py-3">Title</th>
               <th className="px-3 py-3 w-28 hidden sm:table-cell">Category</th>
@@ -74,7 +74,7 @@ const BlogsPage = async ({
               <tr>
                 <td
                   colSpan={5}
-                  className="px-3 py-8 text-center text-[#8A8A8A]"
+                  className="px-3 py-8 text-center text-muted-foreground"
                 >
                   {searchQuery
                     ? `No blogs found matching "${searchQuery}"`
@@ -85,41 +85,41 @@ const BlogsPage = async ({
               blogs.map((b) => (
                 <tr
                   key={b.id}
-                  className="border-t border-white/[0.06] hover:bg-[#28282C] transition-colors"
+                  className="border-t border-border hover:bg-muted/50 transition-colors"
                 >
-                  <td className="px-3 py-3 text-[#8A8A8A] hidden md:table-cell">
+                  <td className="px-3 py-3 text-muted-foreground hidden md:table-cell">
                     #{b.id}
                   </td>
                   <td className="px-3 py-3">
                     <Link
                       href={`/admin/blogs/${b.id}`}
-                      className="text-[#007AFF] hover:underline truncate block"
+                      className="text-foreground hover:underline truncate block"
                     >
                       {b.title}
                     </Link>
-                    <p className="text-[#8A8A8A] text-xs truncate">
+                    <p className="text-muted-foreground text-xs truncate">
                       {b.excerpt}
                     </p>
                   </td>
                   <td className="px-3 py-3 hidden sm:table-cell whitespace-nowrap">
                     {b.category ? (
-                      <span className="px-2.5 py-1 rounded text-xs font-semibold inline-block bg-[#28282C] text-[#FAFAFA]">
+                      <span className="px-2.5 py-1 rounded text-xs font-semibold inline-block bg-muted text-foreground">
                         {b.category}
                       </span>
                     ) : (
-                      <span className="text-[#5A5A5A] text-xs whitespace-nowrap">
+                      <span className="text-muted-foreground text-xs whitespace-nowrap">
                         —
                       </span>
                     )}
                   </td>
-                  <td className="px-3 py-3 text-[#8A8A8A] hidden sm:table-cell whitespace-nowrap">
+                  <td className="px-3 py-3 text-muted-foreground hidden sm:table-cell whitespace-nowrap">
                     {new Date(b.publishedAt).toLocaleDateString("en-US")}
                   </td>
                   <td className="px-3 py-3 text-right whitespace-nowrap">
                     <div className="flex items-center justify-end gap-3">
                       <Link
                         href={`/admin/blogs/${b.id}`}
-                        className="text-[#007AFF] hover:text-[#1ea4ff] text-sm font-medium"
+                        className="text-foreground hover:underline text-sm font-medium"
                       >
                         Edit
                       </Link>
@@ -135,7 +135,7 @@ const BlogsPage = async ({
 
       {totalPages > 1 && (
         <nav className="flex flex-wrap items-center justify-between gap-3 text-sm">
-          <span className="text-[#8A8A8A]">
+          <span className="text-muted-foreground">
             Showing {start}-{end} of {pageInfo.totalElements}
           </span>
           <div className="flex items-center gap-1">
@@ -149,8 +149,8 @@ const BlogsPage = async ({
                   href={href}
                   className={`size-8 flex items-center justify-center rounded-md text-sm ${
                     i === page
-                      ? "bg-[#28282C] text-white"
-                      : "text-[#8A8A8A] hover:bg-[#28282C] hover:text-white"
+                      ? "bg-muted text-foreground"
+                      : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
                   }`}
                 >
                   {i + 1}

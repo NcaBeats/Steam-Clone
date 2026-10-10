@@ -117,15 +117,15 @@ export function UserEditForm({ user }: Props) {
     }
   };
 
-  const labelCls = "text-xs text-[#8A8A8A] font-medium";
+  const labelCls = "text-xs text-muted-foreground font-medium";
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg p-6 flex flex-col gap-4"
+      className="bg-card border border-border rounded-lg p-6 flex flex-col gap-4"
     >
       <fieldset className="flex flex-col gap-4">
-        <legend className="text-sm font-semibold text-[#FAFAFA] mb-2">
+        <legend className="text-sm font-semibold text-foreground mb-2">
           Account
         </legend>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -168,8 +168,8 @@ export function UserEditForm({ user }: Props) {
         </div>
       </fieldset>
 
-      <fieldset className="flex flex-col gap-4 border-t border-[#2A2A2A] pt-4">
-        <legend className="text-sm font-semibold text-[#FAFAFA] mb-2">
+      <fieldset className="flex flex-col gap-4 border-t border-border pt-4">
+        <legend className="text-sm font-semibold text-foreground mb-2">
           Profile
         </legend>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -291,7 +291,7 @@ export function UserEditForm({ user }: Props) {
         <button
           type="submit"
           disabled={saving}
-          className="bg-[#007AFF] hover:bg-[#1ea4ff] disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold px-5 py-2.5 rounded-md transition-colors"
+          className="bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed text-primary-foreground text-sm font-semibold px-5 py-2.5 rounded-md transition-colors"
         >
           {saving ? "Saving..." : "Save changes"}
         </button>

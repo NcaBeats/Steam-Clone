@@ -114,12 +114,12 @@ export function NewGameForm({
     }
   };
 
-  const labelCls = "text-xs text-[#8A8A8A] font-medium";
+  const labelCls = "text-xs text-muted-foreground font-medium";
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg p-6 flex flex-col gap-4"
+      className="bg-card border border-border rounded-lg p-6 flex flex-col gap-4"
     >
       <div className="flex flex-col gap-1">
         <label htmlFor="name" className={labelCls}>
@@ -199,11 +199,11 @@ export function NewGameForm({
 
       <div className="flex flex-col gap-1">
         <span className={labelCls}>Categories</span>
-        <div className="grid grid-cols-3 gap-2 bg-[#1A1A1A] border border-[#2A2A2A] rounded-md p-3 max-h-40 overflow-y-auto">
+        <div className="grid grid-cols-3 gap-2 bg-muted/50 border border-border rounded-md p-3 max-h-40 overflow-y-auto">
           {categories.map((c) => (
             <label
               key={c.id}
-              className="flex items-center gap-2 text-sm text-[#FAFAFA] cursor-pointer"
+              className="flex items-center gap-2 text-sm text-foreground cursor-pointer"
             >
               <input
                 type="checkbox"
@@ -217,8 +217,8 @@ export function NewGameForm({
         </div>
       </div>
 
-      <div className="flex flex-col gap-4 border-t border-[#2A2A2A] pt-4">
-        <p className="text-xs text-[#5A5A5A]">
+      <div className="flex flex-col gap-4 border-t border-border pt-4">
+        <p className="text-xs text-muted-foreground">
           System Requirements (leave blank to hide this section on the game
           page)
         </p>
@@ -235,7 +235,7 @@ export function NewGameForm({
         </div>
       </div>
 
-      <div className="flex flex-col gap-4 border-t border-[#2A2A2A] pt-4">
+      <div className="flex flex-col gap-4 border-t border-border pt-4">
         <FileDropzone
           kind="image"
           value={image}
@@ -266,19 +266,21 @@ export function NewGameForm({
         </p>
       )}
 
-      {uploading && <p className="text-xs text-[#8A8A8A]">{uploading}</p>}
+      {uploading && (
+        <p className="text-xs text-muted-foreground">{uploading}</p>
+      )}
 
       <div className="flex items-center gap-2 mt-2">
         <button
           type="submit"
           disabled={busy || !image}
-          className="bg-[#007AFF] hover:bg-[#1ea4ff] disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold px-5 py-2.5 rounded-md transition-colors"
+          className="bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed text-primary-foreground text-sm font-semibold px-5 py-2.5 rounded-md transition-colors"
         >
           {busy ? (uploading ?? "Creating...") : "Create product"}
         </button>
         <Link
           href={redirectTo}
-          className="text-[#8A8A8A] hover:text-white text-sm px-4 py-2.5"
+          className="text-muted-foreground hover:text-foreground text-sm px-4 py-2.5"
         >
           Cancel
         </Link>

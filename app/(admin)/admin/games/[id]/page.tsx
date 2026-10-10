@@ -34,7 +34,7 @@ const GameDetailPage = async ({
 const BackLink = () => (
   <Link
     href="/admin/games"
-    className="flex items-center gap-1 text-sm text-[#8A8A8A] hover:text-white self-start"
+    className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground self-start"
   >
     <ArrowLeft size={16} />
     Back to products
@@ -54,13 +54,13 @@ const GameSummary = ({ game }: { game: Game }) => (
         />
       </div>
       <div className="flex flex-col gap-1">
-        <h1 className="text-2xl font-bold text-[#FAFAFA]">Edit product</h1>
-        <div className="flex items-center gap-2 text-sm text-[#8A8A8A]">
+        <h1 className="text-2xl font-bold text-foreground">Edit product</h1>
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <span
             className={`px-2 py-0.5 rounded text-xs font-semibold ${
               game.state === "AVAILABLE"
                 ? "bg-[#A1CD44] text-black"
-                : "bg-[#2A2A2A] text-[#FAFAFA]"
+                : "bg-muted text-muted-foreground"
             }`}
           >
             {game.state}
@@ -71,27 +71,27 @@ const GameSummary = ({ game }: { game: Game }) => (
     </header>
 
     <section className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-      <div className="bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg p-4 flex items-center gap-3">
+      <div className="bg-card border border-border rounded-lg p-4 flex items-center gap-3">
         <DollarSign size={18} className="text-[#A1CD44]" />
         <div>
-          <p className="text-xs text-[#8A8A8A]">Price</p>
-          <p className="text-sm text-[#FAFAFA]">${game.price.toFixed(2)}</p>
+          <p className="text-xs text-muted-foreground">Price</p>
+          <p className="text-sm text-foreground">${game.price.toFixed(2)}</p>
         </div>
       </div>
-      <div className="bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg p-4 flex items-center gap-3">
-        <Calendar size={18} className="text-[#8A8A8A]" />
+      <div className="bg-card border border-border rounded-lg p-4 flex items-center gap-3">
+        <Calendar size={18} className="text-muted-foreground" />
         <div>
-          <p className="text-xs text-[#8A8A8A]">Launch date</p>
-          <p className="text-sm text-[#FAFAFA]">
+          <p className="text-xs text-muted-foreground">Launch date</p>
+          <p className="text-sm text-foreground">
             {new Date(game.launchDate).toLocaleDateString("en-US")}
           </p>
         </div>
       </div>
-      <div className="bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg p-4 flex items-center gap-3">
-        <Tag size={18} className="text-[#8A8A8A]" />
+      <div className="bg-card border border-border rounded-lg p-4 flex items-center gap-3">
+        <Tag size={18} className="text-muted-foreground" />
         <div>
-          <p className="text-xs text-[#8A8A8A]">Categories</p>
-          <p className="text-sm text-[#FAFAFA] line-clamp-2">
+          <p className="text-xs text-muted-foreground">Categories</p>
+          <p className="text-sm text-foreground line-clamp-2">
             {game.categories.map((c) => c.name).join(", ")}
           </p>
         </div>

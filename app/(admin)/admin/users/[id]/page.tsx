@@ -22,7 +22,7 @@ const UserDetailPage = async ({
     <div className="flex flex-col gap-6 max-w-2xl">
       <Link
         href="/admin/users"
-        className="flex items-center gap-1 text-sm text-[#8A8A8A] hover:text-white self-start"
+        className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground self-start"
       >
         <ArrowLeft size={16} />
         Back to users
@@ -30,12 +30,12 @@ const UserDetailPage = async ({
 
       <header className="flex flex-col gap-2">
         <div className="flex items-center gap-3">
-          <h1 className="text-2xl font-bold text-[#FAFAFA]">Edit user</h1>
+          <h1 className="text-2xl font-bold text-foreground">Edit user</h1>
           <span
             className={`px-2 py-0.5 rounded text-xs font-semibold ${
               user.role === "ADMIN"
-                ? "bg-[#007AFF] text-white"
-                : "bg-[#2A2A2A] text-[#8A8A8A]"
+                ? "bg-primary text-primary-foreground"
+                : "bg-muted text-muted-foreground"
             }`}
           >
             {user.role}
@@ -44,25 +44,25 @@ const UserDetailPage = async ({
       </header>
 
       <section className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div className="bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg p-4 flex items-center gap-3">
+        <div className="bg-card border border-border rounded-lg p-4 flex items-center gap-3">
           <Mail size={18} className="text-[#007AFF]" />
           <div>
-            <p className="text-xs text-[#8A8A8A]">Email</p>
-            <p className="text-sm text-[#FAFAFA]">{user.email}</p>
+            <p className="text-xs text-muted-foreground">Email</p>
+            <p className="text-sm text-foreground">{user.email}</p>
           </div>
         </div>
-        <div className="bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg p-4 flex items-center gap-3">
+        <div className="bg-card border border-border rounded-lg p-4 flex items-center gap-3">
           <Shield size={18} className="text-[#A1CD44]" />
           <div>
-            <p className="text-xs text-[#8A8A8A]">Role</p>
-            <p className="text-sm text-[#FAFAFA]">{user.role}</p>
+            <p className="text-xs text-muted-foreground">Role</p>
+            <p className="text-sm text-foreground">{user.role}</p>
           </div>
         </div>
-        <div className="bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg p-4 flex items-center gap-3 sm:col-span-2">
-          <Calendar size={18} className="text-[#8A8A8A]" />
+        <div className="bg-card border border-border rounded-lg p-4 flex items-center gap-3 sm:col-span-2">
+          <Calendar size={18} className="text-muted-foreground" />
           <div>
-            <p className="text-xs text-[#8A8A8A]">Created at</p>
-            <p className="text-sm text-[#FAFAFA]">
+            <p className="text-xs text-muted-foreground">Created at</p>
+            <p className="text-sm text-foreground">
               {new Date(user.createdAt).toLocaleString("en-US")}
             </p>
           </div>

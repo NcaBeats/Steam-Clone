@@ -21,38 +21,38 @@ const AdminHomePage = async () => {
       label: "Total Users",
       value: totalUsers.toString(),
       icon: Users,
-      color: "text-[#8A8A8A]",
+      color: "text-muted-foreground",
     },
     {
       label: "Total Games",
       value: totalGames.toString(),
       icon: ShoppingBag,
-      color: "text-[#8A8A8A]",
+      color: "text-muted-foreground",
     },
     {
       label: "Active Games",
       value: activeGames.toString(),
       icon: LayoutDashboard,
-      color: "text-[#8A8A8A]",
+      color: "text-muted-foreground",
     },
     {
       label: "Catalog Value",
       value: `$${totalRevenue.toFixed(2)}`,
       icon: DollarSign,
-      color: "text-[#8A8A8A]",
+      color: "text-muted-foreground",
     },
   ];
 
   return (
     <div className="flex flex-col gap-8">
       <header className="flex flex-col gap-1">
-        <p className="text-xs font-bold uppercase tracking-[0.5px] text-[#8A8A8A]">
+        <p className="text-xs font-bold uppercase tracking-[0.5px] text-muted-foreground">
           Dashboard
         </p>
-        <h1 className="text-xl font-bold tracking-[0.4px] text-[#FAFAFA]">
+        <h1 className="text-xl font-bold tracking-[0.4px] text-foreground">
           HELLO Administrator!
         </h1>
-        <p className="text-sm text-[#8A8A8A]">
+        <p className="text-sm text-muted-foreground">
           Welcome to your dashboard. Here is a quick overview of your store.
         </p>
       </header>
@@ -63,10 +63,10 @@ const AdminHomePage = async () => {
           return (
             <div
               key={stat.label}
-              className="bg-[#202024] border border-white/[0.06] rounded-lg p-5 flex flex-col gap-2"
+              className="bg-card border border-border rounded-lg p-5 flex flex-col gap-2"
             >
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold uppercase tracking-[0.5px] text-[#8A8A8A]">
+                <span className="text-xs font-bold uppercase tracking-[0.5px] text-muted-foreground">
                   {stat.label}
                 </span>
                 <Icon size={16} className={stat.color} />
@@ -75,7 +75,7 @@ const AdminHomePage = async () => {
                 className={`text-xl font-bold tracking-[0.4px] ${
                   stat.label === "Catalog Value"
                     ? "text-[#26BBFF]"
-                    : "text-[#FAFAFA]"
+                    : "text-foreground"
                 }`}
               >
                 {stat.value}
@@ -85,32 +85,32 @@ const AdminHomePage = async () => {
         })}
       </section>
 
-      <section className="bg-[#202024] border border-white/[0.06] rounded-lg p-5 flex flex-col gap-3">
-        <h2 className="text-base font-bold tracking-[0.32px] text-[#FAFAFA]">
+      <section className="bg-card border border-border rounded-lg p-5 flex flex-col gap-3">
+        <h2 className="text-base font-bold tracking-[0.32px] text-foreground">
           Quick actions
         </h2>
         <div className="flex flex-col gap-2">
           <Link
             href="/admin/users/new"
-            className="text-[#007AFF] hover:underline text-sm"
+            className="text-foreground hover:underline text-sm"
           >
             + Create new user
           </Link>
           <Link
             href="/admin/games/new"
-            className="text-[#007AFF] hover:underline text-sm"
+            className="text-foreground hover:underline text-sm"
           >
             + Create new product
           </Link>
           <Link
             href="/admin/users"
-            className="text-[#8A8A8A] hover:text-white text-sm"
+            className="text-muted-foreground hover:text-foreground text-sm"
           >
             View all users
           </Link>
           <Link
             href="/admin/games"
-            className="text-[#8A8A8A] hover:text-white text-sm"
+            className="text-muted-foreground hover:text-foreground text-sm"
           >
             View all products
           </Link>

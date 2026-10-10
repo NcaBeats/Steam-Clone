@@ -31,7 +31,7 @@ const StudioGameDetailPage = async ({
     <div className="flex flex-col gap-6 max-w-3xl">
       <Link
         href="/studio/games"
-        className="flex items-center gap-1 text-sm text-[#8A8A8A] hover:text-white self-start"
+        className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground self-start"
       >
         <ArrowLeft size={16} />
         Back to products
@@ -48,15 +48,15 @@ const StudioGameDetailPage = async ({
           />
         </div>
         <div className="flex flex-col gap-1">
-          <h1 className="text-xl font-bold tracking-[0.4px] text-[#FAFAFA]">
+          <h1 className="text-xl font-bold tracking-[0.4px] text-foreground">
             {game.name}
           </h1>
-          <div className="flex items-center gap-2 text-sm text-[#8A8A8A]">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <span
               className={`px-2.5 py-1 rounded text-xs font-semibold inline-block ${
                 game.state === "AVAILABLE"
-                  ? "bg-[#28282C] text-[#FAFAFA]"
-                  : "bg-[#101014] text-[#8A8A8A]"
+                  ? "bg-muted text-foreground"
+                  : "bg-muted text-muted-foreground"
               }`}
             >
               {game.state}
@@ -64,7 +64,7 @@ const StudioGameDetailPage = async ({
             <span>#{game.id}</span>
             <Link
               href={`/studio/games/${game.id}/edit`}
-              className="text-[#8A8A8A] hover:text-white text-sm font-medium"
+              className="text-muted-foreground hover:text-foreground text-sm font-medium"
             >
               Edit
             </Link>
@@ -73,11 +73,11 @@ const StudioGameDetailPage = async ({
       </header>
 
       <section className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <div className="bg-[#202024] border border-white/[0.06] rounded-lg p-4 flex items-center gap-3">
+        <div className="bg-card border border-border rounded-lg p-4 flex items-center gap-3">
           <DollarSign size={18} className="text-[#26BBFF]" />
           <div>
-            <p className="text-xs text-[#8A8A8A]">Price</p>
-            <p className="text-sm text-[#FAFAFA]">${game.price.toFixed(2)}</p>
+            <p className="text-xs text-muted-foreground">Price</p>
+            <p className="text-sm text-foreground">${game.price.toFixed(2)}</p>
             {game.discountPercent > 0 && (
               <p className="text-xs text-[#26BBFF]">
                 -{game.discountPercent}% off
@@ -85,72 +85,76 @@ const StudioGameDetailPage = async ({
             )}
           </div>
         </div>
-        <div className="bg-[#202024] border border-white/[0.06] rounded-lg p-4 flex items-center gap-3">
-          <Calendar size={18} className="text-[#8A8A8A]" />
+        <div className="bg-card border border-border rounded-lg p-4 flex items-center gap-3">
+          <Calendar size={18} className="text-muted-foreground" />
           <div>
-            <p className="text-xs text-[#8A8A8A]">Launch date</p>
-            <p className="text-sm text-[#FAFAFA]">
+            <p className="text-xs text-muted-foreground">Launch date</p>
+            <p className="text-sm text-foreground">
               {new Date(game.launchDate).toLocaleDateString("en-US")}
             </p>
           </div>
         </div>
-        <div className="bg-[#202024] border border-white/[0.06] rounded-lg p-4 flex items-center gap-3">
-          <Tag size={18} className="text-[#8A8A8A]" />
+        <div className="bg-card border border-border rounded-lg p-4 flex items-center gap-3">
+          <Tag size={18} className="text-muted-foreground" />
           <div>
-            <p className="text-xs text-[#8A8A8A]">Categories</p>
-            <p className="text-sm text-[#FAFAFA] line-clamp-2">
+            <p className="text-xs text-muted-foreground">Categories</p>
+            <p className="text-sm text-foreground line-clamp-2">
               {game.categories.map((c) => c.name).join(", ")}
             </p>
           </div>
         </div>
       </section>
 
-      <section className="bg-[#202024] border border-white/[0.06] rounded-lg p-5 flex flex-col gap-2">
-        <h2 className="text-sm font-bold text-[#FAFAFA] uppercase tracking-[0.5px]">
+      <section className="bg-card border border-border rounded-lg p-5 flex flex-col gap-2">
+        <h2 className="text-sm font-bold text-foreground uppercase tracking-[0.5px]">
           Description
         </h2>
-        <p className="text-sm text-[#8A8A8A] whitespace-pre-line">
+        <p className="text-sm text-muted-foreground whitespace-pre-line">
           {game.description}
         </p>
       </section>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <section className="bg-[#202024] border border-white/[0.06] rounded-lg p-5 flex flex-col gap-2">
-          <h2 className="text-sm font-bold text-[#FAFAFA] uppercase tracking-[0.5px]">
+        <section className="bg-card border border-border rounded-lg p-5 flex flex-col gap-2">
+          <h2 className="text-sm font-bold text-foreground uppercase tracking-[0.5px]">
             Minimum requirements
           </h2>
           {specEntries(game.minimumSpecs).length > 0 ? (
             <ul className="flex flex-col gap-1.5 text-sm">
               {specEntries(game.minimumSpecs).map(([key, value]) => (
                 <li key={key} className="flex justify-between gap-4">
-                  <span className="text-[#8A8A8A] capitalize">{key}</span>
-                  <span className="text-[#FAFAFA] text-right">
+                  <span className="text-muted-foreground capitalize">
+                    {key}
+                  </span>
+                  <span className="text-foreground text-right">
                     {String(value)}
                   </span>
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="text-sm text-[#8A8A8A]">—</p>
+            <p className="text-sm text-muted-foreground">—</p>
           )}
         </section>
-        <section className="bg-[#202024] border border-white/[0.06] rounded-lg p-5 flex flex-col gap-2">
-          <h2 className="text-sm font-bold text-[#FAFAFA] uppercase tracking-[0.5px]">
+        <section className="bg-card border border-border rounded-lg p-5 flex flex-col gap-2">
+          <h2 className="text-sm font-bold text-foreground uppercase tracking-[0.5px]">
             Recommended requirements
           </h2>
           {specEntries(game.recommendedSpecs).length > 0 ? (
             <ul className="flex flex-col gap-1.5 text-sm">
               {specEntries(game.recommendedSpecs).map(([key, value]) => (
                 <li key={key} className="flex justify-between gap-4">
-                  <span className="text-[#8A8A8A] capitalize">{key}</span>
-                  <span className="text-[#FAFAFA] text-right">
+                  <span className="text-muted-foreground capitalize">
+                    {key}
+                  </span>
+                  <span className="text-foreground text-right">
                     {String(value)}
                   </span>
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="text-sm text-[#8A8A8A]">—</p>
+            <p className="text-sm text-muted-foreground">—</p>
           )}
         </section>
       </div>

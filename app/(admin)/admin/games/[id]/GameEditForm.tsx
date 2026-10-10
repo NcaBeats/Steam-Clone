@@ -146,12 +146,12 @@ export function GameEditForm({
     }
   };
 
-  const labelCls = "text-xs text-[#8A8A8A] font-medium";
+  const labelCls = "text-xs text-muted-foreground font-medium";
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg p-6 flex flex-col gap-4"
+      className="bg-card border border-border rounded-lg p-6 flex flex-col gap-4"
     >
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div className="flex flex-col gap-1 sm:col-span-2">
@@ -228,7 +228,7 @@ export function GameEditForm({
         </div>
         <div className="flex flex-col gap-1">
           <label className={labelCls}>Calculated price (USD)</label>
-          <div className="rounded-lg bg-[#1A1A1A] px-3 py-3 text-sm font-semibold text-[#A1CD44]">
+          <div className="rounded-lg bg-muted/50 px-3 py-3 text-sm font-semibold text-[#A1CD44]">
             ${price.toFixed(2)}
           </div>
         </div>
@@ -250,11 +250,11 @@ export function GameEditForm({
 
       <div className="flex flex-col gap-2">
         <span className={labelCls}>Categories</span>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 bg-[#1A1A1A] border border-[#2A2A2A] rounded-md p-3 max-h-60 overflow-y-auto">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 bg-muted/50 border border-border rounded-md p-3 max-h-60 overflow-y-auto">
           {categories.map((c) => (
             <label
               key={c.id}
-              className="flex items-center gap-2 text-sm text-[#FAFAFA] cursor-pointer"
+              className="flex items-center gap-2 text-sm text-foreground cursor-pointer"
             >
               <input
                 type="checkbox"
@@ -268,8 +268,8 @@ export function GameEditForm({
         </div>
       </div>
 
-      <div className="flex flex-col gap-4 border-t border-[#2A2A2A] pt-4">
-        <p className="text-xs text-[#5A5A5A]">
+      <div className="flex flex-col gap-4 border-t border-border pt-4">
+        <p className="text-xs text-muted-foreground">
           Upload files to replace the current asset. Leave fields empty to keep
           what already exists. The gallery is replaced completely if you choose
           new images.
@@ -303,8 +303,8 @@ export function GameEditForm({
       </div>
 
       {/* System Requirements */}
-      <div className="flex flex-col gap-4 border-t border-[#2A2A2A] pt-4">
-        <p className="text-xs text-[#5A5A5A]">
+      <div className="flex flex-col gap-4 border-t border-border pt-4">
+        <p className="text-xs text-muted-foreground">
           System Requirements (leave blank to hide this section on the game
           page)
         </p>
@@ -325,7 +325,7 @@ export function GameEditForm({
         <button
           type="submit"
           disabled={saving || uploading !== null}
-          className="bg-[#007AFF] hover:bg-[#1ea4ff] disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold px-5 py-2.5 rounded-md transition-colors"
+          className="bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed text-primary-foreground text-sm font-semibold px-5 py-2.5 rounded-md transition-colors"
         >
           {uploading ?? (saving ? "Saving..." : "Save changes")}
         </button>

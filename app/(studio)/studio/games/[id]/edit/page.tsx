@@ -25,12 +25,12 @@ const StudioEditGamePage = async ({
       <header className="flex flex-col gap-1">
         <Link
           href={`/studio/games/${id}`}
-          className="text-sm text-[#8A8A8A] hover:text-white self-start"
+          className="text-sm text-muted-foreground hover:text-foreground self-start"
         >
           ← Back to product
         </Link>
-        <h1 className="text-2xl font-bold text-[#FAFAFA]">Edit product</h1>
-        <p className="text-sm text-[#8A8A8A]">
+        <h1 className="text-2xl font-bold text-foreground">Edit product</h1>
+        <p className="text-sm text-muted-foreground">
           Update the data and, if you wish, replace the media assets.
         </p>
       </header>
