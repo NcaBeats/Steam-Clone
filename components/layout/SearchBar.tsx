@@ -5,16 +5,15 @@ import { useRouter } from "next/navigation";
 import { Loader2, SearchIcon } from "lucide-react";
 import { Kbd } from "@/components/ui/kbd";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-} from "@/components/ui/input-group";
-import { SearchGameCard } from "@/components/games/SearchGameCard";
+  Combobox,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+} from "@/components/ui/combobox";
+import { InputGroupAddon } from "@/components/ui/input-group";
+import { SearchGameRow } from "@/components/games/SearchGameRow";
 import { searchGamesClient } from "@/lib/api/search";
 import type { Game } from "@/types";
 
@@ -26,6 +25,7 @@ export const SearchBar = () => {
   const [loading, setLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const highlightedRef = useRef<Game | null>(null);
 
   useEffect(() => {
     if (open) {
@@ -81,108 +81,76 @@ export const SearchBar = () => {
   }, []);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      const trimmed = query.trim();
-      if (trimmed) {
-        router.push(`/search?q=${encodeURIComponent(trimmed)}`);
-        setOpen(false);
-        inputRef.current?.blur();
-      }
+    if (e.key !== "Enter") return;
+    // Con item resaltado el Combobox resuelve la selección (navega al juego).
+    if (highlightedRef.current) return;
+    e.preventDefault();
+    const trimmed = query.trim();
+    if (trimmed) {
+      router.push(`/search?q=${encodeURIComponent(trimmed)}`);
+      setOpen(false);
+      inputRef.current?.blur();
     }
   };
 
   const trimmedQuery = query.trim();
-  const showResults = trimmedQuery.length > 0;
-  const showHint = !loading && trimmedQuery.length === 0;
+  const showTips = trimmedQuery.length === 0;
+  const showHint = !loading && showTips;
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger
-        render={
-          <div className="w-36 sm:flex-1 sm:max-w-64 nav:max-w-56 2xl:max-w-64" />
-        }
+    <div className="w-36 sm:flex-1 sm:max-w-64 nav:max-w-56 2xl:max-w-64">
+      <Combobox<Game>
+        items={results}
+        filteredItems={results}
+        itemToStringValue={(game) => game.name}
+        inputValue={query}
+        onInputValueChange={(value) => setQuery(value)}
+        open={open}
+        onOpenChange={(value) => setOpen(value)}
+        onValueChange={(value) => {
+          if (!value) return;
+          setOpen(false);
+          inputRef.current?.blur();
+          router.push(`/games/${value.id}`);
+        }}
+        onItemHighlighted={(value) => {
+          highlightedRef.current = value ?? null;
+        }}
       >
-        <div className="w-full max-w-xs">
-          <InputGroup>
-            <InputGroupInput
-              ref={inputRef}
-              placeholder="Search..."
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onFocus={() => setOpen(true)}
-              onKeyDown={handleKeyDown}
-              aria-expanded={open}
-              aria-label="Search games"
-            />
-            <InputGroupAddon>
-              <SearchIcon />
-            </InputGroupAddon>
-            <InputGroupAddon align="inline-end">
-              {loading ? (
-                <Loader2 className="animate-spin" size={16} />
-              ) : (
-                showHint && (
-                  <>
-                    <Kbd>⌘</Kbd>
-                    <Kbd>K</Kbd>
-                  </>
-                )
-              )}
-            </InputGroupAddon>
-          </InputGroup>
-        </div>
-      </PopoverTrigger>
-      <PopoverContent
-        align="start"
-        side="bottom"
-        sideOffset={8}
-        className="w-[min(42rem,calc(100vw-2rem))] p-4"
-      >
-        <div className="space-y-4">
-          {showResults && (
-            <div className="w-full max-h-[60vh] overflow-y-auto px-1 py-3">
-              {!loading && results.length === 0 ? (
-                <div className="py-6 text-center text-sm text-[#8A8A8A]">
-                  No results for &quot;{trimmedQuery}&quot;
-                </div>
-              ) : (
+        <ComboboxInput
+          ref={inputRef}
+          className="w-full"
+          placeholder="Search..."
+          autoComplete="off"
+          aria-label="Search games"
+          showTrigger={false}
+          onFocus={() => setOpen(true)}
+          onKeyDown={handleKeyDown}
+        >
+          <InputGroupAddon>
+            <SearchIcon />
+          </InputGroupAddon>
+          <InputGroupAddon align="inline-end">
+            {loading ? (
+              <Loader2 className="animate-spin" size={16} />
+            ) : (
+              showHint && (
                 <>
-                  <div
-                    className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 *:min-w-0"
-                    onClick={() => setOpen(false)}
-                  >
-                    {results.map((game) => (
-                      <SearchGameCard
-                        key={game.id}
-                        id={game.id}
-                        name={game.name}
-                        price={game.price}
-                        originalPrice={game.originalPrice}
-                        discountPercent={game.discountPercent}
-                        imageUrl={game.imageUrl}
-                      />
-                    ))}
-                  </div>
-                  <button
-                    type="button"
-                    className="w-full text-left px-3 py-2 mt-3 text-xs text-[#007AFF] hover:bg-[#1A1A1A] active:bg-[#1A1A1A] rounded-full cursor-pointer border-t border-[#2A2A2A]"
-                    onClick={() => {
-                      router.push(
-                        `/search?q=${encodeURIComponent(trimmedQuery)}`,
-                      );
-                      setOpen(false);
-                    }}
-                  >
-                    View all results for &quot;{trimmedQuery}&quot; →
-                  </button>
+                  <Kbd>⌘</Kbd>
+                  <Kbd>K</Kbd>
                 </>
-              )}
-            </div>
-          )}
-
-          {!showResults && (
-            <div className="w-full">
+              )
+            )}
+          </InputGroupAddon>
+        </ComboboxInput>
+        <ComboboxContent
+          align="start"
+          side="bottom"
+          sideOffset={8}
+          className="w-(--anchor-width) min-w-60 p-1.5"
+        >
+          {showTips ? (
+            <div className="px-2 py-1.5">
               <h4 className="font-medium text-muted-foreground text-xs uppercase mb-2">
                 Quick tips
               </h4>
@@ -192,9 +160,48 @@ export const SearchBar = () => {
                 <li>Press Esc to close</li>
               </ul>
             </div>
+          ) : (
+            <>
+              <ComboboxList>
+                {(game: Game, index: number) => (
+                  <ComboboxItem
+                    key={game.id}
+                    index={index}
+                    value={game}
+                    showIndicator={false}
+                    className="cursor-pointer py-1 pr-2 pl-1 data-highlighted:bg-[#28282C] data-highlighted:text-foreground"
+                  >
+                    <SearchGameRow
+                      name={game.name}
+                      price={game.price}
+                      originalPrice={game.originalPrice}
+                      discountPercent={game.discountPercent}
+                      imageUrl={game.imageUrl}
+                    />
+                  </ComboboxItem>
+                )}
+              </ComboboxList>
+              <ComboboxEmpty className="px-2 py-6 text-center text-sm text-[#8A8A8A]">
+                {!loading ? `No results for "${trimmedQuery}"` : null}
+              </ComboboxEmpty>
+              {!loading && results.length > 0 && (
+                <button
+                  type="button"
+                  className="w-full text-left px-3 py-2 mt-1 text-xs text-[#007AFF] hover:bg-[#1A1A1A] active:bg-[#1A1A1A] rounded-md cursor-pointer border-t border-[#2A2A2A]"
+                  onClick={() => {
+                    router.push(
+                      `/search?q=${encodeURIComponent(trimmedQuery)}`,
+                    );
+                    setOpen(false);
+                  }}
+                >
+                  View all results for &quot;{trimmedQuery}&quot; →
+                </button>
+              )}
+            </>
           )}
-        </div>
-      </PopoverContent>
-    </Popover>
+        </ComboboxContent>
+      </Combobox>
+    </div>
   );
 };
