@@ -24,6 +24,7 @@ export const SearchBar = () => {
   const [results, setResults] = useState<Game[]>([]);
   const [loading, setLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const anchorRef = useRef<HTMLDivElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const highlightedRef = useRef<Game | null>(null);
 
@@ -104,7 +105,10 @@ export const SearchBar = () => {
   const showHint = !loading && showTips;
 
   return (
-    <div className="w-36 sm:flex-1 sm:max-w-64 nav:max-w-56 2xl:max-w-64">
+    <div
+      ref={anchorRef}
+      className="w-36 sm:flex-1 sm:max-w-64 nav:max-w-56 2xl:max-w-64"
+    >
       <Autocomplete<Game>
         items={results}
         filteredItems={results}
@@ -143,6 +147,7 @@ export const SearchBar = () => {
           </InputGroupAddon>
         </AutocompleteInput>
         <AutocompleteContent
+          anchor={anchorRef}
           align="start"
           side="bottom"
           sideOffset={8}
