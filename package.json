@@ -16,7 +16,6 @@
     "@hookform/resolvers": "^5.9.1",
     "@radix-ui/react-checkbox": "^1.3.12",
     "@radix-ui/react-slot": "^1.4.0",
-    "@tanstack/react-table": "^9.2.8",
     "@testing-library/jest-dom": "^7.0.1",
     "@videojs/react": "10.0.0-beta.32",
     "class-variance-authority": "^0.7.1",

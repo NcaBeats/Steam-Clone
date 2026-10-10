@@ -132,13 +132,15 @@ export const getManageGames = (
   page = 0,
   size = 10,
   name?: string,
+  state?: string,
 ): Promise<Paginated<Game>> =>
   fetchAPI<Paginated<Game>>(
     "/manage/games?page=" +
       page +
       "&size=" +
       size +
-      (name ? "&name=" + encodeURIComponent(name) : ""),
+      (name ? "&name=" + encodeURIComponent(name) : "") +
+      (state ? "&state=" + encodeURIComponent(state) : ""),
     { auth: true },
   );
 
