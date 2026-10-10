@@ -1,7 +1,17 @@
 import "./globals.css";
+import type { Metadata } from "next";
 import { Inter, Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { AlertProvider } from "@/components/feedback";
+
+export const metadata: Metadata = {
+  title: {
+    default: "MBR — PC Games Store",
+    template: "%s | MBR",
+  },
+  description:
+    "Discover, buy, and play the best PC titles at fair prices, with deals all week.",
+};
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 

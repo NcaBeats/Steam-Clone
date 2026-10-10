@@ -44,7 +44,7 @@ export function Footer() {
           </nav>
         </div>
 
-        <div className="mt-8 pt-4 border-t border-[#404044]/40 flex flex-col md:flex-row items-center justify-between gap-2 text-xs text-[#6f6f75]">
+        <div className="mt-8 pt-4 border-t border-[#404044]/40 flex flex-col md:flex-row items-center justify-between gap-2 text-xs text-[#a8a8ad]">
           <p>© {new Date().getFullYear()} MBR. All rights reserved.</p>
           <p>
             Created by{" "}

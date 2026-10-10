@@ -8,7 +8,11 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/feedback/alert";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/components/feedback/alert";
 import { CheckCircle2, AlertCircle, X } from "lucide-react";
 
 export type AlertVariant = "default" | "destructive";
@@ -94,8 +98,7 @@ export const AlertProvider = ({ children }: { children: ReactNode }) => {
     <AlertContext.Provider value={{ alerts, showAlert, dismissAlert }}>
       {children}
       <div
-        aria-live="polite"
-        aria-label="Notifications"
+        role="status"
         className="fixed top-4 right-4 left-4 sm:left-auto z-[100] flex flex-col gap-2 w-auto sm:w-full sm:max-w-sm pointer-events-none"
       >
         {alerts.map((alert) => (

@@ -137,7 +137,7 @@ export const SearchBar = () => {
         <AutocompleteInput
           ref={inputRef}
           className="w-full"
-          placeholder="Search..."
+          placeholder="Search"
           autoComplete="off"
           aria-label="Search games"
           onFocus={() => setKbFocus(keyboardRef.current)}
