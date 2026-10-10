@@ -197,8 +197,7 @@ export const GameDetail = ({ game, initialInLibrary }: Props) => {
   return (
     <div className="flex flex-col gap-6 w-full max-w-6xl mx-auto p-4">
       <div className="flex flex-col lg:flex-row gap-6">
-        {/* COLUMNA IZQUIERDA: Video + Descripción + Specs */}
-        <div className="flex flex-col gap-2 flex-1 order-2 lg:order-1">
+        <div className="flex flex-col gap-6 flex-1 order-2 lg:order-1">
           {game.videoUrl ? (
             <GameVideo
               src={game.videoUrl}
@@ -249,7 +248,7 @@ export const GameDetail = ({ game, initialInLibrary }: Props) => {
           </p>
 
           {hasSpecs && (
-            <div className="bg-[#1A1A1A] rounded-lg p-6 flex flex-col gap-4">
+            <div className="rounded-lg flex flex-col gap-4">
               <h2 className="text-base font-bold text-[#FAFAFA]">
                 System Requirements
               </h2>
@@ -271,7 +270,6 @@ export const GameDetail = ({ game, initialInLibrary }: Props) => {
           )}
         </div>
 
-        {/* COLUMNA DERECHA: Categorías, Precios y Juego Destacado */}
         <div className="flex flex-col lg:w-96 shrink-0 gap-2 order-1 lg:order-2">
           <div className="relative w-full aspect-video rounded-xl overflow-hidden">
             <GameImage
@@ -283,8 +281,7 @@ export const GameDetail = ({ game, initialInLibrary }: Props) => {
             />
           </div>
 
-          {/* CATEGORÍAS */}
-          <div className="bg-[#1A1A1A] rounded-lg p-4 flex gap-2 flex-col">
+          <div className="rounded-lg p-4 flex gap-2 flex-col">
             <h3 className="text-xl font-bold text-[#FAFAFA] ">{game.name}</h3>
             <div className="flex flex-wrap gap-2">
               {game.categories.map((cat) => (

@@ -25,7 +25,7 @@ export const GameCard = ({
       href={`/games/${id}`}
       className="select-none cursor-pointer group
         transition-all flex flex-col relative shrink-0
-        ease-in rounded-lg overflow-hidden w-full hover:bg-[#161617]"
+        ease-in rounded-lg overflow-hidden w-full hover:bg-[#161617] shadow-sm shadow-[#00000089]"
     >
       <div className="relative aspect-3/4 overflow-hidden">
         <GameImage

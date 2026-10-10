@@ -40,7 +40,7 @@ export const PriceFilter = ({ min, max }: Props) => {
   const clearQs = clearParams.toString();
 
   return (
-    <div className="bg-[#1A1A1A] rounded-lg p-4 flex flex-col gap-3">
+    <div className="rounded-lg p-4 flex flex-col gap-3">
       <h2 className="text-lg font-bold text-[#FAFAFA]">Filters</h2>
       <div className="flex flex-col gap-2">
         <p className="text-xs text-[#8A8A8A]">

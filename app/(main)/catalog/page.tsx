@@ -87,7 +87,7 @@ const CatalogPage = async ({ searchParams }: Props) => {
                         ? `/catalog?${clearParams.toString()}`
                         : "/catalog"
                     }
-                    className="text-[#007AFF] hover:underline text-sm font-medium"
+                    className="text-[#8A8A8A] hover:underline text-sm font-medium"
                   >
                     Clear price filter
                   </Link>
@@ -99,7 +99,7 @@ const CatalogPage = async ({ searchParams }: Props) => {
                   </p>
                   <Link
                     href="/catalog"
-                    className="text-[#007AFF] hover:underline text-sm font-medium"
+                    className="text-[#8A8A8A] hover:underline text-sm font-medium"
                   >
                     Browse the catalog
                   </Link>

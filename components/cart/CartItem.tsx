@@ -10,7 +10,7 @@ type Props = Readonly<{
 
 export const CartItem = ({ item, onRemove }: Props) => {
   return (
-    <div className="flex items-center gap-4 bg-[#1A1A1A] rounded-lg p-3">
+    <div className="flex items-center gap-4 hover:bg-[#161617]  rounded-lg p-3">
       <div className="relative w-16 h-20 shrink-0 rounded overflow-hidden">
         <GameImage
           src={item.imageUrl}

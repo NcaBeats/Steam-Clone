@@ -94,7 +94,11 @@ export const ContactForm = () => {
                     <FormLabel>Name</FormLabel>
 
                     <FormControl>
-                      <Input {...field} placeholder="Jhon" className="" />
+                      <Input
+                        {...field}
+                        placeholder="Jhon"
+                        className="border-0"
+                      />
                     </FormControl>
 
                     <FormMessage className="text-left" />
@@ -114,7 +118,7 @@ export const ContactForm = () => {
                         {...field}
                         type="email"
                         placeholder="user@gmail.com"
-                        className=""
+                        className="border-0"
                       />
                     </FormControl>
 
@@ -135,7 +139,7 @@ export const ContactForm = () => {
                         {...field}
                         placeholder="Your message"
                         rows={5}
-                        className="min-h-32 rounded-lg  bg-[#28282C] hover:bg-[#303036] placeholder:text-white/55"
+                        className="border-0 min-h-32 rounded-lg  bg-[#28282C] hover:bg-[#303036] placeholder:text-white/55"
                       />
                     </FormControl>
                     <FormMessage className="text-left" />
@@ -157,7 +161,7 @@ export const ContactForm = () => {
               type="submit"
               disabled={form.formState.isSubmitting}
               size="lg"
-              className="bg-[#007AFF] font-semibold text-white hover:bg-[#2e92ff] py-5"
+              className="bg-[#007AFF] self-center font-semibold w-full max-w-xs text-white hover:bg-[#2e92ff] py-5"
             >
               {form.formState.isSubmitting ? (
                 <>

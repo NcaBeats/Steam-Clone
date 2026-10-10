@@ -24,7 +24,7 @@ export const GameCardBig = ({
     <Link
       href={`/games/${id}`}
       className="select-none cursor-pointer group
-        bg-[#161617] flex flex-col relative shrink-0 rounded-lg overflow-hidden w-full"
+        bg-[#161617] flex flex-col relative shrink-0 rounded-lg overflow-hidden w-full shadow-sm shadow-[#00000089]"
     >
       <div className="relative aspect-3/4 w-full">
         <GameImage

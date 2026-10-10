@@ -36,7 +36,7 @@ export const GameListItem = ({
         className="aspect-video object-cover w-40 sm:w-48 shrink-0"
       />
       <div
-        className="flex flex-col p-2 hover:bg-[#161617] gap-1 w-full justify-center
+        className="flex flex-col p-4 hover:bg-[#161617] gap-1 w-full justify-center
            duration-200 ease-in
           "
       >

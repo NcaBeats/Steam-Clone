@@ -142,7 +142,7 @@ To become the digital meeting point where any player, regardless of location or 
         <div className="flex flex-col sm:flex-row gap-3 mt-2">
           <Link
             href="/catalog"
-            className="bg-[#007aff] hover:bg-[#2e92ff] text-[#FAFAFA] font-semibold px-6 py-2.5 rounded-full transition-colors duration-200 ease-in-out"
+            className="bg-[#FCAF17] hover:bg-[#fcc456] text-black font-semibold px-6 py-2.5 rounded-full transition-colors duration-200 ease-in-out"
           >
             Browse the catalog
           </Link>

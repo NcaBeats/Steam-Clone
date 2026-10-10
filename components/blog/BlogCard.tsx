@@ -14,7 +14,7 @@ export const BlogCard = ({ blog }: Props) => {
   return (
     <Link
       href={`/blog/${blog.id}`}
-      className="group bg-[#1A1A1A] border border-[#2A2A2A] rounded-lg overflow-hidden flex flex-col hover:border-[#3A3A3A] transition-colors"
+      className="group border border-[#2A2A2A] rounded-lg overflow-hidden flex flex-col hover:bg-[#161617] duration-200 ease-in transition-colors"
     >
       <div className="relative w-full aspect-video overflow-hidden bg-[#0A0A0A]">
         {blog.coverImage ? (

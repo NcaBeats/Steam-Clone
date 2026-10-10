@@ -90,7 +90,7 @@ export default function LogIn() {
               <Button
                 type="submit"
                 className={
-                  "bg-[#007AFF] font-semibold text-white hover:bg-[#2e92ff] py-5"
+                  "bg-[#FCAF17] hover:bg-[#fcc456] font-semibold text-black  py-5"
                 }
                 size={"lg"}
               >

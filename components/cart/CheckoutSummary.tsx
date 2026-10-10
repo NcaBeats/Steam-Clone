@@ -45,9 +45,6 @@ export const CheckoutSummary = () => {
   const total = getCartTotal(items);
   const insufficient = wallet !== null && wallet.balance < total;
 
-  // No se puede afirmar que "no falta saldo" con la billetera sin leer: si la
-  // lectura falla, el backend sigue siendo la autoridad y va a rechazar el
-  // cobro, pero el usuario tiene que saber por que antes de intentarlo.
   const refreshWallet = async () => {
     try {
       const w = await getMyWalletAction();
@@ -136,7 +133,7 @@ export const CheckoutSummary = () => {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="bg-[#1A1A1A] rounded-lg p-4 flex items-center gap-3 w-fit">
+      <div className="rounded-lg p-4 flex items-center gap-3 w-fit">
         <WalletIcon size={20} className="text-[#007AFF]" />
         <div className="flex-1">
           <p className="text-xs text-[#8A8A8A]">Wallet balance</p>
@@ -152,7 +149,7 @@ export const CheckoutSummary = () => {
           {items.map((item) => (
             <div
               key={item.id}
-              className="flex items-center gap-3 bg-[#1A1A1A] rounded-lg p-2"
+              className="flex items-center gap-3 rounded-lg p-2"
             >
               <div className="relative w-12 h-16 shrink-0 rounded overflow-hidden">
                 <GameImage
