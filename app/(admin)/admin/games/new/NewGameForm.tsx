@@ -203,7 +203,7 @@ export function NewGameForm({
             value={state}
             onValueChange={(value) => setState(value as GameState)}
           >
-            <SelectTrigger id="state" className="w-full">
+            <SelectTrigger id="state" className="w-full" size="lg">
               <SelectValue placeholder="Select a state" />
             </SelectTrigger>
             <SelectContent>

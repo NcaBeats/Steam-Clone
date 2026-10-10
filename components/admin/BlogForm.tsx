@@ -198,7 +198,7 @@ export function BlogForm({ blog, redirectTo = "/admin/blogs" }: Props) {
                   onValueChange={(value) => field.onChange(value || null)}
                 >
                   <FormControl>
-                    <SelectTrigger className="w-full">
+                    <SelectTrigger className="w-full" size="lg">
                       <SelectValue placeholder="No category" />
                     </SelectTrigger>
                   </FormControl>

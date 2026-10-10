@@ -176,7 +176,7 @@ export function UserEditForm({ user }: Props) {
                       }
                     >
                       <FormControl>
-                        <SelectTrigger className="w-full">
+                        <SelectTrigger className="w-full" size="lg">
                           <SelectValue placeholder="Select a role" />
                         </SelectTrigger>
                       </FormControl>
@@ -387,7 +387,7 @@ export function UserEditForm({ user }: Props) {
                   <FormLabel>Visibility</FormLabel>
                   <Select value={field.value} onValueChange={field.onChange}>
                     <FormControl>
-                      <SelectTrigger className="w-full">
+                      <SelectTrigger className="w-full" size="lg">
                         <SelectValue placeholder="Select visibility" />
                       </SelectTrigger>
                     </FormControl>
