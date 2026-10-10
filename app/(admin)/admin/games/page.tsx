@@ -77,20 +77,20 @@ const GamesPage = async ({
     <div className="flex flex-col gap-6">
       <header className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-col gap-1">
-          <p className="text-xs font-bold uppercase tracking-[0.5px] text-[#8A8A8A]">
+          <p className="text-xs font-bold uppercase tracking-[0.5px] text-muted-foreground">
             Products
           </p>
-          <h1 className="text-xl font-bold tracking-[0.4px] text-[#FAFAFA]">
+          <h1 className="text-xl font-bold tracking-[0.4px] text-foreground">
             Productos
           </h1>
-          <p className="text-sm text-[#8A8A8A]">
+          <p className="text-sm text-muted-foreground">
             {pageInfo.totalElements} game
             {pageInfo.totalElements !== 1 ? "s" : ""} in catalog
           </p>
         </div>
         <Link
           href="/admin/games/new"
-          className="bg-[#28282C] hover:bg-[#404044] text-[#FAFAFA] text-sm font-semibold px-4 py-2 rounded-full transition-colors"
+          className="bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-semibold px-4 py-2 rounded-full transition-colors"
         >
           + Nuevo producto
         </Link>
@@ -101,7 +101,7 @@ const GamesPage = async ({
         {(searchName || state) && (
           <Link
             href="/admin/games"
-            className="text-sm text-[#8A8A8A] hover:text-white whitespace-nowrap"
+            className="text-sm text-muted-foreground hover:text-foreground whitespace-nowrap"
           >
             Limpiar filtro
           </Link>
@@ -110,7 +110,7 @@ const GamesPage = async ({
 
       <nav
         aria-label="Filter by state"
-        className="inline-flex w-fit items-center gap-1 rounded-lg bg-[#202024] p-[3px]"
+        className="inline-flex w-fit items-center gap-1 rounded-lg bg-muted p-[3px]"
       >
         {tabs.map((tab) => {
           const isActive = state === tab.value;
@@ -122,8 +122,8 @@ const GamesPage = async ({
               className={cn(
                 "rounded-md px-2.5 py-1 text-xs font-semibold whitespace-nowrap transition-colors",
                 isActive
-                  ? "bg-[#28282C] text-white shadow-sm"
-                  : "text-[#8A8A8A] hover:text-white",
+                  ? "bg-background text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground",
               )}
             >
               {tab.label}
@@ -132,29 +132,29 @@ const GamesPage = async ({
         })}
       </nav>
 
-      <div className="bg-[#202024] border border-white/[0.06] rounded-lg overflow-hidden">
+      <div className="bg-card border border-border rounded-lg overflow-hidden">
         <Table className="table-fixed">
           <TableHeader>
-            <TableRow className="bg-[#18181C] hover:bg-[#18181C]">
-              <TableHead className="px-3 text-[#8A8A8A] text-xs font-bold uppercase tracking-[0.5px] w-16 hidden md:table-cell">
+            <TableRow className="hover:bg-transparent">
+              <TableHead className="px-3 text-muted-foreground text-xs font-bold uppercase tracking-[0.5px] w-16 hidden md:table-cell">
                 ID
               </TableHead>
-              <TableHead className="px-3 text-[#8A8A8A] text-xs font-bold uppercase tracking-[0.5px] w-12 hidden sm:table-cell">
+              <TableHead className="px-3 text-muted-foreground text-xs font-bold uppercase tracking-[0.5px] w-12 hidden sm:table-cell">
                 Cover
               </TableHead>
-              <TableHead className="px-3 text-[#8A8A8A] text-xs font-bold uppercase tracking-[0.5px]">
+              <TableHead className="px-3 text-muted-foreground text-xs font-bold uppercase tracking-[0.5px]">
                 Name
               </TableHead>
-              <TableHead className="px-3 text-[#8A8A8A] text-xs font-bold uppercase tracking-[0.5px] w-24 hidden sm:table-cell">
+              <TableHead className="px-3 text-muted-foreground text-xs font-bold uppercase tracking-[0.5px] w-24 hidden sm:table-cell">
                 State
               </TableHead>
-              <TableHead className="px-3 text-[#8A8A8A] text-xs font-bold uppercase tracking-[0.5px] w-24">
+              <TableHead className="px-3 text-muted-foreground text-xs font-bold uppercase tracking-[0.5px] w-24">
                 Price
               </TableHead>
-              <TableHead className="px-3 text-[#8A8A8A] text-xs font-bold uppercase tracking-[0.5px] w-20 hidden sm:table-cell">
+              <TableHead className="px-3 text-muted-foreground text-xs font-bold uppercase tracking-[0.5px] w-20 hidden sm:table-cell">
                 Discount
               </TableHead>
-              <TableHead className="px-3 text-[#8A8A8A] text-xs font-bold uppercase tracking-[0.5px] w-36 text-right">
+              <TableHead className="px-3 text-muted-foreground text-xs font-bold uppercase tracking-[0.5px] w-36 text-right">
                 Actions
               </TableHead>
             </TableRow>
@@ -164,7 +164,7 @@ const GamesPage = async ({
               <TableRow className="hover:bg-transparent">
                 <TableCell
                   colSpan={7}
-                  className="px-3 py-8 text-center text-[#8A8A8A]"
+                  className="px-3 py-8 text-center text-muted-foreground"
                 >
                   {searchName
                     ? `No games found matching "${searchName}"`
@@ -175,11 +175,8 @@ const GamesPage = async ({
               </TableRow>
             ) : (
               games.map((g) => (
-                <TableRow
-                  key={g.id}
-                  className="border-white/[0.06] hover:bg-[#28282C] transition-colors"
-                >
-                  <TableCell className="px-3 text-[#8A8A8A] hidden md:table-cell">
+                <TableRow key={g.id}>
+                  <TableCell className="px-3 text-muted-foreground hidden md:table-cell">
                     #{g.id}
                   </TableCell>
                   <TableCell className="px-3 hidden sm:table-cell">
@@ -196,7 +193,7 @@ const GamesPage = async ({
                   <TableCell className="px-3">
                     <Link
                       href={`/admin/games/${g.id}`}
-                      className="text-[#007AFF] hover:underline truncate block"
+                      className="text-foreground hover:underline truncate block"
                     >
                       {g.name}
                     </Link>
@@ -215,16 +212,14 @@ const GamesPage = async ({
                       {g.state}
                     </Badge>
                   </TableCell>
-                  <TableCell className="px-3 text-[#FAFAFA]">
-                    ${g.price.toFixed(2)}
-                  </TableCell>
+                  <TableCell className="px-3">${g.price.toFixed(2)}</TableCell>
                   <TableCell className="px-3 hidden sm:table-cell">
                     {g.discountPercent > 0 ? (
                       <span className="text-[#26BBFF] text-xs font-semibold whitespace-nowrap">
                         -{g.discountPercent}%
                       </span>
                     ) : (
-                      <span className="text-[#5A5A5A] text-xs whitespace-nowrap">
+                      <span className="text-muted-foreground text-xs whitespace-nowrap">
                         —
                       </span>
                     )}
@@ -243,7 +238,7 @@ const GamesPage = async ({
 
       {totalPages > 1 && (
         <nav className="flex flex-wrap items-center justify-between gap-3 text-sm">
-          <span className="text-[#8A8A8A]">
+          <span className="text-muted-foreground">
             Showing {start}-{end} of {pageInfo.totalElements}
           </span>
           <div className="flex items-center gap-1">
@@ -253,8 +248,8 @@ const GamesPage = async ({
                 href={pageHref(i)}
                 className={`size-8 flex items-center justify-center rounded-md text-sm ${
                   i === page
-                    ? "bg-[#28282C] text-white"
-                    : "text-[#8A8A8A] hover:bg-[#28282C] hover:text-white"
+                    ? "bg-muted text-foreground"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
                 }`}
               >
                 {i + 1}

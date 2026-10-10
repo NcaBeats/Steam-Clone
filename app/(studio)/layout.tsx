@@ -15,23 +15,25 @@ export default async function StudioLayout({
 
   return (
     <TooltipProvider>
-      <SidebarProvider
-        style={
-          {
-            "--sidebar-width": "calc(var(--spacing) * 72)",
-            "--header-height": "calc(var(--spacing) * 12)",
-          } as React.CSSProperties
-        }
-      >
-        <AppSidebar
-          variant="studio"
-          user={{ email: user?.email ?? "", role: user?.role ?? "" }}
-        />
-        <SidebarInset>
-          <SiteHeader title="Panel" />
-          <main className="flex-1 p-4 sm:p-6">{children}</main>
-        </SidebarInset>
-      </SidebarProvider>
+      <div className="theme-dashboard bg-background text-foreground min-h-screen">
+        <SidebarProvider
+          style={
+            {
+              "--sidebar-width": "calc(var(--spacing) * 72)",
+              "--header-height": "calc(var(--spacing) * 12)",
+            } as React.CSSProperties
+          }
+        >
+          <AppSidebar
+            variant="studio"
+            user={{ email: user?.email ?? "", role: user?.role ?? "" }}
+          />
+          <SidebarInset>
+            <SiteHeader title="Panel" />
+            <main className="flex-1 p-4 sm:p-6">{children}</main>
+          </SidebarInset>
+        </SidebarProvider>
+      </div>
     </TooltipProvider>
   );
 }

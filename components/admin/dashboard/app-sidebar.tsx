@@ -51,7 +51,7 @@ export function AppSidebar({
   const items = variant === "admin" ? ADMIN_ITEMS : STUDIO_ITEMS;
 
   return (
-    <Sidebar collapsible="offcanvas" {...props}>
+    <Sidebar collapsible="offcanvas" variant="inset" {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
