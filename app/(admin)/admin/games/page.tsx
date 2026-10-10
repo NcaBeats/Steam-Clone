@@ -104,7 +104,7 @@ const GamesPage = async ({
 
       <nav
         aria-label="Filter by state"
-        className="inline-flex w-fit items-center gap-1 rounded-lg bg-muted p-[3px]"
+        className="inline-flex w-fit items-center gap-1 rounded-lg bg-muted p-1"
       >
         {tabs.map((tab) => {
           const isActive = state === tab.value;
@@ -133,7 +133,7 @@ const GamesPage = async ({
             { label: "Cover", className: "w-12 hidden sm:table-cell" },
             { label: "Name" },
             { label: "State", className: "w-24 hidden sm:table-cell" },
-            { label: "Price", className: "w-24" },
+            { label: "Price", className: "w-20 sm:w-24" },
             { label: "Discount", className: "w-20 hidden sm:table-cell" },
             { label: "Actions", className: "w-16 text-right" },
           ]}

@@ -18,7 +18,7 @@ export { TableBody, TableCell, TableRow };
 
 export function AdminTable({ children }: { children: React.ReactNode }) {
   return (
-    <div className="bg-card border border-border rounded-lg overflow-hidden">
+    <div className="bg-card border border-border rounded-lg overflow-hidden [&_td]:px-2 [&_th]:px-2 sm:[&_td]:px-3 sm:[&_th]:px-3">
       <Table className="table-fixed">{children}</Table>
     </div>
   );
@@ -32,7 +32,7 @@ export function AdminTableHeader({ columns }: { columns: AdminTableColumn[] }) {
           <TableHead
             key={column.label}
             className={cn(
-              "px-3 py-3 text-muted-foreground text-xs font-bold uppercase tracking-[0.5px]",
+              "px-3 py-3 text-muted-foreground text-xs font-bold uppercase tracking-wide",
               column.className,
             )}
           >
