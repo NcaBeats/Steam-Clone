@@ -165,7 +165,7 @@ export const SearchBar = () => {
                 index={index}
                 value={game}
                 onClick={() => goToGame(game.id)}
-                className="cursor-pointer p-2 data-highlighted:bg-[#3F3F43] data-highlighted:text-foreground"
+                className="duration-150 ease-in-out transition-all cursor-pointer p-2 data-highlighted:bg-[#3F3F43] data-highlighted:text-foreground"
               >
                 <SearchGameRow
                   name={game.name}

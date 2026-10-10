@@ -6,7 +6,7 @@ import { AlertProvider } from "@/components/feedback";
 
 export const metadata: Metadata = {
   title: {
-    default: "MBR — PC Games Store",
+    default: "MBR - Games Store",
     template: "%s | MBR",
   },
   description:

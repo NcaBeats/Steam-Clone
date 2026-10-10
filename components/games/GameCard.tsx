@@ -24,9 +24,8 @@ export const GameCard = ({
     <Link
       href={`/games/${id}`}
       className="select-none cursor-pointer group
-        transition-all bg-[#161617] flex flex-col relative shrink-0
-        active:bg-[#EDEDED] hover:bg-[#EDEDED]
-        active:text-black hover:text-black duration-300 ease-in rounded-lg overflow-hidden w-full"
+        transition-all flex flex-col relative shrink-0
+        ease-in rounded-lg overflow-hidden w-full hover:bg-[#161617]"
     >
       <div className="relative aspect-3/4 overflow-hidden">
         <GameImage
@@ -48,8 +47,7 @@ export const GameCard = ({
         <div className="items-center flex justify-between text-sm font-semibold">
           {hasDiscount ? (
             <span
-              className="transition-colors ease-in group-hover:bg-[#007AFF]
-              group-active:bg-[#007AFF] group-hover:text-white group-active:text-white
+              className="
               font-semibold bg-[#fcaf17] text-black px-2 py-0.5 rounded-md"
             >
               -{discountPercent}%
