@@ -123,11 +123,11 @@ const StudioGamesPage = async ({
                 </TableCell>
                 <TableCell className="px-3 py-3 hidden sm:table-cell">
                   {g.discountPercent > 0 ? (
-                    <span className="text-[#26BBFF] text-xs font-semibold whitespace-nowrap">
+                    <span className="text-[#26BBFF] font-semibold whitespace-nowrap">
                       -{g.discountPercent}%
                     </span>
                   ) : (
-                    <span className="text-muted-foreground text-xs whitespace-nowrap">
+                    <span className="text-muted-foreground whitespace-nowrap">
                       —
                     </span>
                   )}
