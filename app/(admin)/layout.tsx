@@ -1,4 +1,3 @@
-import { Newspaper, Receipt, ShoppingBag, Users } from "lucide-react";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/admin/dashboard/app-sidebar";
@@ -25,12 +24,7 @@ export default async function AdminLayout({
         }
       >
         <AppSidebar
-          items={[
-            { title: "Products", url: "/admin/games", icon: ShoppingBag },
-            { title: "Blogs", url: "/admin/blogs", icon: Newspaper },
-            { title: "Orders", url: "/admin/orders", icon: Receipt },
-            { title: "Users", url: "/admin/users", icon: Users },
-          ]}
+          variant="admin"
           user={{ email: user?.email ?? "", role: user?.role ?? "" }}
         />
         <SidebarInset>

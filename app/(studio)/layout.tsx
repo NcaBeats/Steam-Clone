@@ -1,4 +1,3 @@
-import { Receipt, ShoppingBag } from "lucide-react";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/admin/dashboard/app-sidebar";
@@ -25,10 +24,7 @@ export default async function StudioLayout({
         }
       >
         <AppSidebar
-          items={[
-            { title: "Products", url: "/studio/games", icon: ShoppingBag },
-            { title: "Orders", url: "/studio/orders", icon: Receipt },
-          ]}
+          variant="studio"
           user={{ email: user?.email ?? "", role: user?.role ?? "" }}
         />
         <SidebarInset>

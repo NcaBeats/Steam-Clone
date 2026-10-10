@@ -2,9 +2,16 @@
 
 import Link from "next/link";
 import * as React from "react";
-import { HouseIcon, LogOutIcon } from "lucide-react";
+import {
+  HouseIcon,
+  LogOutIcon,
+  Newspaper,
+  Receipt,
+  ShoppingBag,
+  Users,
+} from "lucide-react";
 import { logoutAction } from "@/actions/logout";
-import { NavMain, type DashboardNavItem } from "./nav-main";
+import { NavMain } from "./nav-main";
 import { NavSecondary } from "./nav-secondary";
 import { NavUser } from "./nav-user";
 import {
@@ -16,18 +23,33 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import type { DashboardNavItem } from "./nav-main";
+
+const ADMIN_ITEMS: DashboardNavItem[] = [
+  { title: "Products", url: "/admin/games", icon: ShoppingBag },
+  { title: "Blogs", url: "/admin/blogs", icon: Newspaper },
+  { title: "Orders", url: "/admin/orders", icon: Receipt },
+  { title: "Users", url: "/admin/users", icon: Users },
+];
+
+const STUDIO_ITEMS: DashboardNavItem[] = [
+  { title: "Products", url: "/studio/games", icon: ShoppingBag },
+  { title: "Orders", url: "/studio/orders", icon: Receipt },
+];
 
 export function AppSidebar({
-  items,
+  variant,
   user,
   ...props
 }: {
-  items: DashboardNavItem[];
+  variant: "admin" | "studio";
   user: {
     email: string;
     role: string;
   };
-} & React.ComponentProps<typeof Sidebar>) {
+} & Omit<React.ComponentProps<typeof Sidebar>, "variant">) {
+  const items = variant === "admin" ? ADMIN_ITEMS : STUDIO_ITEMS;
+
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
