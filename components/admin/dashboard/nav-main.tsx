@@ -36,7 +36,7 @@ export function NavMain({ items }: { items: DashboardNavItem[] }) {
                   isActive={isActive}
                 >
                   <Icon />
-                  <span>{item.title}</span>
+                  <span className="font-normal">{item.title}</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             );

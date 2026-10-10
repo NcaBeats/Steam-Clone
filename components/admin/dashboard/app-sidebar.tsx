@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import * as React from "react";
+import { Erica_One } from "next/font/google";
 import {
   HouseIcon,
   LogOutIcon,
@@ -24,6 +25,11 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import type { DashboardNavItem } from "./nav-main";
+
+const ericaOne = Erica_One({
+  weight: "400",
+  subsets: ["latin"],
+});
 
 const ADMIN_ITEMS: DashboardNavItem[] = [
   { title: "Products", url: "/admin/games", icon: ShoppingBag },
@@ -56,10 +62,9 @@ export function AppSidebar({
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton render={<Link href="/" />}>
-              <span className="flex size-8 items-center justify-center rounded-lg bg-[#007AFF] text-sm font-bold text-white">
+              <span className={`text-2xl text-white ${ericaOne.className}`}>
                 MBR
               </span>
-              <span className="text-base font-semibold">Panel</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
