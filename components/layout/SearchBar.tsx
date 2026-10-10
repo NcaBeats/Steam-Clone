@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, SearchIcon } from "lucide-react";
-import { Kbd } from "@/components/ui/kbd";
 import {
   Autocomplete,
   AutocompleteContent,
@@ -67,20 +66,6 @@ export const SearchBar = () => {
     };
   }, [query]);
 
-  useEffect(() => {
-    const handleKey = (e: KeyboardEvent) => {
-      if (
-        (e.metaKey || e.ctrlKey) &&
-        (e.key === "k" || e.key === "K" || e.key === "ñ" || e.key === "Ñ")
-      ) {
-        e.preventDefault();
-        inputRef.current?.focus();
-      }
-    };
-    window.addEventListener("keydown", handleKey);
-    return () => window.removeEventListener("keydown", handleKey);
-  }, []);
-
   const goToGame = (id: number) => {
     setOpen(false);
     inputRef.current?.blur();
@@ -101,7 +86,6 @@ export const SearchBar = () => {
   };
 
   const trimmedQuery = query.trim();
-  const showHint = !loading && trimmedQuery.length === 0;
 
   return (
     <div
@@ -135,16 +119,7 @@ export const SearchBar = () => {
             <SearchIcon />
           </InputGroupAddon>
           <InputGroupAddon align="inline-end">
-            {loading ? (
-              <Loader2 className="animate-spin" size={16} />
-            ) : (
-              showHint && (
-                <>
-                  <Kbd>⌘</Kbd>
-                  <Kbd>K</Kbd>
-                </>
-              )
-            )}
+            {loading && <Loader2 className="animate-spin" size={16} />}
           </InputGroupAddon>
         </AutocompleteInput>
         <AutocompleteContent
