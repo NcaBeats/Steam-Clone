@@ -6,6 +6,13 @@ import { useState, useTransition } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Input, Textarea } from "@/components/ui";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -16,7 +23,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { FieldGroup } from "@/components/ui/field";
-import { FileDropzone, Select } from "@/components/inputs";
+import { FileDropzone } from "@/components/inputs";
 import { useAlert } from "@/components/feedback";
 import {
   createBlogAction,
@@ -186,21 +193,24 @@ export function BlogForm({ blog, redirectTo = "/admin/blogs" }: Props) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Category (optional)</FormLabel>
-                <FormControl>
-                  <Select
-                    id="category"
-                    name={field.name}
-                    value={field.value ?? ""}
-                    onChange={(e) => field.onChange(e.target.value || null)}
-                  >
-                    <option value="">No category</option>
+                <Select
+                  value={field.value ?? ""}
+                  onValueChange={(value) => field.onChange(value || null)}
+                >
+                  <FormControl>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="No category" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="">No category</SelectItem>
                     {BLOG_CATEGORIES.map((c) => (
-                      <option key={c} value={c}>
+                      <SelectItem key={c} value={c}>
                         {c}
-                      </option>
+                      </SelectItem>
                     ))}
-                  </Select>
-                </FormControl>
+                  </SelectContent>
+                </Select>
                 <FormMessage className="text-left" />
               </FormItem>
             )}

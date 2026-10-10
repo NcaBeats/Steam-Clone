@@ -1,5 +1,6 @@
 import { describe, test, expect, vi, afterEach } from "vitest";
 import { cleanup, render, screen, fireEvent } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 import { BlogForm } from "@/components/admin/BlogForm";
 import { AlertProvider } from "@/components/feedback";
@@ -49,8 +50,9 @@ describe("BlogForm", () => {
     expect(mockedCreate).not.toHaveBeenCalled();
   });
 
-  test("válido sin cover llama al action de crear", async () => {
+  test("elegir categoría por select la envía en el payload", async () => {
     mockedCreate.mockResolvedValue({ ok: true });
+    const user = userEvent.setup();
     const { container } = renderForm();
     const title = container.querySelector('input[name="title"]');
     const excerpt = container.querySelector('textarea[name="excerpt"]');
@@ -59,14 +61,12 @@ describe("BlogForm", () => {
     fireEvent.change(title, { target: { value: "New release" } });
     fireEvent.change(excerpt, { target: { value: "Short summary" } });
     fireEvent.change(content, { target: { value: "Full article body" } });
+    await user.click(screen.getByLabelText("Category (optional)"));
+    await user.click(await screen.findByRole("option", { name: "NEWS" }));
     fireEvent.click(screen.getByRole("button", { name: "Create blog" }));
     expect(await screen.findByText("Create blog")).toBeInTheDocument();
     expect(mockedCreate).toHaveBeenCalledWith(
-      expect.objectContaining({
-        title: "New release",
-        excerpt: "Short summary",
-        content: "Full article body",
-      }),
+      expect.objectContaining({ category: "NEWS" }),
     );
     expect(push).toHaveBeenCalledWith("/admin/blogs");
   });

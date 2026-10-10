@@ -1,5 +1,6 @@
 import { describe, test, expect, vi, afterEach } from "vitest";
 import { cleanup, render, screen, fireEvent } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 import { UserEditForm } from "@/app/(admin)/admin/users/[id]/UserEditForm";
 import { AlertProvider } from "@/components/feedback";
@@ -96,5 +97,20 @@ describe("UserEditForm", () => {
       }),
     );
     expect(push).toHaveBeenCalledWith("/admin/users");
+  });
+
+  test("cambiar el rol por select lo envía en el payload", async () => {
+    mockedUpdateUser.mockResolvedValue({ ok: true });
+    mockedUpdateProfile.mockResolvedValue({ ok: true });
+    const user = userEvent.setup();
+    renderForm();
+    await user.click(screen.getByLabelText("Role"));
+    await user.click(await screen.findByRole("option", { name: "VENDEDOR" }));
+    fireEvent.click(screen.getByRole("button", { name: "Save changes" }));
+    expect(await screen.findByText("Save changes")).toBeInTheDocument();
+    expect(mockedUpdateUser).toHaveBeenCalledWith(
+      3,
+      expect.objectContaining({ role: "VENDEDOR" }),
+    );
   });
 });

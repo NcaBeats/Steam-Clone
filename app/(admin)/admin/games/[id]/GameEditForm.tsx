@@ -4,7 +4,14 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Input, Textarea } from "@/components/ui";
 import { useAlert } from "@/components/feedback";
-import { FileDropzone, SpecsEditor, Select } from "@/components/inputs";
+import { FileDropzone, SpecsEditor } from "@/components/inputs";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   presignGameImageAction,
@@ -204,14 +211,17 @@ export function GameEditForm({
             State
           </label>
           <Select
-            id="state"
-            name="state"
             value={state}
-            onChange={(e) => setState(e.target.value as GameState)}
+            onValueChange={(value) => setState(value as GameState)}
           >
-            <option value="AVAILABLE">AVAILABLE</option>
-            <option value="COMING_SOON">COMING_SOON</option>
-            <option value="DISCONTINUED">DISCONTINUED</option>
+            <SelectTrigger id="state" className="w-full">
+              <SelectValue placeholder="Select a state" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="AVAILABLE">AVAILABLE</SelectItem>
+              <SelectItem value="COMING_SOON">COMING_SOON</SelectItem>
+              <SelectItem value="DISCONTINUED">DISCONTINUED</SelectItem>
+            </SelectContent>
           </Select>
         </div>
         <div className="flex flex-col gap-1">

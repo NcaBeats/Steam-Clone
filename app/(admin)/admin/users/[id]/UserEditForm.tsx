@@ -7,7 +7,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useAlert } from "@/components/feedback";
 import { Input, Textarea } from "@/components/ui";
-import { Select } from "@/components/inputs";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -163,20 +169,23 @@ export function UserEditForm({ user }: Props) {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Role</FormLabel>
-                    <FormControl>
-                      <Select
-                        id="role"
-                        name={field.name}
-                        value={field.value}
-                        onChange={(e) =>
-                          field.onChange(e.target.value as UserRole)
-                        }
-                      >
-                        <option value="ADMIN">ADMIN</option>
-                        <option value="VENDEDOR">VENDEDOR</option>
-                        <option value="CLIENTE">CLIENTE</option>
-                      </Select>
-                    </FormControl>
+                    <Select
+                      value={field.value}
+                      onValueChange={(value) =>
+                        field.onChange(value as UserRole)
+                      }
+                    >
+                      <FormControl>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select a role" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="ADMIN">ADMIN</SelectItem>
+                        <SelectItem value="VENDEDOR">VENDEDOR</SelectItem>
+                        <SelectItem value="CLIENTE">CLIENTE</SelectItem>
+                      </SelectContent>
+                    </Select>
                     <FormMessage className="text-left" />
                   </FormItem>
                 )}
@@ -376,19 +385,17 @@ export function UserEditForm({ user }: Props) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Visibility</FormLabel>
-                  <FormControl>
-                    <Select
-                      id="visibility"
-                      name={field.name}
-                      value={field.value}
-                      onChange={(e) =>
-                        field.onChange(e.target.value as "PUBLIC" | "PRIVATE")
-                      }
-                    >
-                      <option value="PUBLIC">Public</option>
-                      <option value="PRIVATE">Private</option>
-                    </Select>
-                  </FormControl>
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <FormControl>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select visibility" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="PUBLIC">Public</SelectItem>
+                      <SelectItem value="PRIVATE">Private</SelectItem>
+                    </SelectContent>
+                  </Select>
                   <FormMessage className="text-left" />
                 </FormItem>
               )}

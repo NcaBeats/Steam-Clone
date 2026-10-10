@@ -5,7 +5,14 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { Input, Textarea } from "@/components/ui";
 import { Checkbox } from "@/components/ui/checkbox";
-import { FileDropzone, SpecsEditor, Select } from "@/components/inputs";
+import { FileDropzone, SpecsEditor } from "@/components/inputs";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useAlert } from "@/components/feedback";
 import {
   createGameWithUrlsAction,
@@ -14,7 +21,7 @@ import {
 } from "@/actions/admin";
 import { uploadGameMedia } from "@/lib/game-upload";
 import { GameMetadataSchema } from "@/schemas/admin/game.schema";
-import type { Category } from "@/types";
+import type { Category, GameState } from "@/types";
 
 type Props = Readonly<{
   categories: Category[];
@@ -35,6 +42,7 @@ export function NewGameForm({
   const [gallery, setGallery] = useState<File[]>([]);
   const [minimumSpecs, setMinimumSpecs] = useState("");
   const [recommendedSpecs, setRecommendedSpecs] = useState("");
+  const [state, setState] = useState<GameState>("AVAILABLE");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
   const busy = pending || uploading !== null;
@@ -54,6 +62,7 @@ export function NewGameForm({
     const formData = new FormData(e.currentTarget);
     formData.set("minimumSpecs", minimumSpecs);
     formData.set("recommendedSpecs", recommendedSpecs);
+    formData.set("state", state);
 
     const parsed = GameMetadataSchema.safeParse({
       name: formData.get("name"),
@@ -190,10 +199,18 @@ export function NewGameForm({
           <label htmlFor="state" className={labelCls}>
             State
           </label>
-          <Select id="state" name="state" defaultValue="AVAILABLE">
-            <option value="AVAILABLE">AVAILABLE</option>
-            <option value="COMING_SOON">COMING_SOON</option>
-            <option value="DISCONTINUED">DISCONTINUED</option>
+          <Select
+            value={state}
+            onValueChange={(value) => setState(value as GameState)}
+          >
+            <SelectTrigger id="state" className="w-full">
+              <SelectValue placeholder="Select a state" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="AVAILABLE">AVAILABLE</SelectItem>
+              <SelectItem value="COMING_SOON">COMING_SOON</SelectItem>
+              <SelectItem value="DISCONTINUED">DISCONTINUED</SelectItem>
+            </SelectContent>
           </Select>
         </div>
 
