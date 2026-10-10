@@ -2,7 +2,7 @@ import Link from "next/link";
 import { requireRole } from "@/actions/admin/guard";
 import { getAdminBlogs } from "@/lib/api/blogs";
 import { SearchInput } from "@/components/admin/SearchInput";
-import { DeleteBlogButton } from "@/components/admin/DeleteBlogButton";
+import { RowActions } from "@/components/admin/dashboard/row-actions";
 
 const PAGE_SIZE = 10;
 
@@ -66,7 +66,7 @@ const BlogsPage = async ({
               <th className="px-3 py-3">Title</th>
               <th className="px-3 py-3 w-28 hidden sm:table-cell">Category</th>
               <th className="px-3 py-3 w-32 hidden sm:table-cell">Published</th>
-              <th className="px-3 py-3 w-36 text-right">Actions</th>
+              <th className="px-3 py-3 w-16 text-right">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -116,14 +116,8 @@ const BlogsPage = async ({
                     {new Date(b.publishedAt).toLocaleDateString("en-US")}
                   </td>
                   <td className="px-3 py-3 text-right whitespace-nowrap">
-                    <div className="flex items-center justify-end gap-3">
-                      <Link
-                        href={`/admin/blogs/${b.id}`}
-                        className="text-foreground hover:underline text-sm font-medium"
-                      >
-                        Edit
-                      </Link>
-                      <DeleteBlogButton id={b.id} title={b.title} />
+                    <div className="flex items-center justify-end">
+                      <RowActions kind="blog" id={b.id} label={b.title} />
                     </div>
                   </td>
                 </tr>

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { requireAdmin } from "@/actions/admin/guard";
 import { getAdminUsers } from "@/lib/api/games";
 import { SearchInput } from "@/components/admin/SearchInput";
-import { DeleteUserButton } from "@/components/admin/DeleteUserButton";
+import { RowActions } from "@/components/admin/dashboard/row-actions";
 const PAGE_SIZE = 10;
 
 const UsersPage = async ({
@@ -65,7 +65,7 @@ const UsersPage = async ({
               <th className="px-3 py-3">Email</th>
               <th className="px-3 py-3 w-28">Role</th>
               <th className="px-3 py-3 w-28 hidden sm:table-cell">Created</th>
-              <th className="px-3 py-3 w-36 text-right">Actions</th>
+              <th className="px-3 py-3 w-16 text-right">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -112,18 +112,13 @@ const UsersPage = async ({
                     {new Date(u.createdAt).toLocaleDateString("en-US")}
                   </td>
                   <td className="px-3 py-3 text-right whitespace-nowrap">
-                    <div className="flex items-center justify-end gap-3">
-                      <Link
-                        href={`/admin/users/${u.id}`}
-                        className="text-foreground hover:underline text-sm font-medium"
-                      >
-                        Edit
-                      </Link>
-                      {u.role === "ADMIN" ? (
-                        <span className="text-muted-foreground text-sm">—</span>
-                      ) : (
-                        <DeleteUserButton id={u.id} email={u.email} />
-                      )}
+                    <div className="flex items-center justify-end">
+                      <RowActions
+                        kind="user"
+                        id={u.id}
+                        label={u.email}
+                        allowDelete={u.role !== "ADMIN"}
+                      />
                     </div>
                   </td>
                 </tr>

@@ -3,7 +3,7 @@ import { TicketIcon } from "lucide-react";
 import { requireRole } from "@/actions/admin/guard";
 import { getManageGames } from "@/lib/api/games";
 import { SearchInput } from "@/components/admin/SearchInput";
-import { GameRowActions } from "@/components/admin/dashboard/game-row-actions";
+import { RowActions } from "@/components/admin/dashboard/row-actions";
 import { GameImage } from "@/components/games/GameImage";
 import {
   Table,
@@ -226,7 +226,7 @@ const GamesPage = async ({
                   </TableCell>
                   <TableCell className="px-3 text-right">
                     <div className="flex items-center justify-end">
-                      <GameRowActions id={g.id} name={g.name} />
+                      <RowActions kind="game" id={g.id} label={g.name} />
                     </div>
                   </TableCell>
                 </TableRow>

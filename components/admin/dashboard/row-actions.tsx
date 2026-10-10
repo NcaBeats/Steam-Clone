@@ -3,7 +3,11 @@
 import { useState } from "react";
 import Link from "next/link";
 import { EllipsisVerticalIcon, PencilIcon, Trash2Icon } from "lucide-react";
-import { deleteGameAction } from "@/actions/admin";
+import {
+  deleteBlogByIdAction,
+  deleteGameAction,
+  deleteUserByIdAction,
+} from "@/actions/admin";
 import { ConfirmOverlay } from "@/components/feedback/ConfirmOverlay";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,13 +20,45 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-type Props = Readonly<{ id: number; name: string }>;
+type RowKind = "game" | "user" | "blog";
 
-export const GameRowActions = ({ id, name }: Props) => {
+type RowConfig = {
+  editBase: string;
+  deleteTitle: string;
+  runDelete: (id: number) => Promise<{ ok: boolean; error?: string }>;
+};
+
+const CONFIG: Record<RowKind, RowConfig> = {
+  game: {
+    editBase: "/admin/games",
+    deleteTitle: "Delete game",
+    runDelete: deleteGameAction,
+  },
+  user: {
+    editBase: "/admin/users",
+    deleteTitle: "Delete user",
+    runDelete: deleteUserByIdAction,
+  },
+  blog: {
+    editBase: "/admin/blogs",
+    deleteTitle: "Delete blog",
+    runDelete: deleteBlogByIdAction,
+  },
+};
+
+type Props = Readonly<{
+  kind: RowKind;
+  id: number;
+  label: string;
+  allowDelete?: boolean;
+}>;
+
+export const RowActions = ({ kind, id, label, allowDelete = true }: Props) => {
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const config = CONFIG[kind];
 
   const handleConfirm = async (): Promise<{ ok: boolean; error?: string }> => {
-    const result = await deleteGameAction(id);
+    const result = await config.runDelete(id);
     if (result.ok) {
       setConfirmOpen(false);
     }
@@ -37,7 +73,7 @@ export const GameRowActions = ({ id, name }: Props) => {
             <Button
               variant="ghost"
               size="icon"
-              aria-label={`Open actions for ${name}`}
+              aria-label={`Open actions for ${label}`}
             />
           }
         >
@@ -47,24 +83,26 @@ export const GameRowActions = ({ id, name }: Props) => {
           <DropdownMenuGroup>
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
           </DropdownMenuGroup>
-          <DropdownMenuItem render={<Link href={`/admin/games/${id}`} />}>
+          <DropdownMenuItem render={<Link href={`${config.editBase}/${id}`} />}>
             <PencilIcon />
             Edit
           </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            variant="destructive"
-            onClick={() => setConfirmOpen(true)}
-          >
-            <Trash2Icon />
-            Delete
-          </DropdownMenuItem>
+          {allowDelete && <DropdownMenuSeparator />}
+          {allowDelete && (
+            <DropdownMenuItem
+              variant="destructive"
+              onClick={() => setConfirmOpen(true)}
+            >
+              <Trash2Icon />
+              Delete
+            </DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
       <ConfirmOverlay
         open={confirmOpen}
         onClose={() => setConfirmOpen(false)}
-        title="Delete game"
+        title={config.deleteTitle}
         description="Are you sure you want to perform this action?"
         confirmLabel="Delete"
         onConfirm={handleConfirm}
