@@ -2,68 +2,77 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { format } from "date-fns";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { useAlert } from "@/components/feedback";
 import { Input, Textarea } from "@/components/ui";
 import { Select } from "@/components/inputs";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { FieldGroup } from "@/components/ui/field";
 import { PasswordInput } from "@/components/auth";
 import {
   ComunaSelect,
   RegionSelect,
   type Region,
 } from "@/components/admin/LocationSelects";
+import { DatePickerField } from "@/components/admin/DatePickerField";
 import { updateUserAction, updateUserProfileAction } from "@/actions/admin";
-import { passwordSchema } from "@/schemas/password.schema";
-import { USER_ROLES, type AdminUser } from "@/types";
+import {
+  AdminUserEditSchema,
+  type AdminUserEditInput,
+} from "@/schemas/admin/user-edit.schema";
+import type { AdminUser, UserRole } from "@/types";
 
 type Props = Readonly<{
   user: AdminUser;
 }>;
 
+const parseBirthDate = (raw: string | null): Date | null => {
+  if (!raw) return null;
+  const date = new Date(raw);
+  return Number.isNaN(date.getTime()) ? null : date;
+};
+
 export function UserEditForm({ user }: Props) {
   const router = useRouter();
   const { showAlert } = useAlert();
-  const [saving, setSaving] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [region, setRegion] = useState<Region | "">(
-    (user.profile.region as Region | null) ?? "",
-  );
-  const [comuna, setComuna] = useState(user.profile.comuna ?? "");
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const email = (formData.get("email")?.toString() ?? user.email) as string;
-    const rawRole = formData.get("role")?.toString() ?? user.role;
-    // Buscar en USER_ROLES en vez de castear a UserRole: el cast era un
-    // agujero por el que paso un "VENDEDOR" que el backend nunca emite.
-    const role = USER_ROLES.find((r) => r === rawRole);
-    if (!role) {
-      showAlert({
-        variant: "destructive",
-        title: "Save error",
-        description: "Invalid role",
-      });
-      return;
-    }
-    const trimmedPassword = (formData.get("password")?.toString() ?? "").trim();
-    if (trimmedPassword.length > 0) {
-      const passwordCheck = passwordSchema.safeParse(trimmedPassword);
-      if (!passwordCheck.success) {
-        showAlert({
-          variant: "destructive",
-          title: "Save error",
-          description: passwordCheck.error.issues[0].message,
-        });
-        return;
-      }
-    }
+  const form = useForm<AdminUserEditInput>({
+    resolver: zodResolver(AdminUserEditSchema),
+    defaultValues: {
+      email: user.email,
+      role: user.role,
+      password: "",
+      nickname: user.profile.nickname,
+      firstName: user.profile.firstName,
+      lastName: user.profile.lastName,
+      birthDate: parseBirthDate(user.profile.birthDate),
+      region: user.profile.region ?? "",
+      comuna: user.profile.comuna ?? "",
+      address: user.profile.address,
+      bio: user.profile.bio ?? "",
+      visibility: user.profile.visibility,
+    },
+  });
 
-    setSaving(true);
+  const regionValue = form.watch("region") as Region | "";
+
+  const onSubmit = async (values: AdminUserEditInput) => {
     try {
       const userResult = await updateUserAction(user.id, {
-        email,
-        role,
-        password: trimmedPassword || undefined,
+        email: values.email,
+        role: values.role,
+        password: values.password || undefined,
       });
       if (!userResult.ok) {
         showAlert({
@@ -71,23 +80,21 @@ export function UserEditForm({ user }: Props) {
           title: "Save error",
           description: userResult.error ?? "Could not update the user",
         });
-        setSaving(false);
         return;
       }
 
       const profileResult = await updateUserProfileAction(user.id, {
-        nickname: formData.get("nickname")?.toString() ?? user.profile.nickname,
-        bio: formData.get("bio")?.toString() || null,
-        visibility: (formData.get("visibility")?.toString() ??
-          user.profile.visibility) as "PUBLIC" | "PRIVATE",
-        firstName:
-          formData.get("firstName")?.toString() ?? user.profile.firstName,
-        lastName: formData.get("lastName")?.toString() ?? user.profile.lastName,
-        birthDate:
-          formData.get("birthDate")?.toString() || user.profile.birthDate,
-        region: region || null,
-        comuna: comuna || null,
-        address: formData.get("address")?.toString() ?? user.profile.address,
+        nickname: values.nickname,
+        bio: values.bio || null,
+        visibility: values.visibility,
+        firstName: values.firstName,
+        lastName: values.lastName,
+        birthDate: values.birthDate
+          ? format(values.birthDate, "yyyy-MM-dd")
+          : (user.profile.birthDate ?? null),
+        region: values.region || null,
+        comuna: values.comuna || null,
+        address: values.address,
       });
 
       if (!profileResult.ok) {
@@ -96,14 +103,13 @@ export function UserEditForm({ user }: Props) {
           title: "Profile save error",
           description: profileResult.error ?? "Could not update the profile",
         });
-        setSaving(false);
         return;
       }
 
       showAlert({
         variant: "default",
         title: "User updated",
-        description: `${email} updated successfully`,
+        description: `${values.email} updated successfully`,
       });
       router.push("/admin/users");
       router.refresh();
@@ -113,189 +119,246 @@ export function UserEditForm({ user }: Props) {
         title: "Error",
         description: e instanceof Error ? e.message : "Unknown error",
       });
-      setSaving(false);
     }
   };
 
-  const labelCls = "text-xs text-muted-foreground font-medium";
-
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="bg-card border border-border rounded-lg p-6 flex flex-col gap-4"
-    >
-      <fieldset className="flex flex-col gap-4">
-        <legend className="text-sm font-semibold text-foreground mb-2">
-          Account
-        </legend>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div className="flex flex-col gap-1">
-            <label htmlFor="email" className={labelCls}>
-              Email
-            </label>
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              required
-              defaultValue={user.email}
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        noValidate
+        className="bg-card border border-border rounded-lg p-6 flex flex-col gap-4"
+      >
+        <fieldset className="flex flex-col gap-4">
+          <legend className="text-sm font-semibold text-foreground mb-2">
+            Account
+          </legend>
+          <FieldGroup>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input {...field} type="email" maxLength={100} />
+                    </FormControl>
+                    <FormMessage className="text-left" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="role"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Role</FormLabel>
+                    <FormControl>
+                      <Select
+                        id="role"
+                        name={field.name}
+                        value={field.value}
+                        onChange={(e) =>
+                          field.onChange(e.target.value as UserRole)
+                        }
+                      >
+                        <option value="ADMIN">ADMIN</option>
+                        <option value="VENDEDOR">VENDEDOR</option>
+                        <option value="CLIENTE">CLIENTE</option>
+                      </Select>
+                    </FormControl>
+                    <FormMessage className="text-left" />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    New password (optional, leave blank to keep current)
+                  </FormLabel>
+                  <FormControl>
+                    <PasswordInput
+                      field={field}
+                      placeholder="••••••"
+                      show={showPassword}
+                      onToggle={() => setShowPassword(!showPassword)}
+                    />
+                  </FormControl>
+                  <FormMessage className="text-left" />
+                </FormItem>
+              )}
             />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label htmlFor="role" className={labelCls}>
-              Role
-            </label>
-            <Select id="role" name="role" defaultValue={user.role}>
-              <option value="ADMIN">ADMIN</option>
-              <option value="VENDEDOR">VENDEDOR</option>
-              <option value="CLIENTE">CLIENTE</option>
-            </Select>
-          </div>
-        </div>
-        <div className="flex flex-col gap-1">
-          <label htmlFor="password" className={labelCls}>
-            New password (optional, leave blank to keep current)
-          </label>
-          <PasswordInput
-            name="password"
-            required={false}
-            minLength={4}
-            maxLength={10}
-            placeholder="••••••"
-            show={showPassword}
-            onToggle={() => setShowPassword(!showPassword)}
-          />
-        </div>
-      </fieldset>
+          </FieldGroup>
+        </fieldset>
 
-      <fieldset className="flex flex-col gap-4 border-t border-border pt-4">
-        <legend className="text-sm font-semibold text-foreground mb-2">
-          Profile
-        </legend>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div className="flex flex-col gap-1">
-            <label htmlFor="nickname" className={labelCls}>
-              Nickname
-            </label>
-            <Input
-              id="nickname"
-              name="nickname"
-              type="text"
-              required
-              maxLength={50}
-              defaultValue={user.profile.nickname}
+        <fieldset className="flex flex-col gap-4 border-t border-border pt-4">
+          <legend className="text-sm font-semibold text-foreground mb-2">
+            Profile
+          </legend>
+          <FieldGroup>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <FormField
+                control={form.control}
+                name="nickname"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nickname</FormLabel>
+                    <FormControl>
+                      <Input {...field} type="text" maxLength={50} />
+                    </FormControl>
+                    <FormMessage className="text-left" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="firstName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>First name</FormLabel>
+                    <FormControl>
+                      <Input {...field} type="text" maxLength={50} />
+                    </FormControl>
+                    <FormMessage className="text-left" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="lastName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Last name</FormLabel>
+                    <FormControl>
+                      <Input {...field} type="text" maxLength={100} />
+                    </FormControl>
+                    <FormMessage className="text-left" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="birthDate"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Date of birth</FormLabel>
+                    <FormControl>
+                      <DatePickerField
+                        label="Date of birth"
+                        value={field.value}
+                        onChange={field.onChange}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-left" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="region"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Region</FormLabel>
+                    <FormControl>
+                      <RegionSelect
+                        name={field.name}
+                        value={(field.value ?? "") as Region | ""}
+                        onValueChange={(value) => {
+                          field.onChange(value);
+                          form.setValue("comuna", "");
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-left" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="comuna"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Municipality</FormLabel>
+                    <FormControl>
+                      <ComunaSelect
+                        name={field.name}
+                        value={field.value ?? ""}
+                        region={regionValue}
+                        onValueChange={field.onChange}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-left" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="address"
+                render={({ field }) => (
+                  <FormItem className="sm:col-span-2">
+                    <FormLabel>Address</FormLabel>
+                    <FormControl>
+                      <Input {...field} type="text" maxLength={300} />
+                    </FormControl>
+                    <FormMessage className="text-left" />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <FormField
+              control={form.control}
+              name="bio"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Bio</FormLabel>
+                  <FormControl>
+                    <Textarea {...field} value={field.value ?? ""} rows={3} />
+                  </FormControl>
+                  <FormMessage className="text-left" />
+                </FormItem>
+              )}
             />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label htmlFor="firstName" className={labelCls}>
-              First name
-            </label>
-            <Input
-              id="firstName"
-              name="firstName"
-              type="text"
-              required
-              maxLength={50}
-              defaultValue={user.profile.firstName}
+            <FormField
+              control={form.control}
+              name="visibility"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Visibility</FormLabel>
+                  <FormControl>
+                    <Select
+                      id="visibility"
+                      name={field.name}
+                      value={field.value}
+                      onChange={(e) =>
+                        field.onChange(e.target.value as "PUBLIC" | "PRIVATE")
+                      }
+                    >
+                      <option value="PUBLIC">Public</option>
+                      <option value="PRIVATE">Private</option>
+                    </Select>
+                  </FormControl>
+                  <FormMessage className="text-left" />
+                </FormItem>
+              )}
             />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label htmlFor="lastName" className={labelCls}>
-              Last name
-            </label>
-            <Input
-              id="lastName"
-              name="lastName"
-              type="text"
-              required
-              maxLength={100}
-              defaultValue={user.profile.lastName}
-            />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label htmlFor="birthDate" className={labelCls}>
-              Date of birth
-            </label>
-            <Input
-              id="birthDate"
-              name="birthDate"
-              type="date"
-              defaultValue={user.profile.birthDate ?? ""}
-            />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label htmlFor="region" className={labelCls}>
-              Region
-            </label>
-            <RegionSelect
-              name="region"
-              value={region}
-              onValueChange={(v) => {
-                setRegion(v as Region);
-                if (comuna) setComuna("");
-              }}
-            />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label htmlFor="comuna" className={labelCls}>
-              Municipality
-            </label>
-            <ComunaSelect
-              name="comuna"
-              value={comuna}
-              region={region}
-              onValueChange={setComuna}
-            />
-          </div>
-          <div className="flex flex-col gap-1 sm:col-span-2">
-            <label htmlFor="address" className={labelCls}>
-              Address
-            </label>
-            <Input
-              id="address"
-              name="address"
-              type="text"
-              required
-              maxLength={300}
-              defaultValue={user.profile.address}
-            />
-          </div>
-        </div>
-        <div className="flex flex-col gap-1">
-          <label htmlFor="bio" className={labelCls}>
-            Bio
-          </label>
-          <Textarea
-            id="bio"
-            name="bio"
-            defaultValue={user.profile.bio ?? ""}
-            rows={3}
-          />
-        </div>
-        <div className="flex flex-col gap-1">
-          <label htmlFor="visibility" className={labelCls}>
-            Visibility
-          </label>
-          <Select
-            id="visibility"
-            name="visibility"
-            defaultValue={user.profile.visibility}
+          </FieldGroup>
+        </fieldset>
+
+        <div className="flex items-center gap-2 mt-2">
+          <Button
+            type="submit"
+            disabled={form.formState.isSubmitting}
+            className="bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed text-primary-foreground text-sm font-semibold px-5 py-2.5 rounded-md transition-colors"
           >
-            <option value="PUBLIC">Public</option>
-            <option value="PRIVATE">Private</option>
-          </Select>
+            {form.formState.isSubmitting ? "Saving..." : "Save changes"}
+          </Button>
         </div>
-      </fieldset>
-
-      <div className="flex items-center gap-2 mt-2">
-        <button
-          type="submit"
-          disabled={saving}
-          className="bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed text-primary-foreground text-sm font-semibold px-5 py-2.5 rounded-md transition-colors"
-        >
-          {saving ? "Saving..." : "Save changes"}
-        </button>
-      </div>
-    </form>
+      </form>
+    </Form>
   );
 }

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Input, Textarea } from "@/components/ui";
 import { useAlert } from "@/components/feedback";
 import { FileDropzone, SpecsEditor, Select } from "@/components/inputs";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   presignGameImageAction,
   presignGameVideoAction,
@@ -254,13 +255,13 @@ export function GameEditForm({
           {categories.map((c) => (
             <label
               key={c.id}
+              htmlFor={`game-category-${c.id}`}
               className="flex items-center gap-2 text-sm text-foreground cursor-pointer"
             >
-              <input
-                type="checkbox"
+              <Checkbox
+                id={`game-category-${c.id}`}
                 checked={selectedCategories.includes(c.name)}
-                onChange={() => toggleCategory(c.name)}
-                className="accent-[#007AFF]"
+                onCheckedChange={() => toggleCategory(c.name)}
               />
               {c.name}
             </label>

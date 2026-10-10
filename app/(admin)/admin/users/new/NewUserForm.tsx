@@ -3,59 +3,93 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { clean as cleanRun, validate as validateRun } from "rut.js";
+import { format } from "date-fns";
+import { Loader2 } from "lucide-react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 import { Input } from "@/components/ui";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { FieldGroup } from "@/components/ui/field";
 import { PasswordInput } from "@/components/auth";
 import { createUserFromFormAction } from "@/actions/admin";
-import { passwordSchema } from "@/schemas/password.schema";
+import { AdminUserCreateSchema } from "@/schemas/admin/user.schema";
+import { DatePickerField } from "@/components/admin/DatePickerField";
 import {
   ComunaSelect,
   RegionSelect,
   type Region,
 } from "@/components/admin/LocationSelects";
 
+const NewUserFormSchema = AdminUserCreateSchema.extend({
+  address: z
+    .string()
+    .trim()
+    .min(1, "Address is required")
+    .max(300, "Address cannot exceed 300 characters"),
+  birthDate: z.date().nullable().optional(),
+  confirmPassword: z.string(),
+}).refine((values) => values.password === values.confirmPassword, {
+  message: "Passwords do not match",
+  path: ["confirmPassword"],
+});
+
+type NewUserFormValues = z.infer<typeof NewUserFormSchema>;
+
 export function NewUserForm() {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
-  const [error, setError] = useState<string | null>(null);
-
+  const [serverError, setServerError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [region, setRegion] = useState<Region | "">("");
-  const [comuna, setComuna] = useState("");
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const form = useForm<NewUserFormValues>({
+    resolver: zodResolver(NewUserFormSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      confirmPassword: "",
+      run: "",
+      firstName: "",
+      lastName: "",
+      birthDate: null,
+      region: "",
+      comuna: "",
+      address: "",
+    },
+  });
 
-    const formData = new FormData(e.currentTarget);
-    const password = formData.get("password")?.toString() ?? "";
-    const confirmPassword = formData.get("confirmPassword")?.toString() ?? "";
-    const run = formData.get("run")?.toString() ?? "";
-    const cleanedRun = cleanRun(run);
+  const regionValue = form.watch("region") as Region | "";
 
-    const passwordCheck = passwordSchema.safeParse(password);
-    if (!passwordCheck.success) {
-      setError(passwordCheck.error.issues[0].message);
-      return;
-    }
-    if (password !== confirmPassword) {
-      setError("Passwords do not match");
-      return;
-    }
-    if (!validateRun(cleanedRun)) {
-      setError("RUN is not valid (e.g. 12.345.678-9)");
-      return;
-    }
+  const onSubmit = (values: NewUserFormValues) => {
+    const formData = new FormData();
+    formData.set("email", values.email);
+    formData.set("password", values.password);
+    formData.set("confirmPassword", values.confirmPassword);
+    formData.set("run", values.run);
+    formData.set("firstName", values.firstName);
+    formData.set("lastName", values.lastName);
+    formData.set(
+      "birthDate",
+      values.birthDate ? format(values.birthDate, "yyyy-MM-dd") : "",
+    );
+    formData.set("region", values.region ?? "");
+    formData.set("comuna", values.comuna ?? "");
+    formData.set("address", values.address);
 
-    formData.set("run", cleanedRun);
-    formData.set("region", region || "");
-    formData.set("comuna", comuna || "");
-
-    setError(null);
+    setServerError(null);
     startTransition(async () => {
       const result = await createUserFromFormAction(formData);
       if (!result.ok) {
-        setError(result.error ?? "Could not create the user");
+        setServerError(result.error ?? "Could not create the user");
         return;
       }
       router.push("/admin/users");
@@ -63,166 +97,233 @@ export function NewUserForm() {
     });
   };
 
-  const labelCls = "text-xs text-muted-foreground font-medium";
-
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="bg-card border border-border rounded-lg p-6 flex flex-col gap-4"
-    >
-      {error && <p className="text-red-500 text-sm italic">{error}</p>}
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        noValidate
+        className="bg-card border border-border rounded-lg p-6 flex flex-col gap-4"
+      >
+        {serverError && (
+          <div
+            role="alert"
+            className="rounded-md border border-[#5C2A2A] bg-[#2A1A1A] p-3 text-sm text-[#FF6B6B]"
+          >
+            {serverError}
+          </div>
+        )}
 
-      <fieldset className="flex flex-col gap-4">
-        <legend className="text-sm font-semibold text-foreground mb-2">
-          Account
-        </legend>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div className="flex flex-col gap-1">
-            <label htmlFor="email" className={labelCls}>
-              Email
-            </label>
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              required
-              maxLength={100}
-              placeholder="user@gmail.com"
-            />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label htmlFor="password" className={labelCls}>
-              Password
-            </label>
-            <PasswordInput
-              name="password"
-              required
-              minLength={4}
-              maxLength={10}
-              placeholder="4-10 characters"
-              show={showPassword}
-              onToggle={() => setShowPassword(!showPassword)}
-            />
-          </div>
-          <div className="flex flex-col gap-1 sm:col-span-2">
-            <label htmlFor="confirmPassword" className={labelCls}>
-              Confirm password
-            </label>
-            <PasswordInput
-              name="confirmPassword"
-              required
-              minLength={4}
-              maxLength={10}
-              placeholder="Repeat password"
-              show={showConfirmPassword}
-              onToggle={() => setShowConfirmPassword(!showConfirmPassword)}
-            />
-          </div>
+        <fieldset className="flex flex-col gap-4">
+          <legend className="text-sm font-semibold text-foreground mb-2">
+            Account
+          </legend>
+          <FieldGroup>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="email"
+                        maxLength={100}
+                        placeholder="user@gmail.com"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-left" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <PasswordInput
+                        field={field}
+                        placeholder="4-10 characters"
+                        show={showPassword}
+                        onToggle={() => setShowPassword(!showPassword)}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-left" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem className="sm:col-span-2">
+                    <FormLabel>Confirm password</FormLabel>
+                    <FormControl>
+                      <PasswordInput
+                        field={field}
+                        placeholder="Repeat password"
+                        show={showConfirmPassword}
+                        onToggle={() =>
+                          setShowConfirmPassword(!showConfirmPassword)
+                        }
+                      />
+                    </FormControl>
+                    <FormMessage className="text-left" />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </FieldGroup>
+        </fieldset>
+
+        <fieldset className="flex flex-col gap-4 border-t border-border pt-4">
+          <legend className="text-sm font-semibold text-foreground mb-2">
+            Profile
+          </legend>
+          <FieldGroup>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <FormField
+                control={form.control}
+                name="run"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>RUN</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="text"
+                        maxLength={13}
+                        placeholder="12.345.678-9"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-left" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="firstName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>First name</FormLabel>
+                    <FormControl>
+                      <Input {...field} type="text" maxLength={50} />
+                    </FormControl>
+                    <FormMessage className="text-left" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="lastName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Last name</FormLabel>
+                    <FormControl>
+                      <Input {...field} type="text" maxLength={100} />
+                    </FormControl>
+                    <FormMessage className="text-left" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="birthDate"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Date of birth</FormLabel>
+                    <FormControl>
+                      <DatePickerField
+                        label="Date of birth"
+                        value={field.value}
+                        onChange={field.onChange}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-left" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="region"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Region</FormLabel>
+                    <FormControl>
+                      <RegionSelect
+                        name={field.name}
+                        value={(field.value ?? "") as Region | ""}
+                        onValueChange={(value) => {
+                          field.onChange(value);
+                          form.setValue("comuna", "");
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-left" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="comuna"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Municipality</FormLabel>
+                    <FormControl>
+                      <ComunaSelect
+                        name={field.name}
+                        value={field.value ?? ""}
+                        region={regionValue}
+                        onValueChange={field.onChange}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-left" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="address"
+                render={({ field }) => (
+                  <FormItem className="sm:col-span-2">
+                    <FormLabel>Address</FormLabel>
+                    <FormControl>
+                      <Input {...field} type="text" maxLength={300} />
+                    </FormControl>
+                    <FormMessage className="text-left" />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </FieldGroup>
+        </fieldset>
+
+        <div className="flex items-center gap-2 mt-2">
+          <Button
+            type="submit"
+            disabled={pending}
+            className="bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed text-primary-foreground text-sm font-semibold px-5 py-2.5 rounded-md transition-colors"
+          >
+            {pending ? (
+              <>
+                <Loader2 size={18} className="animate-spin" />
+                Creating...
+              </>
+            ) : (
+              "Create user"
+            )}
+          </Button>
+          <Link
+            href="/admin/users"
+            className="text-muted-foreground hover:text-foreground text-sm px-4 py-2.5"
+          >
+            Cancel
+          </Link>
         </div>
-      </fieldset>
-
-      <fieldset className="flex flex-col gap-4 border-t border-border pt-4">
-        <legend className="text-sm font-semibold text-foreground mb-2">
-          Profile
-        </legend>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div className="flex flex-col gap-1">
-            <label htmlFor="run" className={labelCls}>
-              RUN
-            </label>
-            <Input
-              id="run"
-              name="run"
-              type="text"
-              required
-              maxLength={13}
-              placeholder="12.345.678-9"
-            />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label htmlFor="firstName" className={labelCls}>
-              First name
-            </label>
-            <Input
-              id="firstName"
-              name="firstName"
-              type="text"
-              required
-              maxLength={50}
-            />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label htmlFor="lastName" className={labelCls}>
-              Last name
-            </label>
-            <Input
-              id="lastName"
-              name="lastName"
-              type="text"
-              required
-              maxLength={100}
-            />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label htmlFor="birthDate" className={labelCls}>
-              Date of birth
-            </label>
-            <Input id="birthDate" name="birthDate" type="date" />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label htmlFor="region" className={labelCls}>
-              Region
-            </label>
-            <RegionSelect
-              name="region"
-              value={region}
-              onValueChange={(v) => {
-                setRegion(v as Region);
-                if (comuna) setComuna("");
-              }}
-            />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label htmlFor="comuna" className={labelCls}>
-              Municipality
-            </label>
-            <ComunaSelect
-              name="comuna"
-              value={comuna}
-              region={region}
-              onValueChange={setComuna}
-            />
-          </div>
-          <div className="flex flex-col gap-1 sm:col-span-2">
-            <label htmlFor="address" className={labelCls}>
-              Address
-            </label>
-            <Input
-              id="address"
-              name="address"
-              type="text"
-              required
-              maxLength={300}
-            />
-          </div>
-        </div>
-      </fieldset>
-
-      <div className="flex items-center gap-2 mt-2">
-        <button
-          type="submit"
-          disabled={pending}
-          className="bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed text-primary-foreground text-sm font-semibold px-5 py-2.5 rounded-md transition-colors"
-        >
-          {pending ? "Creating..." : "Create user"}
-        </button>
-        <Link
-          href="/admin/users"
-          className="text-muted-foreground hover:text-foreground text-sm px-4 py-2.5"
-        >
-          Cancel
-        </Link>
-      </div>
-    </form>
+      </form>
+    </Form>
   );
 }

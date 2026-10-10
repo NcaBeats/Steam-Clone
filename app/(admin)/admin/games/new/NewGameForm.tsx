@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { Input, Textarea } from "@/components/ui";
+import { Checkbox } from "@/components/ui/checkbox";
 import { FileDropzone, SpecsEditor, Select } from "@/components/inputs";
 import { useAlert } from "@/components/feedback";
 import {
@@ -34,8 +35,15 @@ export function NewGameForm({
   const [gallery, setGallery] = useState<File[]>([]);
   const [minimumSpecs, setMinimumSpecs] = useState("");
   const [recommendedSpecs, setRecommendedSpecs] = useState("");
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
   const busy = pending || uploading !== null;
+
+  const toggleCategory = (name: string) => {
+    setSelectedCategories((prev) =>
+      prev.includes(name) ? prev.filter((c) => c !== name) : [...prev, name],
+    );
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -203,16 +211,19 @@ export function NewGameForm({
           {categories.map((c) => (
             <label
               key={c.id}
+              htmlFor={`game-category-${c.id}`}
               className="flex items-center gap-2 text-sm text-foreground cursor-pointer"
             >
-              <input
-                type="checkbox"
-                name="categories"
-                value={c.name}
-                className="accent-[#007AFF]"
+              <Checkbox
+                id={`game-category-${c.id}`}
+                checked={selectedCategories.includes(c.name)}
+                onCheckedChange={() => toggleCategory(c.name)}
               />
               {c.name}
             </label>
+          ))}
+          {selectedCategories.map((name) => (
+            <input key={name} type="hidden" name="categories" value={name} />
           ))}
         </div>
       </div>

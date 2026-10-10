@@ -3,7 +3,19 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { Input, Textarea } from "@/components/ui";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { FieldGroup } from "@/components/ui/field";
 import { FileDropzone, Select } from "@/components/inputs";
 import { useAlert } from "@/components/feedback";
 import {
@@ -12,7 +24,11 @@ import {
   updateBlogAction,
 } from "@/actions/admin";
 import { uploadBlogCover } from "@/lib/blog-upload";
-import { BlogCategorySchema, BlogSchema } from "@/schemas/admin/blog.schema";
+import {
+  BlogCategorySchema,
+  BlogSchema,
+  type BlogInput,
+} from "@/schemas/admin/blog.schema";
 import type { Blog } from "@/types";
 
 type Props = Readonly<{
@@ -32,35 +48,25 @@ export function BlogForm({ blog, redirectTo = "/admin/blogs" }: Props) {
   const isEdit = !!blog;
   const busy = pending || uploading !== null;
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const parsedCategory = BlogCategorySchema.safeParse(blog?.category ?? null);
 
-    const formData = new FormData(e.currentTarget);
-    const rawCategory = formData.get("category")?.toString().trim() ?? "";
+  const form = useForm<BlogInput>({
+    resolver: zodResolver(BlogSchema),
+    defaultValues: {
+      title: blog?.title ?? "",
+      excerpt: blog?.excerpt ?? "",
+      content: blog?.content ?? "",
+      category: parsedCategory.success ? parsedCategory.data : null,
+    },
+  });
 
-    const parsed = BlogSchema.safeParse({
-      title: formData.get("title"),
-      excerpt: formData.get("excerpt"),
-      content: formData.get("content"),
-      category: rawCategory === "" ? undefined : rawCategory,
-    });
-    if (!parsed.success) {
-      showAlert({
-        variant: "destructive",
-        title: isEdit
-          ? "Could not update the blog"
-          : "Could not create the blog",
-        description: parsed.error.issues[0]?.message ?? "Invalid data",
-      });
-      return;
-    }
-
+  const onSubmit = async (values: BlogInput) => {
     try {
       let coverImage: string | undefined;
       if (cover) {
         setUploading("Uploading cover...");
         const publicPath = await uploadBlogCover({
-          title: parsed.data.title,
+          title: values.title,
           cover,
           presignCover: presignBlogCoverAction,
           onProgress: setUploading,
@@ -72,11 +78,11 @@ export function BlogForm({ blog, redirectTo = "/admin/blogs" }: Props) {
       startTransition(async () => {
         const result = isEdit
           ? await updateBlogAction(blog.id, {
-              ...parsed.data,
+              ...values,
               ...(coverImage ? { coverImage } : {}),
             })
           : await createBlogAction({
-              ...parsed.data,
+              ...values,
               ...(coverImage ? { coverImage } : {}),
             });
         if (!result.ok) {
@@ -110,108 +116,130 @@ export function BlogForm({ blog, redirectTo = "/admin/blogs" }: Props) {
     }
   };
 
-  const labelCls = "text-xs text-muted-foreground font-medium";
-
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="bg-card border border-border rounded-lg p-6 flex flex-col gap-4"
-    >
-      <div className="flex flex-col gap-1">
-        <label htmlFor="title" className={labelCls}>
-          Title
-        </label>
-        <Input
-          id="title"
-          name="title"
-          type="text"
-          required
-          minLength={1}
-          maxLength={200}
-          defaultValue={blog?.title ?? ""}
-          placeholder="Blog title"
-        />
-      </div>
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        noValidate
+        className="bg-card border border-border rounded-lg p-6 flex flex-col gap-4"
+      >
+        <FieldGroup>
+          <FormField
+            control={form.control}
+            name="title"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Title</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    type="text"
+                    maxLength={200}
+                    placeholder="Blog title"
+                  />
+                </FormControl>
+                <FormMessage className="text-left" />
+              </FormItem>
+            )}
+          />
 
-      <div className="flex flex-col gap-1">
-        <label htmlFor="excerpt" className={labelCls}>
-          Excerpt
-        </label>
-        <Textarea
-          id="excerpt"
-          name="excerpt"
-          required
-          rows={3}
-          maxLength={500}
-          defaultValue={blog?.excerpt ?? ""}
-          placeholder="Short summary..."
-        />
-      </div>
+          <FormField
+            control={form.control}
+            name="excerpt"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Excerpt</FormLabel>
+                <FormControl>
+                  <Textarea
+                    {...field}
+                    rows={3}
+                    maxLength={500}
+                    placeholder="Short summary..."
+                  />
+                </FormControl>
+                <FormMessage className="text-left" />
+              </FormItem>
+            )}
+          />
 
-      <div className="flex flex-col gap-1">
-        <label htmlFor="content" className={labelCls}>
-          Content
-        </label>
-        <Textarea
-          id="content"
-          name="content"
-          required
-          rows={10}
-          defaultValue={blog?.content ?? ""}
-          placeholder="Full article..."
-        />
-      </div>
+          <FormField
+            control={form.control}
+            name="content"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Content</FormLabel>
+                <FormControl>
+                  <Textarea
+                    {...field}
+                    rows={10}
+                    placeholder="Full article..."
+                  />
+                </FormControl>
+                <FormMessage className="text-left" />
+              </FormItem>
+            )}
+          />
 
-      <div className="flex flex-col gap-1">
-        <label htmlFor="category" className={labelCls}>
-          Category (optional)
-        </label>
-        <Select
-          id="category"
-          name="category"
-          defaultValue={blog?.category ?? ""}
-        >
-          <option value="">No category</option>
-          {BLOG_CATEGORIES.map((c) => (
-            <option key={c} value={c}>
-              {c}
-            </option>
-          ))}
-        </Select>
-      </div>
+          <FormField
+            control={form.control}
+            name="category"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Category (optional)</FormLabel>
+                <FormControl>
+                  <Select
+                    id="category"
+                    name={field.name}
+                    value={field.value ?? ""}
+                    onChange={(e) => field.onChange(e.target.value || null)}
+                  >
+                    <option value="">No category</option>
+                    {BLOG_CATEGORIES.map((c) => (
+                      <option key={c} value={c}>
+                        {c}
+                      </option>
+                    ))}
+                  </Select>
+                </FormControl>
+                <FormMessage className="text-left" />
+              </FormItem>
+            )}
+          />
+        </FieldGroup>
 
-      <div className="flex flex-col gap-4 border-t border-border pt-4">
-        <FileDropzone
-          kind="image"
-          value={cover}
-          onChange={(v) => setCover(Array.isArray(v) ? (v[0] ?? null) : v)}
-          existingUrl={blog?.coverImage ?? null}
-        />
-      </div>
+        <div className="flex flex-col gap-4 border-t border-border pt-4">
+          <FileDropzone
+            kind="image"
+            value={cover}
+            onChange={(v) => setCover(Array.isArray(v) ? (v[0] ?? null) : v)}
+            existingUrl={blog?.coverImage ?? null}
+          />
+        </div>
 
-      {uploading && (
-        <p className="text-xs text-muted-foreground">{uploading}</p>
-      )}
+        {uploading && (
+          <p className="text-xs text-muted-foreground">{uploading}</p>
+        )}
 
-      <div className="flex items-center gap-2 mt-2">
-        <button
-          type="submit"
-          disabled={busy}
-          className="bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed text-primary-foreground text-sm font-semibold px-5 py-2.5 rounded-md transition-colors"
-        >
-          {busy
-            ? (uploading ?? (isEdit ? "Saving..." : "Creating..."))
-            : isEdit
-              ? "Save changes"
-              : "Create blog"}
-        </button>
-        <Link
-          href={redirectTo}
-          className="text-muted-foreground hover:text-foreground text-sm px-4 py-2.5"
-        >
-          Cancel
-        </Link>
-      </div>
-    </form>
+        <div className="flex items-center gap-2 mt-2">
+          <Button
+            type="submit"
+            disabled={busy}
+            className="bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed text-primary-foreground text-sm font-semibold px-5 py-2.5 rounded-md transition-colors"
+          >
+            {busy
+              ? (uploading ?? (isEdit ? "Saving..." : "Creating..."))
+              : isEdit
+                ? "Save changes"
+                : "Create blog"}
+          </Button>
+          <Link
+            href={redirectTo}
+            className="text-muted-foreground hover:text-foreground text-sm px-4 py-2.5"
+          >
+            Cancel
+          </Link>
+        </div>
+      </form>
+    </Form>
   );
 }
