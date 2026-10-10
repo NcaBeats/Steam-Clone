@@ -16,7 +16,7 @@ const ericaOne = Erica_One({
 
 export const AuthLayout = ({ children }: AuthLayoutProps) => {
   return (
-    <div className="relative flex min-h-screen items-center justify-center bg-[#101014] p-4">
+    <div className="relative flex min-h-screen items-center justify-center bg-[#0A0A0A] p-4">
       <Link
         className="absolute left-4 top-4 rounded-md p-2 text-[#EDEDED] transition-colors duration-200 ease-out hover:bg-[#28282C] md:fixed"
         href="/"
