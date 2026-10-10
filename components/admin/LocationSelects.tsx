@@ -1,21 +1,4 @@
-"use client";
-
-import { useMemo, useEffect } from "react";
-import { Select } from "@/components/inputs";
 import regiones from "@/data/regiones.json";
-
-const COMUNAS_BY_REGION: Record<string, string[]> = regiones.reduce(
-  (acc, region) => {
-    acc[region.nombre] = region.comunas;
-    return acc;
-  },
-  {} as Record<string, string[]>,
-);
-
-const ALL_COMUNAS: string[] = regiones.reduce((acc, region) => {
-  acc.push(...region.comunas);
-  return acc;
-}, [] as string[]);
 
 export type Region =
   | "ARICA_Y_PARINACOTA"
@@ -56,95 +39,27 @@ const REGION_LABELS: Record<Region, string> = {
   MAGALLANES: "Magallanes",
 };
 
-const ALL_REGIONS = Object.keys(REGION_LABELS) as Region[];
+export type RegionOption = {
+  key: Region;
+  label: string;
+};
 
-export type RegionSelectProps = Readonly<{
-  name: string;
-  placeholder?: string;
-  value?: Region | "";
-  defaultValue?: Region | "";
-  onValueChange?: (value: Region) => void;
-  className?: string;
-}>;
+export const REGION_OPTIONS: RegionOption[] = (
+  Object.keys(REGION_LABELS) as Region[]
+).map((key) => ({ key, label: REGION_LABELS[key] }));
 
-export function RegionSelect({
-  name,
-  placeholder = "Select a region",
-  value,
-  defaultValue,
-  onValueChange,
-  className,
-}: RegionSelectProps) {
-  return (
-    <Select
-      name={name}
-      value={value}
-      defaultValue={defaultValue}
-      onChange={(e) => onValueChange?.(e.target.value as Region)}
-      className={className ?? ""}
-    >
-      <option value="">{placeholder}</option>
-      {ALL_REGIONS.map((region) => (
-        <option key={region} value={region}>
-          {REGION_LABELS[region]}
-        </option>
-      ))}
-    </Select>
-  );
-}
+const COMUNAS_BY_REGION: Record<Region, string[]> = (
+  Object.keys(REGION_LABELS) as Region[]
+).reduce(
+  (acc, key) => {
+    const entry = regiones.find(
+      (region) => region.nombre === REGION_LABELS[key],
+    );
+    acc[key] = entry ? [...entry.comunas] : [];
+    return acc;
+  },
+  {} as Record<Region, string[]>,
+);
 
-export type ComunaSelectProps = Readonly<{
-  name: string;
-  placeholder?: string;
-  value?: string;
-  defaultValue?: string;
-  region?: Region | "";
-  onValueChange?: (value: string) => void;
-  className?: string;
-}>;
-
-export function ComunaSelect({
-  name,
-  placeholder = "Select a municipality",
-  value,
-  defaultValue,
-  region,
-  onValueChange,
-  className,
-}: ComunaSelectProps) {
-  const comunas = useMemo(() => {
-    if (region && COMUNAS_BY_REGION[region]) {
-      return COMUNAS_BY_REGION[region];
-    }
-    return ALL_COMUNAS;
-  }, [region]);
-
-  // If region changes, reset to first comuna to avoid stale selection
-  useEffect(() => {
-    if (region && defaultValue) {
-      const valid = COMUNAS_BY_REGION[region]?.includes(defaultValue);
-      if (!valid) onValueChange?.("");
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [region]);
-
-  return (
-    <Select
-      name={name}
-      value={value}
-      defaultValue={defaultValue}
-      onChange={(e) => onValueChange?.(e.target.value)}
-      className={className ?? ""}
-    >
-      <option value="">{placeholder}</option>
-      {comunas.map((comuna) => (
-        <option key={comuna} value={comuna}>
-          {comuna}
-        </option>
-      ))}
-    </Select>
-  );
-}
-
-export const REGION_NAMES = ALL_REGIONS;
-export const REGION_DISPLAY = REGION_LABELS;
+export const getComunasByRegion = (region: Region | ""): string[] =>
+  region ? (COMUNAS_BY_REGION[region] ?? []) : [];

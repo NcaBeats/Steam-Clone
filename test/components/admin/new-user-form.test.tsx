@@ -1,5 +1,6 @@
 import { describe, test, expect, vi, afterEach } from "vitest";
 import { cleanup, render, screen, fireEvent } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 import { NewUserForm } from "@/app/(admin)/admin/users/new/NewUserForm";
 import { createUserFromFormAction } from "@/actions/admin";
@@ -85,8 +86,9 @@ describe("NewUserForm", () => {
     expect(mockedCreate).not.toHaveBeenCalled();
   });
 
-  test("válido llama al action y navega", async () => {
+  test("región estilo register guarda la clave enum", async () => {
     mockedCreate.mockResolvedValue({ ok: true });
+    const user = userEvent.setup();
     const { container } = render(<NewUserForm />);
     fillText("user@gmail.com", "user@gmail.com");
     fillText("4-10 characters", "abcd1234");
@@ -95,10 +97,20 @@ describe("NewUserForm", () => {
     fillByName(container, "firstName", "Nico");
     fillByName(container, "lastName", "Carvajal");
     fillByName(container, "address", "Calle 123");
+
+    const regionInput = screen.getByPlaceholderText("Select a region");
+    await user.click(regionInput);
+    await user.keyboard("Metro");
+    fireEvent.click(await screen.findByText("Metropolitana de Santiago"));
+    expect(
+      screen.getByPlaceholderText("Select a municipality"),
+    ).toBeInTheDocument();
+
     await submit();
     const formData = mockedCreate.mock.calls[0][0] as FormData;
     expect(formData.get("email")).toBe("user@gmail.com");
     expect(formData.get("run")).toBe("111111111");
+    expect(formData.get("region")).toBe("METROPOLITANA_DE_SANTIAGO");
     expect(push).toHaveBeenCalledWith("/admin/users");
   });
 });

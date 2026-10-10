@@ -20,8 +20,16 @@ import {
 import { FieldGroup } from "@/components/ui/field";
 import { PasswordInput } from "@/components/auth";
 import {
-  ComunaSelect,
-  RegionSelect,
+  Combobox,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+} from "@/components/ui/combobox";
+import {
+  REGION_OPTIONS,
+  getComunasByRegion,
   type Region,
 } from "@/components/admin/LocationSelects";
 import { DatePickerField } from "@/components/admin/DatePickerField";
@@ -66,6 +74,7 @@ export function UserEditForm({ user }: Props) {
   });
 
   const regionValue = form.watch("region") as Region | "";
+  const comunas = getComunasByRegion(regionValue);
 
   const onSubmit = async (values: AdminUserEditInput) => {
     try {
@@ -261,37 +270,75 @@ export function UserEditForm({ user }: Props) {
               <FormField
                 control={form.control}
                 name="region"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Region</FormLabel>
-                    <FormControl>
-                      <RegionSelect
-                        name={field.name}
-                        value={(field.value ?? "") as Region | ""}
-                        onValueChange={(value) => {
-                          field.onChange(value);
+                render={({ field }) => {
+                  const selectedLabel =
+                    REGION_OPTIONS.find((option) => option.key === field.value)
+                      ?.label ?? null;
+                  return (
+                    <FormItem>
+                      <FormLabel>Region</FormLabel>
+                      <Combobox
+                        items={REGION_OPTIONS.map((option) => option.label)}
+                        value={selectedLabel}
+                        onValueChange={(label) => {
+                          const option = REGION_OPTIONS.find(
+                            (o) => o.label === label,
+                          );
+                          field.onChange(option ? option.key : "");
                           form.setValue("comuna", "");
                         }}
-                      />
-                    </FormControl>
-                    <FormMessage className="text-left" />
-                  </FormItem>
-                )}
+                      >
+                        <FormControl>
+                          <ComboboxInput
+                            placeholder="Select a region"
+                            className="w-full border-0 h-10"
+                          />
+                        </FormControl>
+                        <ComboboxContent>
+                          <ComboboxEmpty>No region found.</ComboboxEmpty>
+                          <ComboboxList>
+                            {(item: string) => (
+                              <ComboboxItem key={item} value={item}>
+                                {item}
+                              </ComboboxItem>
+                            )}
+                          </ComboboxList>
+                        </ComboboxContent>
+                      </Combobox>
+                      <FormMessage className="text-left" />
+                    </FormItem>
+                  );
+                }}
               />
               <FormField
                 control={form.control}
                 name="comuna"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="min-w-0">
                     <FormLabel>Municipality</FormLabel>
-                    <FormControl>
-                      <ComunaSelect
-                        name={field.name}
-                        value={field.value ?? ""}
-                        region={regionValue}
-                        onValueChange={field.onChange}
-                      />
-                    </FormControl>
+                    <Combobox
+                      items={comunas}
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      disabled={!regionValue}
+                    >
+                      <FormControl>
+                        <ComboboxInput
+                          placeholder="Select a municipality"
+                          className="w-full min-w-0 border-0 h-10"
+                        />
+                      </FormControl>
+                      <ComboboxContent>
+                        <ComboboxEmpty>No municipality found.</ComboboxEmpty>
+                        <ComboboxList>
+                          {(item) => (
+                            <ComboboxItem key={item} value={item}>
+                              {item}
+                            </ComboboxItem>
+                          )}
+                        </ComboboxList>
+                      </ComboboxContent>
+                    </Combobox>
                     <FormMessage className="text-left" />
                   </FormItem>
                 )}
