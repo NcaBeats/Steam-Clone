@@ -146,7 +146,7 @@ export const SearchBar = () => {
           align="start"
           side="bottom"
           sideOffset={8}
-          className="w-(--anchor-width) min-w-60 p-1.5"
+          className="w-(--anchor-width) min-w-60 p-1.5 sm:w-[min(calc(var(--anchor-width)*2),calc(100vw-2rem))]"
         >
           {showTips ? (
             <div className="px-2 py-1.5">
