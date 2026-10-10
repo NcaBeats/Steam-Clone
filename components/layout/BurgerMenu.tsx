@@ -25,7 +25,7 @@ import {
   DrawerClose,
   DrawerContent,
   DrawerTrigger,
-} from "@/components/feedback/drawer";
+} from "@/components/ui/drawer";
 
 const ICONS: Record<string, LucideIcon> = {
   house: House,

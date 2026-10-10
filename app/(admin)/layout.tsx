@@ -1,14 +1,10 @@
-import Link from "next/link";
-import { Erica_One } from "next/font/google";
-import { AdminSidebar } from "@/components/admin/AdminSidebar";
-import { AdminBurgerMenu } from "@/components/admin/AdminBurgerMenu";
+import { Newspaper, Receipt, ShoppingBag, Users } from "lucide-react";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/admin/dashboard/app-sidebar";
+import { SiteHeader } from "@/components/admin/dashboard/site-header";
 import { requireRole } from "@/actions/admin/guard";
-
-const ericaOne = Erica_One({
-  weight: "400",
-  subsets: ["latin"],
-  variable: "--font-erica-one",
-});
+import { getCurrentUserAction } from "@/actions/admin/auth";
 
 export default async function AdminLayout({
   children,
@@ -16,21 +12,32 @@ export default async function AdminLayout({
   readonly children: React.ReactNode;
 }) {
   await requireRole(["ADMIN"], "/studio/games");
+  const user = await getCurrentUserAction();
 
   return (
-    <div className="flex min-h-screen bg-[#18181C]">
-      <AdminSidebar />
-      <div className="flex-1 flex flex-col">
-        <header className="sm:hidden bg-[#0A0A0A] border-b border-[#2A2A2A] h-16 flex items-center justify-between px-4">
-          <AdminBurgerMenu />
-          <Link href="/" className="flex items-center">
-            <span className={`text-2xl text-white ${ericaOne.className}`}>
-              MBR
-            </span>
-          </Link>
-        </header>
-        <main className="flex-1 p-4 sm:p-6 overflow-y-auto">{children}</main>
-      </div>
-    </div>
+    <TooltipProvider>
+      <SidebarProvider
+        style={
+          {
+            "--sidebar-width": "calc(var(--spacing) * 72)",
+            "--header-height": "calc(var(--spacing) * 12)",
+          } as React.CSSProperties
+        }
+      >
+        <AppSidebar
+          items={[
+            { title: "Products", url: "/admin/games", icon: ShoppingBag },
+            { title: "Blogs", url: "/admin/blogs", icon: Newspaper },
+            { title: "Orders", url: "/admin/orders", icon: Receipt },
+            { title: "Users", url: "/admin/users", icon: Users },
+          ]}
+          user={{ email: user?.email ?? "", role: user?.role ?? "" }}
+        />
+        <SidebarInset>
+          <SiteHeader title="Dashboard" />
+          <main className="flex-1 p-4 sm:p-6">{children}</main>
+        </SidebarInset>
+      </SidebarProvider>
+    </TooltipProvider>
   );
 }
