@@ -41,7 +41,7 @@ export const DiscountCarousel = ({
         {games.map((game) => (
           <CarouselItem
             key={game.id}
-            className="basis-1/2 sm:basis-1/6 py-2 pr-1"
+            className="basis-1/2 sm:basis-1/3 md:basis-1/4 xl:basis-1/6 py-2 pr-1"
           >
             <GameCard
               id={game.id}
@@ -86,7 +86,7 @@ export const DiscountCarouselFeatured = ({
         {games.map((game) => (
           <CarouselItem
             key={game.id}
-            className="basis-1/2 md:basis-1/4 pl-2 md:pl-4 py-2"
+            className="basis-1/2 md:basis-1/3 lg:basis-1/4 pl-2 md:pl-4 py-2"
           >
             <GameCardBig
               id={game.id}
