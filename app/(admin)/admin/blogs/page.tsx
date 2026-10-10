@@ -71,7 +71,7 @@ const BlogsPage = async ({
             { label: "Title" },
             { label: "Category", className: "w-28 hidden sm:table-cell" },
             { label: "Published", className: "w-32 hidden sm:table-cell" },
-            { label: "Actions", className: "w-16 text-right" },
+            { label: "Actions", className: "w-24 text-right" },
           ]}
         />
         <TableBody>

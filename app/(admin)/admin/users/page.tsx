@@ -70,7 +70,7 @@ const UsersPage = async ({
             { label: "Email" },
             { label: "Role", className: "w-28" },
             { label: "Created", className: "w-28 hidden sm:table-cell" },
-            { label: "Actions", className: "w-16 text-right" },
+            { label: "Actions", className: "w-24 text-right" },
           ]}
         />
         <TableBody>

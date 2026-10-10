@@ -71,7 +71,7 @@ const StudioGamesPage = async ({
             { label: "Name" },
             { label: "State", className: "w-24 hidden sm:table-cell" },
             { label: "Price", className: "w-20 sm:w-24" },
-            { label: "Discount", className: "w-20 hidden sm:table-cell" },
+            { label: "Discount", className: "w-24 hidden sm:table-cell" },
             { label: "Actions", className: "w-36 text-right" },
           ]}
         />
