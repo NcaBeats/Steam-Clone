@@ -3,6 +3,15 @@ import { requireRole } from "@/actions/admin/guard";
 import { getManageGames } from "@/lib/api/games";
 import { SearchInput } from "@/components/admin/SearchInput";
 import { GameImage } from "@/components/games/GameImage";
+import {
+  AdminTable,
+  AdminTableEmpty,
+  AdminTableHeader,
+  AdminTablePagination,
+  TableBody,
+  TableCell,
+  TableRow,
+} from "@/components/admin/dashboard/admin-table";
 
 const PAGE_SIZE = 10;
 
@@ -14,14 +23,10 @@ const StudioGamesPage = async ({
   await requireRole(["VENDEDOR"], "/admin");
   const { page: pageParam, q } = await searchParams;
   const page = Math.max(0, Number(pageParam ?? 0));
-  const offset = page * PAGE_SIZE;
   const searchName = q?.trim() || undefined;
 
   const data = await getManageGames(page, PAGE_SIZE, searchName);
   const { content: games, page: pageInfo } = data;
-  const totalPages = pageInfo.totalPages;
-  const start = pageInfo.totalElements === 0 ? 0 : offset + 1;
-  const end = Math.min(offset + PAGE_SIZE, pageInfo.totalElements);
 
   return (
     <div className="flex flex-col gap-6">
@@ -58,134 +63,105 @@ const StudioGamesPage = async ({
         </div>
       </div>
 
-      <div className="bg-card border border-border rounded-lg overflow-x-auto">
-        <table className="w-full text-sm table-fixed">
-          <thead>
-            <tr className="bg-muted/50 text-left text-muted-foreground text-xs font-bold uppercase tracking-[0.5px]">
-              <th className="px-3 py-3 w-16 hidden md:table-cell">ID</th>
-              <th className="px-3 py-3 w-12 hidden sm:table-cell">Cover</th>
-              <th className="px-3 py-3">Name</th>
-              <th className="px-3 py-3 w-24 hidden sm:table-cell">State</th>
-              <th className="px-3 py-3 w-24">Price</th>
-              <th className="px-3 py-3 w-20 hidden sm:table-cell">Discount</th>
-              <th className="px-3 py-3 w-36 text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {games.length === 0 ? (
-              <tr>
-                <td
-                  colSpan={7}
-                  className="px-3 py-8 text-center text-muted-foreground"
-                >
-                  {searchName
-                    ? `No games found matching "${searchName}"`
-                    : "No games found"}
-                </td>
-              </tr>
-            ) : (
-              games.map((g) => (
-                <tr
-                  key={g.id}
-                  className="border-t border-border hover:bg-muted/50 transition-colors"
-                >
-                  <td className="px-3 py-3 text-muted-foreground hidden md:table-cell">
-                    #{g.id}
-                  </td>
-                  <td className="px-3 py-3 hidden sm:table-cell">
-                    <div className="relative w-10 h-14 rounded overflow-hidden">
-                      <GameImage
-                        src={g.imageUrl}
-                        alt={g.name}
-                        fill
-                        className="object-cover"
-                        sizes="40px"
-                      />
-                    </div>
-                  </td>
-                  <td className="px-3 py-3">
+      <AdminTable>
+        <AdminTableHeader
+          columns={[
+            { label: "ID", className: "w-16 hidden md:table-cell" },
+            { label: "Cover", className: "w-12 hidden sm:table-cell" },
+            { label: "Name" },
+            { label: "State", className: "w-24 hidden sm:table-cell" },
+            { label: "Price", className: "w-24" },
+            { label: "Discount", className: "w-20 hidden sm:table-cell" },
+            { label: "Actions", className: "w-36 text-right" },
+          ]}
+        />
+        <TableBody>
+          {games.length === 0 ? (
+            <AdminTableEmpty colSpan={7}>
+              {searchName
+                ? `No games found matching "${searchName}"`
+                : "No games found"}
+            </AdminTableEmpty>
+          ) : (
+            games.map((g) => (
+              <TableRow key={g.id}>
+                <TableCell className="px-3 py-3 text-muted-foreground hidden md:table-cell">
+                  #{g.id}
+                </TableCell>
+                <TableCell className="px-3 py-3 hidden sm:table-cell">
+                  <div className="relative w-10 h-14 rounded overflow-hidden">
+                    <GameImage
+                      src={g.imageUrl}
+                      alt={g.name}
+                      fill
+                      className="object-cover"
+                      sizes="40px"
+                    />
+                  </div>
+                </TableCell>
+                <TableCell className="px-3 py-3 whitespace-normal">
+                  <Link
+                    href={`/studio/games/${g.id}`}
+                    className="text-foreground hover:underline truncate block"
+                  >
+                    {g.name}
+                  </Link>
+                </TableCell>
+                <TableCell className="px-3 py-3 hidden sm:table-cell whitespace-nowrap">
+                  <span
+                    className={`px-2.5 py-1 rounded text-xs font-semibold inline-block ${
+                      g.state === "AVAILABLE"
+                        ? "bg-muted text-foreground"
+                        : "bg-muted text-muted-foreground"
+                    }`}
+                  >
+                    {g.state}
+                  </span>
+                </TableCell>
+                <TableCell className="px-3 py-3 text-foreground whitespace-nowrap">
+                  ${g.price.toFixed(2)}
+                </TableCell>
+                <TableCell className="px-3 py-3 hidden sm:table-cell">
+                  {g.discountPercent > 0 ? (
+                    <span className="text-[#26BBFF] text-xs font-semibold whitespace-nowrap">
+                      -{g.discountPercent}%
+                    </span>
+                  ) : (
+                    <span className="text-muted-foreground text-xs whitespace-nowrap">
+                      —
+                    </span>
+                  )}
+                </TableCell>
+                <TableCell className="px-3 py-3 text-right whitespace-nowrap">
+                  <div className="flex items-center justify-end gap-3">
                     <Link
                       href={`/studio/games/${g.id}`}
-                      className="text-foreground hover:underline truncate block"
+                      className="text-muted-foreground hover:text-foreground text-sm font-medium"
                     >
-                      {g.name}
+                      View
                     </Link>
-                  </td>
-                  <td className="px-3 py-3 hidden sm:table-cell whitespace-nowrap">
-                    <span
-                      className={`px-2.5 py-1 rounded text-xs font-semibold inline-block ${
-                        g.state === "AVAILABLE"
-                          ? "bg-muted text-foreground"
-                          : "bg-muted text-muted-foreground"
-                      }`}
+                    <Link
+                      href={`/studio/games/${g.id}/edit`}
+                      className="text-muted-foreground hover:text-foreground text-sm font-medium"
                     >
-                      {g.state}
-                    </span>
-                  </td>
-                  <td className="px-3 py-3 text-foreground whitespace-nowrap">
-                    ${g.price.toFixed(2)}
-                  </td>
-                  <td className="px-3 py-3 hidden sm:table-cell">
-                    {g.discountPercent > 0 ? (
-                      <span className="text-[#26BBFF] text-xs font-semibold whitespace-nowrap">
-                        -{g.discountPercent}%
-                      </span>
-                    ) : (
-                      <span className="text-muted-foreground text-xs whitespace-nowrap">
-                        —
-                      </span>
-                    )}
-                  </td>
-                  <td className="px-3 py-3 text-right whitespace-nowrap">
-                    <div className="flex items-center justify-end gap-3">
-                      <Link
-                        href={`/studio/games/${g.id}`}
-                        className="text-muted-foreground hover:text-foreground text-sm font-medium"
-                      >
-                        View
-                      </Link>
-                      <Link
-                        href={`/studio/games/${g.id}/edit`}
-                        className="text-muted-foreground hover:text-foreground text-sm font-medium"
-                      >
-                        Edit
-                      </Link>
-                    </div>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+                      Edit
+                    </Link>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))
+          )}
+        </TableBody>
+      </AdminTable>
 
-      {totalPages > 1 && (
-        <nav className="flex flex-wrap items-center justify-between gap-3 text-sm">
-          <span className="text-muted-foreground">
-            Showing {start}-{end} of {pageInfo.totalElements}
-          </span>
-          <div className="flex items-center gap-1">
-            {Array.from({ length: totalPages }, (_, i) => {
-              const href = searchName
-                ? `/studio/games?page=${i}&q=${encodeURIComponent(searchName)}`
-                : `/studio/games?page=${i}`;
-              return (
-                <Link
-                  key={i}
-                  href={href}
-                  className={`size-8 flex items-center justify-center rounded-md text-sm ${
-                    i === page
-                      ? "bg-muted text-foreground"
-                      : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-                  }`}
-                >
-                  {i + 1}
-                </Link>
-              );
-            })}
-          </div>
-        </nav>
-      )}
+      <AdminTablePagination
+        page={page}
+        totalPages={pageInfo.totalPages}
+        totalElements={pageInfo.totalElements}
+        pageSize={PAGE_SIZE}
+        basePath="/studio/games"
+        query={searchName ? { q: searchName } : undefined}
+      />
     </div>
   );
 };
