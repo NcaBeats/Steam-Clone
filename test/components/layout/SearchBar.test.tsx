@@ -53,6 +53,17 @@ describe("SearchBar", () => {
     ).toBeNull();
   });
 
+  test("el ring solo aparece con foco de teclado", () => {
+    render(<SearchBar />);
+    const anchor = () => getInput().closest("[data-kb]");
+    fireEvent.focus(getInput());
+    expect(anchor()).toHaveAttribute("data-kb", "false");
+    fireEvent.blur(getInput());
+    fireEvent.keyDown(window, { key: "Tab", code: "Tab" });
+    fireEvent.focus(getInput());
+    expect(anchor()).toHaveAttribute("data-kb", "true");
+  });
+
   test("mientras escribe muestra los juegos que devuelve el servidor", async () => {
     mockedSearch.mockResolvedValue([game]);
     render(<SearchBar />);

@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, SearchIcon } from "lucide-react";
+import Link from "next/link";
+import { cn } from "cn";
 import {
   Autocomplete,
   AutocompleteContent,
@@ -26,6 +28,8 @@ export const SearchBar = () => {
   const anchorRef = useRef<HTMLDivElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const highlightedRef = useRef<Game | null>(null);
+  const keyboardRef = useRef(false);
+  const [kbFocus, setKbFocus] = useState(false);
 
   useEffect(() => {
     if (open) {
@@ -66,6 +70,24 @@ export const SearchBar = () => {
     };
   }, [query]);
 
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Tab") keyboardRef.current = true;
+    };
+    const onPointerDown = () => {
+      keyboardRef.current = false;
+      if (document.activeElement === inputRef.current) {
+        setKbFocus(false);
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("pointerdown", onPointerDown);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("pointerdown", onPointerDown);
+    };
+  }, []);
+
   const goToGame = (id: number) => {
     setOpen(false);
     inputRef.current?.blur();
@@ -90,7 +112,12 @@ export const SearchBar = () => {
   return (
     <div
       ref={anchorRef}
-      className="w-36 sm:flex-1 sm:max-w-64 nav:max-w-56 2xl:max-w-64"
+      data-kb={kbFocus}
+      className={cn(
+        "w-36 sm:flex-1 sm:max-w-64 nav:max-w-56 2xl:max-w-64",
+        "data-[kb=false]:[&_[data-slot=input-group]:has([data-slot=input-group-control]:focus-visible)]:border-input",
+        "data-[kb=false]:[&_[data-slot=input-group]:has([data-slot=input-group-control]:focus-visible)]:ring-0",
+      )}
     >
       <Autocomplete<Game>
         items={results}
@@ -113,6 +140,8 @@ export const SearchBar = () => {
           placeholder="Search..."
           autoComplete="off"
           aria-label="Search games"
+          onFocus={() => setKbFocus(keyboardRef.current)}
+          onBlur={() => setKbFocus(false)}
           onKeyDown={handleKeyDown}
         >
           <InputGroupAddon>
@@ -127,7 +156,7 @@ export const SearchBar = () => {
           align="start"
           side="bottom"
           sideOffset={8}
-          className="w-(--anchor-width) min-w-60 p-1.5 sm:w-[min(calc(var(--anchor-width)*2),calc(100vw-2rem))]"
+          className="w-(--anchor-width) min-w-60 bg-[#101014]/70 backdrop-blur-xl p-1.5 sm:w-[min(calc(var(--anchor-width)*2),calc(100vw-2rem))]"
         >
           <AutocompleteList>
             {(game: Game, index: number) => (
@@ -136,7 +165,7 @@ export const SearchBar = () => {
                 index={index}
                 value={game}
                 onClick={() => goToGame(game.id)}
-                className="cursor-pointer py-1 pr-2 pl-1 data-highlighted:bg-[#28282C] data-highlighted:text-foreground"
+                className="cursor-pointer p-2 data-highlighted:bg-[#3F3F43] data-highlighted:text-foreground"
               >
                 <SearchGameRow
                   name={game.name}
@@ -152,16 +181,13 @@ export const SearchBar = () => {
             {!loading ? `No results for "${trimmedQuery}"` : null}
           </AutocompleteEmpty>
           {!loading && results.length > 0 && (
-            <button
-              type="button"
-              className="w-full text-left px-3 py-2 mt-1 text-xs text-[#007AFF] hover:bg-[#1A1A1A] active:bg-[#1A1A1A] rounded-md cursor-pointer border-t border-[#2A2A2A]"
-              onClick={() => {
-                router.push(`/search?q=${encodeURIComponent(trimmedQuery)}`);
-                setOpen(false);
-              }}
+            <Link
+              href={`/search?q=${encodeURIComponent(trimmedQuery)}`}
+              onClick={() => setOpen(false)}
+              className="inline-block text-left px-3 py-2 mt-1 text-sm text-[#A1A1A1] rounded-md cursor-pointer hover:text-white hover:underline"
             >
               View all results for &quot;{trimmedQuery}&quot; →
-            </button>
+            </Link>
           )}
         </AutocompleteContent>
       </Autocomplete>
