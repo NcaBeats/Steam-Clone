@@ -1,8 +1,9 @@
 import Link from "next/link";
+import { TicketIcon } from "lucide-react";
 import { requireRole } from "@/actions/admin/guard";
 import { getManageGames } from "@/lib/api/games";
 import { SearchInput } from "@/components/admin/SearchInput";
-import { DeleteGameButton } from "@/components/admin/DeleteGameButton";
+import { GameRowActions } from "@/components/admin/dashboard/game-row-actions";
 import { GameImage } from "@/components/games/GameImage";
 import {
   Table,
@@ -204,10 +205,13 @@ const GamesPage = async ({
                     <Badge
                       className={
                         g.state === "AVAILABLE"
-                          ? "bg-[#28282C] text-[#FAFAFA] border-transparent"
-                          : "bg-[#101014] text-[#8A8A8A] border-transparent"
+                          ? "bg-[#A1CD44]/15 text-[#A1CD44] border-transparent"
+                          : g.state === "COMING_SOON"
+                            ? "bg-[#FCAF17]/15 text-[#FCAF17] border-transparent"
+                            : "bg-[#FF6B6B]/15 text-[#FF6B6B] border-transparent"
                       }
                     >
+                      <TicketIcon />
                       {g.state}
                     </Badge>
                   </TableCell>
@@ -226,14 +230,8 @@ const GamesPage = async ({
                     )}
                   </TableCell>
                   <TableCell className="px-3 text-right">
-                    <div className="flex items-center justify-end gap-3">
-                      <Link
-                        href={`/admin/games/${g.id}`}
-                        className="text-[#007AFF] hover:text-[#1ea4ff] text-sm font-medium"
-                      >
-                        Edit
-                      </Link>
-                      <DeleteGameButton id={g.id} name={g.name} />
+                    <div className="flex items-center justify-end">
+                      <GameRowActions id={g.id} name={g.name} />
                     </div>
                   </TableCell>
                 </TableRow>
