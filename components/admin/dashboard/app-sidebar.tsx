@@ -24,6 +24,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarRail,
 } from "@/components/ui/sidebar";
 import type { DashboardNavItem } from "./nav-main";
 
@@ -33,6 +34,7 @@ const ericaOne = Erica_One({
 });
 
 const ADMIN_ITEMS: DashboardNavItem[] = [
+  { title: "Dashboard", url: "/admin", icon: LayoutDashboardIcon },
   { title: "Products", url: "/admin/games", icon: ShoppingBag },
   { title: "Blogs", url: "/admin/blogs", icon: Newspaper },
   { title: "Orders", url: "/admin/orders", icon: Receipt },
@@ -58,7 +60,7 @@ export function AppSidebar({
   const items = variant === "admin" ? ADMIN_ITEMS : STUDIO_ITEMS;
 
   return (
-    <Sidebar collapsible="offcanvas" variant="inset" {...props}>
+    <Sidebar collapsible="icon" variant="inset" {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -74,15 +76,6 @@ export function AppSidebar({
         <NavMain items={items} />
         <NavSecondary
           items={[
-            ...(variant === "admin"
-              ? [
-                  {
-                    title: "Dashboard",
-                    url: "/admin",
-                    icon: <LayoutDashboardIcon />,
-                  },
-                ]
-              : []),
             {
               title: "Back to site",
               url: "/",
@@ -99,6 +92,7 @@ export function AppSidebar({
             <SidebarMenuItem>
               <SidebarMenuButton
                 render={<button type="submit" />}
+                tooltip="Log out"
                 className="w-full cursor-pointer"
               >
                 <LogOutIcon />
@@ -108,6 +102,7 @@ export function AppSidebar({
           </SidebarMenu>
         </form>
       </SidebarFooter>
+      <SidebarRail />
     </Sidebar>
   );
 }
