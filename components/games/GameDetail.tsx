@@ -300,7 +300,7 @@ export const GameDetail = ({ game, initialInLibrary }: Props) => {
               <div className="flex flex-col gap-2">
                 {game.discountPercent > 0 && (
                   <div className="flex items-center gap-4">
-                    <span className="bg-[#A1CD44] text-black text-sm font-semibold px-2 py-1 rounded-md">
+                    <span className="bg-[#FCAF17] text-black text-sm font-semibold px-2 py-1 rounded-md">
                       -{game.discountPercent}%
                     </span>
                   </div>
@@ -309,9 +309,11 @@ export const GameDetail = ({ game, initialInLibrary }: Props) => {
                   <span className="text-2xl font-bold text-[#FAFAFA]">
                     {formatPrice(game.price)}
                   </span>
-                  <s className="text-sm text-[#8A8A8A] text-decoration-line-through">
-                    {formatPrice(game.originalPrice)}
-                  </s>
+                  {game.discountPercent > 0 && game.price > 0 && (
+                    <s className="text-sm text-[#8A8A8A] text-decoration-line-through">
+                      {formatPrice(game.originalPrice)}
+                    </s>
+                  )}
                 </div>
               </div>
 

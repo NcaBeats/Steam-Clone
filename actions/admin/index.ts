@@ -62,6 +62,7 @@ function compactMedia(media: GameMediaUrls): Record<string, unknown> {
 }
 
 function readRawUserProfile(formData: FormData) {
+  const comunaRaw = formData.get("comunaId")?.toString();
   return {
     email: formData.get("email")?.toString(),
     password: formData.get("password")?.toString(),
@@ -69,8 +70,7 @@ function readRawUserProfile(formData: FormData) {
     firstName: formData.get("firstName")?.toString(),
     lastName: formData.get("lastName")?.toString(),
     birthDate: formData.get("birthDate")?.toString(),
-    region: formData.get("region")?.toString(),
-    comuna: formData.get("comuna")?.toString(),
+    comunaId: comunaRaw && comunaRaw !== "" ? Number(comunaRaw) : undefined,
     address: formData.get("address")?.toString(),
   };
 }
@@ -112,8 +112,7 @@ export async function createUserAction(
           lastName: input.lastName,
           run: input.run,
           birthDate: input.birthDate ?? null,
-          region: input.region ?? null,
-          comuna: input.comuna ?? null,
+          comunaId: input.comunaId ?? null,
           address: input.address,
         },
         auth: true,
@@ -138,8 +137,7 @@ export async function createUserFromFormAction(
     firstName: parsed.data.firstName,
     lastName: parsed.data.lastName,
     birthDate: parsed.data.birthDate || null,
-    region: parsed.data.region || null,
-    comuna: parsed.data.comuna || null,
+    comunaId: parsed.data.comunaId ?? null,
     address: parsed.data.address,
   });
   if (!created.ok || !created.user) {

@@ -32,7 +32,6 @@ export const AdminUserCreateSchema = z.object({
     .min(1, "Last name is required")
     .max(100, "Last name cannot exceed 100 characters"),
   birthDate: z.string().optional(),
-  region: z.string().optional(),
-  comuna: z.string().optional(),
+  comunaId: z.number().int().positive().optional(),
   address: z.string().trim().max(300, "Address cannot exceed 300 characters"),
 });

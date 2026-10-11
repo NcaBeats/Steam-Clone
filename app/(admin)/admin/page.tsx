@@ -1,5 +1,11 @@
 import { getAdminUsers, getGameStats } from "@/lib/api/games";
-import { LayoutDashboard, Users, ShoppingBag, DollarSign } from "lucide-react";
+import {
+  LayoutDashboard,
+  Plus,
+  Users,
+  ShoppingBag,
+  DollarSign,
+} from "lucide-react";
 import Link from "next/link";
 import { requireRole } from "@/actions/admin/guard";
 
@@ -92,15 +98,17 @@ const AdminHomePage = async () => {
         <div className="flex flex-col gap-2">
           <Link
             href="/admin/users/new"
-            className="text-foreground hover:underline text-sm"
+            className="inline-flex items-center gap-1.5 text-foreground hover:underline text-sm"
           >
-            + Create new user
+            <Plus size={14} />
+            Create new user
           </Link>
           <Link
             href="/admin/games/new"
-            className="text-foreground hover:underline text-sm"
+            className="inline-flex items-center gap-1.5 text-foreground hover:underline text-sm"
           >
-            + Create new product
+            <Plus size={14} />
+            Create new product
           </Link>
           <Link
             href="/admin/users"

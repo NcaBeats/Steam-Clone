@@ -9,7 +9,9 @@ export type Profile = {
   firstName: string;
   lastName: string;
   birthDate: string | null;
+  regionId: number | null;
   region: string | null;
+  comunaId: number | null;
   comuna: string | null;
   address: string;
   createdAt: string;

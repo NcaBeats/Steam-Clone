@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
+import { format } from "date-fns";
 import { Input, Textarea } from "@/components/ui";
 import { Checkbox } from "@/components/ui/checkbox";
 import { FileDropzone, SpecsEditor } from "@/components/inputs";
@@ -14,6 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useAlert } from "@/components/feedback";
+import { DatePickerField } from "@/components/admin/DatePickerField";
 import {
   createGameWithUrlsAction,
   presignGameImageAction,
@@ -43,6 +45,7 @@ export function NewGameForm({
   const [minimumSpecs, setMinimumSpecs] = useState("");
   const [recommendedSpecs, setRecommendedSpecs] = useState("");
   const [state, setState] = useState<GameState>("AVAILABLE");
+  const [launchDate, setLaunchDate] = useState<Date | undefined>(undefined);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
   const busy = pending || uploading !== null;
@@ -63,6 +66,10 @@ export function NewGameForm({
     formData.set("minimumSpecs", minimumSpecs);
     formData.set("recommendedSpecs", recommendedSpecs);
     formData.set("state", state);
+    formData.set(
+      "launchDate",
+      launchDate ? format(launchDate, "yyyy-MM-dd") : "",
+    );
 
     const parsed = GameMetadataSchema.safeParse({
       name: formData.get("name"),
@@ -150,6 +157,7 @@ export function NewGameForm({
           minLength={1}
           maxLength={50}
           placeholder="Game title"
+          className="border-0"
         />
       </div>
       <div className="grid grid-cols-2 gap-3">
@@ -165,6 +173,7 @@ export function NewGameForm({
             min="0"
             required
             placeholder="29.99"
+            className="border-0"
           />
         </div>
 
@@ -179,6 +188,7 @@ export function NewGameForm({
             min="0"
             max="100"
             placeholder="0"
+            className="border-0"
           />
         </div>
       </div>
@@ -192,6 +202,7 @@ export function NewGameForm({
           required
           rows={4}
           placeholder="Game description..."
+          className="border-0"
         />
       </div>
       <div className="grid grid-cols-2 gap-3">
@@ -203,7 +214,7 @@ export function NewGameForm({
             value={state}
             onValueChange={(value) => setState(value as GameState)}
           >
-            <SelectTrigger id="state" className="w-full" size="lg">
+            <SelectTrigger id="state" className="w-full border-0" size="lg">
               <SelectValue placeholder="Select a state" />
             </SelectTrigger>
             <SelectContent>
@@ -218,7 +229,11 @@ export function NewGameForm({
           <label htmlFor="launchDate" className={labelCls}>
             Launch date
           </label>
-          <Input id="launchDate" name="launchDate" type="date" required />
+          <DatePickerField
+            label="Launch date"
+            value={launchDate}
+            onChange={setLaunchDate}
+          />
         </div>
       </div>
 

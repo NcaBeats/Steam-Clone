@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { Asterisk } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import { Slot } from "@radix-ui/react-slot";
@@ -75,8 +76,10 @@ function FormItem({ className, ...props }: React.ComponentProps<"div">) {
 
 function FormLabel({
   className,
+  required,
+  children,
   ...props
-}: React.ComponentProps<typeof Label>) {
+}: React.ComponentProps<typeof Label> & { required?: boolean }) {
   const { error, formItemId } = useFormField();
 
   return (
@@ -86,7 +89,15 @@ function FormLabel({
       className={cn("data-[error=true]:text-destructive", className)}
       htmlFor={formItemId}
       {...props}
-    />
+    >
+      {children}
+      {required && (
+        <Asterisk
+          className="text-destructive ml-1 size-3.5"
+          aria-hidden="true"
+        />
+      )}
+    </Label>
   );
 }
 

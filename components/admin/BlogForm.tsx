@@ -143,6 +143,7 @@ export function BlogForm({ blog, redirectTo = "/admin/blogs" }: Props) {
                     type="text"
                     maxLength={200}
                     placeholder="Blog title"
+                    className="border-0"
                   />
                 </FormControl>
                 <FormMessage className="text-left" />
@@ -162,6 +163,7 @@ export function BlogForm({ blog, redirectTo = "/admin/blogs" }: Props) {
                     rows={3}
                     maxLength={500}
                     placeholder="Short summary..."
+                    className="border-0"
                   />
                 </FormControl>
                 <FormMessage className="text-left" />
@@ -180,6 +182,7 @@ export function BlogForm({ blog, redirectTo = "/admin/blogs" }: Props) {
                     {...field}
                     rows={10}
                     placeholder="Full article..."
+                    className="border-0"
                   />
                 </FormControl>
                 <FormMessage className="text-left" />
@@ -198,7 +201,7 @@ export function BlogForm({ blog, redirectTo = "/admin/blogs" }: Props) {
                   onValueChange={(value) => field.onChange(value || null)}
                 >
                   <FormControl>
-                    <SelectTrigger className="w-full" size="lg">
+                    <SelectTrigger className="w-full border-0" size="lg">
                       <SelectValue placeholder="No category" />
                     </SelectTrigger>
                   </FormControl>

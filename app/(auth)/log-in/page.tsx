@@ -1,7 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import { AuthLayout } from "../AuthLayout";
 import { loginAction } from "@/actions";
+import { PasswordInput } from "@/components/auth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -19,6 +21,7 @@ import { Button } from "@/components/ui/button";
 import z from "zod";
 
 export default function LogIn() {
+  const [showPassword, setShowPassword] = useState(false);
   const form = useForm({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
@@ -75,11 +78,13 @@ export default function LogIn() {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input
-                        type="password"
-                        {...field}
+                      <PasswordInput
+                        field={field}
                         placeholder="••••••••"
-                        className="border-0"
+                        inputClassName="border-0"
+                        required={false}
+                        show={showPassword}
+                        onToggle={() => setShowPassword(!showPassword)}
                       />
                     </FormControl>
                     <FormMessage className="text-left" />
@@ -90,7 +95,7 @@ export default function LogIn() {
               <Button
                 type="submit"
                 className={
-                  "bg-[#FCAF17] hover:bg-[#fcc456] font-semibold text-black  py-5"
+                  "bg-[#007AFF] hover:bg-[#1ea4ff] font-semibold text-white py-5"
                 }
                 size={"lg"}
               >
@@ -101,7 +106,7 @@ export default function LogIn() {
                 {"Don't have an account?"}
                 <span>
                   <a
-                    className="text-white hover:text-[#007AFF] hover:underline active:underline active:text-[#007AFF]"
+                    className="text-white hover:text-[#1ea4ff] hover:underline active:underline active:text-[#1ea4ff]"
                     href="/sign-up"
                   >
                     Sign up

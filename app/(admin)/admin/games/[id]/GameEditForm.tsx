@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { format } from "date-fns";
 import { Input, Textarea } from "@/components/ui";
 import { useAlert } from "@/components/feedback";
 import { FileDropzone, SpecsEditor } from "@/components/inputs";
+import { DatePickerField } from "@/components/admin/DatePickerField";
 import {
   Select,
   SelectContent,
@@ -28,6 +30,13 @@ type Props = Readonly<{
   categories: Category[];
   redirectTo?: string;
 }>;
+
+// Parsea "yyyy-MM-dd" en hora local (evita el desfase UTC de `new Date(str)`).
+const parseLocalDate = (raw: string): Date | null => {
+  const [y, m, d] = raw.split("-").map(Number);
+  if (!y || !m || !d) return null;
+  return new Date(y, m - 1, d);
+};
 
 export function GameEditForm({
   game,
@@ -174,6 +183,7 @@ export function GameEditForm({
             maxLength={50}
             value={name}
             onChange={(e) => setName(e.target.value)}
+            className="border-0"
           />
         </div>
         <div className="flex flex-col gap-1">
@@ -189,6 +199,7 @@ export function GameEditForm({
             required
             value={originalPrice}
             onChange={(e) => setOriginalPrice(Number(e.target.value))}
+            className="border-0"
           />
         </div>
         <div className="flex flex-col gap-1">
@@ -204,6 +215,7 @@ export function GameEditForm({
             placeholder="0"
             value={discountPercent}
             onChange={(e) => setDiscountPercent(e.target.value)}
+            className="border-0"
           />
         </div>
         <div className="flex flex-col gap-1">
@@ -214,7 +226,7 @@ export function GameEditForm({
             value={state}
             onValueChange={(value) => setState(value as GameState)}
           >
-            <SelectTrigger id="state" className="w-full" size="lg">
+            <SelectTrigger id="state" className="w-full border-0" size="lg">
               <SelectValue placeholder="Select a state" />
             </SelectTrigger>
             <SelectContent>
@@ -228,13 +240,12 @@ export function GameEditForm({
           <label htmlFor="launchDate" className={labelCls}>
             Launch date
           </label>
-          <Input
-            id="launchDate"
-            name="launchDate"
-            type="date"
-            required
-            value={launchDate}
-            onChange={(e) => setLaunchDate(e.target.value)}
+          <DatePickerField
+            label="Launch date"
+            value={parseLocalDate(launchDate)}
+            onChange={(date) =>
+              setLaunchDate(date ? format(date, "yyyy-MM-dd") : "")
+            }
           />
         </div>
         <div className="flex flex-col gap-1">
@@ -256,6 +267,7 @@ export function GameEditForm({
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           rows={5}
+          className="border-0"
         />
       </div>
 

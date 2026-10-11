@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Plus } from "lucide-react";
 import { requireRole } from "@/actions/admin/guard";
 import { getAdminBlogs } from "@/lib/api/blogs";
 import { SearchInput } from "@/components/admin/SearchInput";
@@ -46,9 +47,10 @@ const BlogsPage = async ({
         </div>
         <Link
           href="/admin/blogs/new"
-          className="bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-semibold px-4 py-2 rounded-full transition-colors"
+          className="inline-flex items-center gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-semibold px-4 py-2 rounded-full transition-colors"
         >
-          + Nuevo blog
+          <Plus size={16} />
+          Nuevo blog
         </Link>
       </header>
 

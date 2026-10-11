@@ -1,4 +1,10 @@
-export type RegionData = {
+export type Region = {
+  id: number;
   nombre: string;
-  comunas: string[];
+};
+
+export type Comuna = {
+  id: number;
+  nombre: string;
+  regionId: number;
 };

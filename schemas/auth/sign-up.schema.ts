@@ -1,6 +1,5 @@
 import * as z from "zod";
 import { validate, clean } from "rut.js";
-import type { RegionData } from "@/types";
 import { passwordSchema } from "@/schemas/password.schema";
 
 const domains = new Set(["duoc.cl", "profesor.duoc.cl", "gmail.com"]);
@@ -17,9 +16,17 @@ const run = z
       .refine((val) => validate(val), { message: "RUN is not valid" }),
   );
 
-const name = z.string().max(50, "Maximun of 50 characters");
+const name = z
+  .string()
+  .trim()
+  .min(1, "First name is required")
+  .max(50, "Maximun of 50 characters");
 
-const lastName = z.string().max(50, "Maximun of 50 characters");
+const lastName = z
+  .string()
+  .trim()
+  .min(1, "Last name is required")
+  .max(50, "Maximun of 50 characters");
 
 const email = z
   .string()
@@ -48,9 +55,9 @@ const birthdate = z
   })
   .optional();
 
-const region = z.string().min(1, "Select a region");
-
-const comuna = z.string().min(1, "Select a municipality");
+const comunaId = z.number({ error: "Select a municipality" }).int().positive({
+  error: "Select a municipality",
+});
 
 const direccion = z
   .string()
@@ -61,35 +68,21 @@ const password = passwordSchema;
 
 const confirmPassword = z.string();
 
-export const createSignUpSchema = (regiones: RegionData[]) => {
-  return z
-    .object({
-      run: run,
-      name: name,
-      lastName: lastName,
-      email: email,
-      birthdate: birthdate,
-      region: region.refine((val) => regiones.some((r) => r.nombre === val), {
-        message: "Invalid region",
-      }),
-      comuna: comuna,
-      direccion: direccion,
-      password: password,
-      confirmPassword: confirmPassword,
-    })
-    .refine(
-      (data) => {
-        const regionData = regiones.find((r) => r.nombre === data.region);
-        if (!regionData) return false;
-        return regionData.comunas.includes(data.comuna);
-      },
-      {
-        message: "Invalid municipality for the selected region",
-        path: ["comuna"],
-      },
-    )
-    .refine((data) => data.password === data.confirmPassword, {
-      message: "Passwords do not match",
-      path: ["password"],
-    });
-};
+export const signUpSchema = z
+  .object({
+    run: run,
+    name: name,
+    lastName: lastName,
+    email: email,
+    birthdate: birthdate,
+    comunaId: comunaId,
+    direccion: direccion,
+    password: password,
+    confirmPassword: confirmPassword,
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["password"],
+  });
+
+export type SignUpInput = z.infer<typeof signUpSchema>;

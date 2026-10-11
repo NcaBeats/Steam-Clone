@@ -18,6 +18,16 @@ vi.mock("@/actions/admin", () => ({
   createUserFromFormAction: vi.fn(),
 }));
 
+vi.mock("@/lib/api/regions", () => ({
+  getRegionsClient: vi
+    .fn()
+    .mockResolvedValue([{ id: 7, nombre: "Metropolitana de Santiago" }]),
+  getComunasClient: vi.fn().mockResolvedValue([
+    { id: 1, nombre: "Santiago", regionId: 7 },
+    { id: 2, nombre: "Puente Alto", regionId: 7 },
+  ]),
+}));
+
 const mockedCreate = vi.mocked(createUserFromFormAction);
 
 const fillText = (placeholder: RegExp | string, value: string) => {
@@ -86,7 +96,7 @@ describe("NewUserForm", () => {
     expect(mockedCreate).not.toHaveBeenCalled();
   });
 
-  test("región estilo register guarda la clave enum", async () => {
+  test("región/comuna del catálogo guarda el comunaId", async () => {
     mockedCreate.mockResolvedValue({ ok: true });
     const user = userEvent.setup();
     const { container } = render(<NewUserForm />);
@@ -102,15 +112,16 @@ describe("NewUserForm", () => {
     await user.click(regionInput);
     await user.keyboard("Metro");
     fireEvent.click(await screen.findByText("Metropolitana de Santiago"));
-    expect(
-      screen.getByPlaceholderText("Select a municipality"),
-    ).toBeInTheDocument();
+
+    const comunaInput = screen.getByPlaceholderText("Select a municipality");
+    await user.click(comunaInput);
+    fireEvent.click(await screen.findByText("Puente Alto"));
 
     await submit();
     const formData = mockedCreate.mock.calls[0][0] as FormData;
     expect(formData.get("email")).toBe("user@gmail.com");
     expect(formData.get("run")).toBe("111111111");
-    expect(formData.get("region")).toBe("METROPOLITANA_DE_SANTIAGO");
+    expect(formData.get("comunaId")).toBe("2");
     expect(push).toHaveBeenCalledWith("/admin/users");
   });
 });

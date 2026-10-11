@@ -27,7 +27,7 @@ export function DatePickerField({ label, value, onChange }: Props) {
             variant="outline"
             aria-label={label}
             className={cn(
-              "w-full justify-start text-left font-normal h-10",
+              "w-full justify-start text-left font-normal h-10 py-1 border-0",
               !value && "text-muted-foreground",
             )}
           />

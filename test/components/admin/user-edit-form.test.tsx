@@ -21,6 +21,11 @@ vi.mock("@/actions/admin", () => ({
   updateUserProfileAction: vi.fn(),
 }));
 
+vi.mock("@/lib/api/regions", () => ({
+  getRegionsClient: vi.fn().mockResolvedValue([]),
+  getComunasClient: vi.fn().mockResolvedValue([]),
+}));
+
 vi.mock("@/components/feedback", () => ({
   AlertProvider: ({ children }: { children: React.ReactNode }) => (
     <>{children}</>
@@ -45,7 +50,9 @@ const user: AdminUser = {
     firstName: "Nico",
     lastName: "Carvajal",
     birthDate: null,
+    regionId: null,
     region: null,
+    comunaId: null,
     comuna: null,
     address: "Calle 123",
     createdAt: "2026-01-01T00:00:00Z",
@@ -92,8 +99,7 @@ describe("UserEditForm", () => {
         nickname: "nick",
         firstName: "Nico",
         birthDate: null,
-        region: null,
-        comuna: null,
+        comunaId: null,
       }),
     );
     expect(push).toHaveBeenCalledWith("/admin/users");
@@ -104,7 +110,7 @@ describe("UserEditForm", () => {
     mockedUpdateProfile.mockResolvedValue({ ok: true });
     const user = userEvent.setup();
     renderForm();
-    await user.click(screen.getByLabelText("Role"));
+    await user.click(screen.getByLabelText(/Role/));
     await user.click(await screen.findByRole("option", { name: "VENDEDOR" }));
     fireEvent.click(screen.getByRole("button", { name: "Save changes" }));
     expect(await screen.findByText("Save changes")).toBeInTheDocument();

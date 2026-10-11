@@ -73,7 +73,7 @@ export const CartList = ({ isLoggedIn }: Props) => {
             <CartItem key={item.id} item={item} onRemove={handleRemove} />
           ))}
         </div>
-        <div className="bg-[#1A1A1A] rounded-lg p-4 flex flex-col gap-3 w-full lg:w-80 xl:w-96 shrink-0 self-start">
+        <div className="rounded-lg p-4 flex flex-col gap-3 w-full lg:w-80 xl:w-96 shrink-0 self-start">
           <h2 className="text-lg font-bold text-[#FAFAFA]">Order Summary</h2>
           <div className="flex justify-between text-sm text-[#C0C0C0]">
             <span>Subtotal ({items.length} items)</span>

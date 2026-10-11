@@ -6,10 +6,7 @@ import * as z from "zod";
 
 import { fetchAPI } from "@/lib/api/fetch";
 import type { AuthToken } from "@/types";
-import { createSignUpSchema } from "@/schemas/auth/sign-up.schema";
-import regiones from "@/data/regiones.json";
-
-const signUpSchema = createSignUpSchema(regiones);
+import { signUpSchema } from "@/schemas/auth/sign-up.schema";
 
 export async function signUpAction(values: z.infer<typeof signUpSchema>) {
   const result = signUpSchema.safeParse(values);
@@ -28,8 +25,7 @@ export async function signUpAction(values: z.infer<typeof signUpSchema>) {
     email,
     password,
     birthdate,
-    region,
-    comuna,
+    comunaId,
     direccion,
   } = result.data;
 
@@ -45,8 +41,7 @@ export async function signUpAction(values: z.infer<typeof signUpSchema>) {
 
         birthDate: birthdate ? format(birthdate, "yyyy-MM-dd") : undefined,
 
-        region,
-        comuna,
+        comunaId,
         address: direccion,
       },
     });

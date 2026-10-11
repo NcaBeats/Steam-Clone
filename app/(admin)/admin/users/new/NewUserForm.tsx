@@ -23,6 +23,7 @@ import { PasswordInput } from "@/components/auth";
 import { createUserFromFormAction } from "@/actions/admin";
 import { AdminUserCreateSchema } from "@/schemas/admin/user.schema";
 import { DatePickerField } from "@/components/admin/DatePickerField";
+import { Label } from "@/components/ui/label";
 import {
   Combobox,
   ComboboxContent,
@@ -31,11 +32,7 @@ import {
   ComboboxItem,
   ComboboxList,
 } from "@/components/ui/combobox";
-import {
-  REGION_OPTIONS,
-  getComunasByRegion,
-  type Region,
-} from "@/components/admin/LocationSelects";
+import { useComunas, useRegions } from "@/hooks/use-location";
 
 const NewUserFormSchema = AdminUserCreateSchema.extend({
   address: z
@@ -61,6 +58,8 @@ export function NewUserForm() {
 
   const form = useForm<NewUserFormValues>({
     resolver: zodResolver(NewUserFormSchema),
+    mode: "onBlur",
+    reValidateMode: "onChange",
     defaultValues: {
       email: "",
       password: "",
@@ -69,14 +68,18 @@ export function NewUserForm() {
       firstName: "",
       lastName: "",
       birthDate: null,
-      region: "",
-      comuna: "",
+      comunaId: undefined,
       address: "",
     },
   });
 
-  const regionValue = form.watch("region") as Region | "";
-  const comunas = getComunasByRegion(regionValue);
+  const [regionId, setRegionId] = useState<number | null>(null);
+  const { regions, loading: regionsLoading } = useRegions();
+  const { comunas } = useComunas(regionId);
+  const selectedRegion = regions.find((region) => region.id === regionId);
+  const selectedComuna = comunas.find(
+    (comuna) => comuna.id === form.watch("comunaId"),
+  );
 
   const onSubmit = (values: NewUserFormValues) => {
     const formData = new FormData();
@@ -90,8 +93,7 @@ export function NewUserForm() {
       "birthDate",
       values.birthDate ? format(values.birthDate, "yyyy-MM-dd") : "",
     );
-    formData.set("region", values.region ?? "");
-    formData.set("comuna", values.comuna ?? "");
+    formData.set("comunaId", values.comunaId ? String(values.comunaId) : "");
     formData.set("address", values.address);
 
     setServerError(null);
@@ -133,13 +135,14 @@ export function NewUserForm() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel required>Email</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
                         type="email"
                         maxLength={100}
                         placeholder="user@gmail.com"
+                        className="border-0"
                       />
                     </FormControl>
                     <FormMessage className="text-left" />
@@ -151,11 +154,12 @@ export function NewUserForm() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel required>Password</FormLabel>
                     <FormControl>
                       <PasswordInput
                         field={field}
                         placeholder="4-10 characters"
+                        inputClassName="border-0"
                         show={showPassword}
                         onToggle={() => setShowPassword(!showPassword)}
                       />
@@ -169,11 +173,12 @@ export function NewUserForm() {
                 name="confirmPassword"
                 render={({ field }) => (
                   <FormItem className="sm:col-span-2">
-                    <FormLabel>Confirm password</FormLabel>
+                    <FormLabel required>Confirm password</FormLabel>
                     <FormControl>
                       <PasswordInput
                         field={field}
                         placeholder="Repeat password"
+                        inputClassName="border-0"
                         show={showConfirmPassword}
                         onToggle={() =>
                           setShowConfirmPassword(!showConfirmPassword)
@@ -199,13 +204,14 @@ export function NewUserForm() {
                 name="run"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>RUN</FormLabel>
+                    <FormLabel required>RUN</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
                         type="text"
                         maxLength={13}
                         placeholder="12.345.678-9"
+                        className="border-0"
                       />
                     </FormControl>
                     <FormMessage className="text-left" />
@@ -217,9 +223,14 @@ export function NewUserForm() {
                 name="firstName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>First name</FormLabel>
+                    <FormLabel required>First name</FormLabel>
                     <FormControl>
-                      <Input {...field} type="text" maxLength={50} />
+                      <Input
+                        {...field}
+                        type="text"
+                        maxLength={50}
+                        className="border-0"
+                      />
                     </FormControl>
                     <FormMessage className="text-left" />
                   </FormItem>
@@ -230,9 +241,14 @@ export function NewUserForm() {
                 name="lastName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Last name</FormLabel>
+                    <FormLabel required>Last name</FormLabel>
                     <FormControl>
-                      <Input {...field} type="text" maxLength={100} />
+                      <Input
+                        {...field}
+                        type="text"
+                        maxLength={100}
+                        className="border-0"
+                      />
                     </FormControl>
                     <FormMessage className="text-left" />
                   </FormItem>
@@ -255,65 +271,56 @@ export function NewUserForm() {
                   </FormItem>
                 )}
               />
+              <FormItem>
+                <Label>Region</Label>
+                <Combobox
+                  items={regions.map((region) => region.nombre)}
+                  value={selectedRegion?.nombre ?? null}
+                  onValueChange={(nombre) => {
+                    const region = regions.find((r) => r.nombre === nombre);
+                    setRegionId(region ? region.id : null);
+                    form.setValue("comunaId", undefined);
+                  }}
+                  disabled={regionsLoading}
+                >
+                  <ComboboxInput
+                    placeholder="Select a region"
+                    className="w-full border-0 h-10"
+                  />
+                  <ComboboxContent>
+                    <ComboboxEmpty>No region found.</ComboboxEmpty>
+                    <ComboboxList>
+                      {(item: string) => (
+                        <ComboboxItem key={item} value={item}>
+                          {item}
+                        </ComboboxItem>
+                      )}
+                    </ComboboxList>
+                  </ComboboxContent>
+                </Combobox>
+                <p className="min-h-5 text-sm" aria-hidden="true">
+                  {"\u00A0"}
+                </p>
+              </FormItem>
               <FormField
                 control={form.control}
-                name="region"
-                render={({ field }) => {
-                  const selectedLabel =
-                    REGION_OPTIONS.find((option) => option.key === field.value)
-                      ?.label ?? null;
-                  return (
-                    <FormItem>
-                      <FormLabel>Region</FormLabel>
-                      <Combobox
-                        items={REGION_OPTIONS.map((option) => option.label)}
-                        value={selectedLabel}
-                        onValueChange={(label) => {
-                          const option = REGION_OPTIONS.find(
-                            (o) => o.label === label,
-                          );
-                          field.onChange(option ? option.key : "");
-                          form.setValue("comuna", "");
-                        }}
-                      >
-                        <FormControl>
-                          <ComboboxInput
-                            placeholder="Select a region"
-                            className="w-full border-0 h-10"
-                          />
-                        </FormControl>
-                        <ComboboxContent>
-                          <ComboboxEmpty>No region found.</ComboboxEmpty>
-                          <ComboboxList>
-                            {(item: string) => (
-                              <ComboboxItem key={item} value={item}>
-                                {item}
-                              </ComboboxItem>
-                            )}
-                          </ComboboxList>
-                        </ComboboxContent>
-                      </Combobox>
-                      <FormMessage className="text-left" />
-                    </FormItem>
-                  );
-                }}
-              />
-              <FormField
-                control={form.control}
-                name="comuna"
+                name="comunaId"
                 render={({ field }) => (
                   <FormItem className="min-w-0">
                     <FormLabel>Municipality</FormLabel>
                     <Combobox
-                      items={comunas}
-                      value={field.value}
-                      onValueChange={field.onChange}
-                      disabled={!regionValue}
+                      items={comunas.map((comuna) => comuna.nombre)}
+                      value={selectedComuna?.nombre ?? null}
+                      onValueChange={(nombre) => {
+                        const comuna = comunas.find((c) => c.nombre === nombre);
+                        field.onChange(comuna ? comuna.id : undefined);
+                      }}
+                      disabled={!selectedRegion}
                     >
                       <FormControl>
                         <ComboboxInput
                           placeholder="Select a municipality"
-                          className="w-full min-w-0 border-0 h-10"
+                          className="w-full min-w-0 border-0 h-10 py-1"
                         />
                       </FormControl>
                       <ComboboxContent>
@@ -336,9 +343,14 @@ export function NewUserForm() {
                 name="address"
                 render={({ field }) => (
                   <FormItem className="sm:col-span-2">
-                    <FormLabel>Address</FormLabel>
+                    <FormLabel required>Address</FormLabel>
                     <FormControl>
-                      <Input {...field} type="text" maxLength={300} />
+                      <Input
+                        {...field}
+                        type="text"
+                        maxLength={300}
+                        className="border-0"
+                      />
                     </FormControl>
                     <FormMessage className="text-left" />
                   </FormItem>

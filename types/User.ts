@@ -22,7 +22,6 @@ export type UserCreateInput = {
   lastName?: string;
   run?: string;
   birthDate?: string | null;
-  region?: string | null;
-  comuna?: string | null;
+  comunaId?: number | null;
   address?: string;
 };

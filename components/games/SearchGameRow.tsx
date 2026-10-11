@@ -34,7 +34,7 @@ export const SearchGameRow = ({
         <p className="truncate text-sm font-medium">{name}</p>
         <p className="flex min-w-0 items-center gap-1.5 text-xs font-semibold">
           {hasDiscount && (
-            <span className="shrink-0 rounded bg-[#A1CD44] p-1 leading-none text-black">
+            <span className="shrink-0 rounded bg-[#FCAF17] p-1 leading-none text-black">
               -{discountPercent}%
             </span>
           )}

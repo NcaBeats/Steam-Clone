@@ -3,15 +3,15 @@
 import { useState } from "react";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import { CalendarIcon } from "lucide-react";
+import { Asterisk, CalendarIcon } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import z from "zod";
 
 import { AuthLayout } from "../AuthLayout";
 import { signUpAction } from "@/actions";
-import { createSignUpSchema } from "@/schemas";
-import regiones from "@/data/regiones.json";
+import { signUpSchema } from "@/schemas/auth/sign-up.schema";
+import { useComunas, useRegions } from "@/hooks/use-location";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -44,17 +44,24 @@ import {
 
 import { Calendar } from "@/components/ui/calendar";
 import { FieldGroup } from "@/components/ui/field";
+import { Label } from "@/components/ui/label";
+import { PasswordInput } from "@/components/auth";
 import { cn } from "@/lib/utils";
-
-const signUpSchema = createSignUpSchema(regiones);
 
 type SignUpForm = z.infer<typeof signUpSchema>;
 
 export default function SignUp() {
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [regionId, setRegionId] = useState<number | null>(null);
+  const { regions, loading: regionsLoading } = useRegions();
+  const { comunas } = useComunas(regionId);
 
   const form = useForm<SignUpForm>({
     resolver: zodResolver(signUpSchema),
+    mode: "onBlur",
+    reValidateMode: "onChange",
     defaultValues: {
       run: "",
       name: "",
@@ -63,8 +70,7 @@ export default function SignUp() {
       password: "",
       confirmPassword: "",
       birthdate: undefined,
-      region: "",
-      comuna: "",
+      comunaId: 0,
       direccion: "",
     },
   });
@@ -83,8 +89,9 @@ export default function SignUp() {
     }
   };
 
-  const selectedRegion = regiones.find(
-    (region) => region.nombre === form.watch("region"),
+  const selectedRegion = regions.find((region) => region.id === regionId);
+  const selectedComuna = comunas.find(
+    (comuna) => comuna.id === form.watch("comunaId"),
   );
 
   return (
@@ -110,7 +117,7 @@ export default function SignUp() {
                     control={form.control}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>First name</FormLabel>
+                        <FormLabel required>First name</FormLabel>
 
                         <FormControl>
                           <Input
@@ -130,7 +137,7 @@ export default function SignUp() {
                     control={form.control}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Last name</FormLabel>
+                        <FormLabel required>Last name</FormLabel>
 
                         <FormControl>
                           <Input
@@ -152,7 +159,7 @@ export default function SignUp() {
                     control={form.control}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>RUN</FormLabel>
+                        <FormLabel required>RUN</FormLabel>
 
                         <FormControl>
                           <Input
@@ -224,7 +231,7 @@ export default function SignUp() {
                     control={form.control}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Email</FormLabel>
+                        <FormLabel required>Email</FormLabel>
 
                         <FormControl>
                           <Input
@@ -245,7 +252,7 @@ export default function SignUp() {
                     control={form.control}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Address</FormLabel>
+                        <FormLabel required>Address</FormLabel>
 
                         <FormControl>
                           <Input
@@ -265,69 +272,69 @@ export default function SignUp() {
               {/* Location */}
               <FieldGroup>
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <FormField
-                    name="region"
-                    control={form.control}
-                    render={({ field }) => {
-                      const regionNames = regiones.map(
-                        (region) => region.nombre,
-                      );
+                  <FormItem>
+                    <Label>
+                      Region
+                      <Asterisk
+                        className="text-destructive ml-1 size-3.5"
+                        aria-hidden="true"
+                      />
+                    </Label>
 
-                      return (
-                        <FormItem>
-                          <FormLabel>Region</FormLabel>
+                    <Combobox
+                      items={regions.map((region) => region.nombre)}
+                      value={selectedRegion?.nombre ?? null}
+                      onValueChange={(nombre) => {
+                        const region = regions.find((r) => r.nombre === nombre);
+                        setRegionId(region ? region.id : null);
+                        form.setValue("comunaId", 0);
+                      }}
+                      disabled={regionsLoading}
+                    >
+                      <ComboboxInput
+                        placeholder="Select a region"
+                        className="w-full border-0 h-10"
+                      />
 
-                          <Combobox
-                            items={regionNames}
-                            value={field.value}
-                            onValueChange={(value) => {
-                              field.onChange(value);
-                              form.setValue("comuna", "");
-                            }}
-                          >
-                            <FormControl>
-                              <ComboboxInput
-                                placeholder="Select a region"
-                                className="w-full border-0 h-10"
-                              />
-                            </FormControl>
+                      <ComboboxContent>
+                        <ComboboxEmpty>No region found.</ComboboxEmpty>
 
-                            <ComboboxContent>
-                              <ComboboxEmpty>No region found.</ComboboxEmpty>
-
-                              <ComboboxList>
-                                {(item) => (
-                                  <ComboboxItem key={item} value={item}>
-                                    {item}
-                                  </ComboboxItem>
-                                )}
-                              </ComboboxList>
-                            </ComboboxContent>
-                          </Combobox>
-
-                          <FormMessage className="text-left" />
-                        </FormItem>
-                      );
-                    }}
-                  />
+                        <ComboboxList>
+                          {(item) => (
+                            <ComboboxItem key={item} value={item}>
+                              {item}
+                            </ComboboxItem>
+                          )}
+                        </ComboboxList>
+                      </ComboboxContent>
+                    </Combobox>
+                    <p className="min-h-5 text-sm" aria-hidden="true">
+                      {"\u00A0"}
+                    </p>
+                  </FormItem>
 
                   <FormField
-                    name="comuna"
+                    name="comunaId"
                     control={form.control}
                     render={({ field }) => (
                       <FormItem className="min-w-0">
-                        <FormLabel>Municipality</FormLabel>
+                        <FormLabel required>Municipality</FormLabel>
 
                         <Combobox
-                          items={selectedRegion?.comunas ?? []}
-                          value={field.value}
-                          onValueChange={field.onChange}
+                          items={comunas.map((comuna) => comuna.nombre)}
+                          value={selectedComuna?.nombre ?? null}
+                          onValueChange={(nombre) => {
+                            const comuna = comunas.find(
+                              (c) => c.nombre === nombre,
+                            );
+                            field.onChange(comuna ? comuna.id : 0);
+                          }}
                           disabled={!selectedRegion}
                         >
                           <FormControl>
                             <ComboboxInput
                               placeholder="Select a municipality"
-                              className="w-full min-w-0 border-0 h-10"
+                              className="w-full min-w-0 border-0 h-10 py-1"
                             />
                           </FormControl>
 
@@ -361,14 +368,16 @@ export default function SignUp() {
                     control={form.control}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Password</FormLabel>
+                        <FormLabel required>Password</FormLabel>
 
                         <FormControl>
-                          <Input
-                            type="password"
-                            {...field}
+                          <PasswordInput
+                            field={field}
                             placeholder="••••••••"
-                            className="border-0"
+                            inputClassName="border-0"
+                            required={false}
+                            show={showPassword}
+                            onToggle={() => setShowPassword(!showPassword)}
                           />
                         </FormControl>
 
@@ -382,14 +391,18 @@ export default function SignUp() {
                     control={form.control}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Confirm password</FormLabel>
+                        <FormLabel required>Confirm password</FormLabel>
 
                         <FormControl>
-                          <Input
-                            type="password"
-                            {...field}
+                          <PasswordInput
+                            field={field}
                             placeholder="••••••••"
-                            className="border-0"
+                            inputClassName="border-0"
+                            required={false}
+                            show={showConfirmPassword}
+                            onToggle={() =>
+                              setShowConfirmPassword(!showConfirmPassword)
+                            }
                           />
                         </FormControl>
 

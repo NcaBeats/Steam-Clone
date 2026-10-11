@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Calendar, DollarSign, Tag } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { requireRole } from "@/actions/admin/guard";
 import { getManageGameById, getCategories } from "@/lib/api/games";
 import type { Game } from "@/types";
@@ -69,34 +69,6 @@ const GameSummary = ({ game }: { game: Game }) => (
         </div>
       </div>
     </header>
-
-    <section className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-      <div className="bg-card border border-border rounded-lg p-4 flex items-center gap-3">
-        <DollarSign size={18} className="text-[#A1CD44]" />
-        <div>
-          <p className="text-xs text-muted-foreground">Price</p>
-          <p className="text-sm text-foreground">${game.price.toFixed(2)}</p>
-        </div>
-      </div>
-      <div className="bg-card border border-border rounded-lg p-4 flex items-center gap-3">
-        <Calendar size={18} className="text-muted-foreground" />
-        <div>
-          <p className="text-xs text-muted-foreground">Launch date</p>
-          <p className="text-sm text-foreground">
-            {new Date(game.launchDate).toLocaleDateString("en-US")}
-          </p>
-        </div>
-      </div>
-      <div className="bg-card border border-border rounded-lg p-4 flex items-center gap-3">
-        <Tag size={18} className="text-muted-foreground" />
-        <div>
-          <p className="text-xs text-muted-foreground">Categories</p>
-          <p className="text-sm text-foreground line-clamp-2">
-            {game.categories.map((c) => c.name).join(", ")}
-          </p>
-        </div>
-      </div>
-    </section>
   </>
 );
 

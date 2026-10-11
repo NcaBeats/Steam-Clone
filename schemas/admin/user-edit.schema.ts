@@ -32,8 +32,7 @@ export const AdminUserEditSchema = z.object({
     .min(1, "Last name is required")
     .max(100, "Last name cannot exceed 100 characters"),
   birthDate: z.date().nullable().optional(),
-  region: z.string().optional(),
-  comuna: z.string().optional(),
+  comunaId: z.number().int().positive().nullable().optional(),
   address: z
     .string()
     .trim()

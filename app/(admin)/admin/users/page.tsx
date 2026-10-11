@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Plus } from "lucide-react";
 import { requireAdmin } from "@/actions/admin/guard";
 import { getAdminUsers } from "@/lib/api/games";
 import { SearchInput } from "@/components/admin/SearchInput";
@@ -45,9 +46,10 @@ const UsersPage = async ({
         </div>
         <Link
           href="/admin/users/new"
-          className="bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-semibold px-4 py-2 rounded-full transition-colors"
+          className="inline-flex items-center gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-semibold px-4 py-2 rounded-full transition-colors"
         >
-          + Nuevo usuario
+          <Plus size={16} />
+          Nuevo usuario
         </Link>
       </header>
 

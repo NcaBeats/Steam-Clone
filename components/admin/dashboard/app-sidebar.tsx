@@ -5,6 +5,7 @@ import * as React from "react";
 import { Erica_One } from "next/font/google";
 import {
   HouseIcon,
+  LayoutDashboardIcon,
   LogOutIcon,
   Newspaper,
   Receipt,
@@ -73,6 +74,15 @@ export function AppSidebar({
         <NavMain items={items} />
         <NavSecondary
           items={[
+            ...(variant === "admin"
+              ? [
+                  {
+                    title: "Dashboard",
+                    url: "/admin",
+                    icon: <LayoutDashboardIcon />,
+                  },
+                ]
+              : []),
             {
               title: "Back to site",
               url: "/",

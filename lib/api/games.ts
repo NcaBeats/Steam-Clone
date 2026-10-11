@@ -3,6 +3,7 @@ import type {
   Game,
   Category,
   Library,
+  Profile,
   Purchase,
   User,
   AdminUser,
@@ -109,8 +110,36 @@ export const getAdminUsers = (
     { auth: true },
   );
 
-export const getAdminUser = (id: number): Promise<AdminUser> =>
-  fetchAPI<AdminUser>("/users/" + id, { auth: true });
+export const getAdminUser = async (id: number): Promise<AdminUser> => {
+  const user = await fetchAPI<User>(`/users/${id}`, { auth: true });
+  // El perfil puede no existir (usuarios creados antes de la migración a
+  // tablas region/comuna): en ese caso se edita desde un perfil vacío.
+  const profile = await fetchAPI<Profile>(`/profile/${id}`, {
+    auth: true,
+  }).catch((): Profile => ({
+    userId: id,
+    nickname: "",
+    bio: null,
+    visibility: "PUBLIC",
+    run: "",
+    firstName: "",
+    lastName: "",
+    birthDate: null,
+    regionId: null,
+    region: null,
+    comunaId: null,
+    comuna: null,
+    address: "",
+    createdAt: user.createdAt,
+  }));
+  return {
+    id: user.id,
+    email: user.email,
+    role: user.role,
+    createdAt: user.createdAt,
+    profile,
+  };
+};
 
 export const getAdminGames = (
   page = 0,

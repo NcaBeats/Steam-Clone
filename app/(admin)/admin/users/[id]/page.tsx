@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Calendar, Mail, Shield } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { requireAdmin } from "@/actions/admin/guard";
 import { getAdminUser } from "@/lib/api/games";
 import { UserEditForm } from "./UserEditForm";
@@ -42,32 +42,6 @@ const UserDetailPage = async ({
           </span>
         </div>
       </header>
-
-      <section className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div className="bg-card border border-border rounded-lg p-4 flex items-center gap-3">
-          <Mail size={18} className="text-[#007AFF]" />
-          <div>
-            <p className="text-xs text-muted-foreground">Email</p>
-            <p className="text-sm text-foreground">{user.email}</p>
-          </div>
-        </div>
-        <div className="bg-card border border-border rounded-lg p-4 flex items-center gap-3">
-          <Shield size={18} className="text-[#A1CD44]" />
-          <div>
-            <p className="text-xs text-muted-foreground">Role</p>
-            <p className="text-sm text-foreground">{user.role}</p>
-          </div>
-        </div>
-        <div className="bg-card border border-border rounded-lg p-4 flex items-center gap-3 sm:col-span-2">
-          <Calendar size={18} className="text-muted-foreground" />
-          <div>
-            <p className="text-xs text-muted-foreground">Created at</p>
-            <p className="text-sm text-foreground">
-              {new Date(user.createdAt).toLocaleString("en-US")}
-            </p>
-          </div>
-        </div>
-      </section>
 
       <UserEditForm user={user} />
     </div>

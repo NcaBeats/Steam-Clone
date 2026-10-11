@@ -33,12 +33,9 @@ import {
   ComboboxItem,
   ComboboxList,
 } from "@/components/ui/combobox";
-import {
-  REGION_OPTIONS,
-  getComunasByRegion,
-  type Region,
-} from "@/components/admin/LocationSelects";
+import { useComunas, useRegions } from "@/hooks/use-location";
 import { DatePickerField } from "@/components/admin/DatePickerField";
+import { Label } from "@/components/ui/label";
 import { updateUserAction, updateUserProfileAction } from "@/actions/admin";
 import {
   AdminUserEditSchema,
@@ -63,6 +60,8 @@ export function UserEditForm({ user }: Props) {
 
   const form = useForm<AdminUserEditInput>({
     resolver: zodResolver(AdminUserEditSchema),
+    mode: "onBlur",
+    reValidateMode: "onChange",
     defaultValues: {
       email: user.email,
       role: user.role,
@@ -71,16 +70,26 @@ export function UserEditForm({ user }: Props) {
       firstName: user.profile.firstName,
       lastName: user.profile.lastName,
       birthDate: parseBirthDate(user.profile.birthDate),
-      region: user.profile.region ?? "",
-      comuna: user.profile.comuna ?? "",
+      comunaId: user.profile.comunaId ?? null,
       address: user.profile.address,
       bio: user.profile.bio ?? "",
       visibility: user.profile.visibility,
     },
   });
 
-  const regionValue = form.watch("region") as Region | "";
-  const comunas = getComunasByRegion(regionValue);
+  const [regionId, setRegionId] = useState<number | null>(
+    user.profile.regionId ?? null,
+  );
+  const { regions, loading: regionsLoading } = useRegions();
+  const { comunas, loading: comunasLoading } = useComunas(regionId);
+  // Mientras carga el catálogo se muestra el texto bonito que ya trae el
+  // perfil; después se resuelve por id contra lo fetched.
+  const selectedRegion =
+    regions.find((region) => region.id === regionId)?.nombre ??
+    (regionsLoading ? (user.profile.region ?? null) : null);
+  const selectedComuna =
+    comunas.find((comuna) => comuna.id === form.watch("comunaId"))?.nombre ??
+    (comunasLoading || !regionId ? (user.profile.comuna ?? null) : null);
 
   const onSubmit = async (values: AdminUserEditInput) => {
     try {
@@ -107,8 +116,7 @@ export function UserEditForm({ user }: Props) {
         birthDate: values.birthDate
           ? format(values.birthDate, "yyyy-MM-dd")
           : (user.profile.birthDate ?? null),
-        region: values.region || null,
-        comuna: values.comuna || null,
+        comunaId: values.comunaId ?? null,
         address: values.address,
       });
 
@@ -155,9 +163,14 @@ export function UserEditForm({ user }: Props) {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel required>Email</FormLabel>
                     <FormControl>
-                      <Input {...field} type="email" maxLength={100} />
+                      <Input
+                        {...field}
+                        type="email"
+                        maxLength={100}
+                        className="border-0"
+                      />
                     </FormControl>
                     <FormMessage className="text-left" />
                   </FormItem>
@@ -168,7 +181,7 @@ export function UserEditForm({ user }: Props) {
                 name="role"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Role</FormLabel>
+                    <FormLabel required>Role</FormLabel>
                     <Select
                       value={field.value}
                       onValueChange={(value) =>
@@ -176,7 +189,7 @@ export function UserEditForm({ user }: Props) {
                       }
                     >
                       <FormControl>
-                        <SelectTrigger className="w-full" size="lg">
+                        <SelectTrigger className="w-full border-0" size="lg">
                           <SelectValue placeholder="Select a role" />
                         </SelectTrigger>
                       </FormControl>
@@ -203,6 +216,7 @@ export function UserEditForm({ user }: Props) {
                     <PasswordInput
                       field={field}
                       placeholder="••••••"
+                      inputClassName="border-0"
                       show={showPassword}
                       onToggle={() => setShowPassword(!showPassword)}
                     />
@@ -225,9 +239,14 @@ export function UserEditForm({ user }: Props) {
                 name="nickname"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nickname</FormLabel>
+                    <FormLabel required>Nickname</FormLabel>
                     <FormControl>
-                      <Input {...field} type="text" maxLength={50} />
+                      <Input
+                        {...field}
+                        type="text"
+                        maxLength={50}
+                        className="border-0"
+                      />
                     </FormControl>
                     <FormMessage className="text-left" />
                   </FormItem>
@@ -238,9 +257,14 @@ export function UserEditForm({ user }: Props) {
                 name="firstName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>First name</FormLabel>
+                    <FormLabel required>First name</FormLabel>
                     <FormControl>
-                      <Input {...field} type="text" maxLength={50} />
+                      <Input
+                        {...field}
+                        type="text"
+                        maxLength={50}
+                        className="border-0"
+                      />
                     </FormControl>
                     <FormMessage className="text-left" />
                   </FormItem>
@@ -251,9 +275,14 @@ export function UserEditForm({ user }: Props) {
                 name="lastName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Last name</FormLabel>
+                    <FormLabel required>Last name</FormLabel>
                     <FormControl>
-                      <Input {...field} type="text" maxLength={100} />
+                      <Input
+                        {...field}
+                        type="text"
+                        maxLength={100}
+                        className="border-0"
+                      />
                     </FormControl>
                     <FormMessage className="text-left" />
                   </FormItem>
@@ -276,65 +305,56 @@ export function UserEditForm({ user }: Props) {
                   </FormItem>
                 )}
               />
+              <FormItem>
+                <Label>Region</Label>
+                <Combobox
+                  items={regions.map((region) => region.nombre)}
+                  value={selectedRegion}
+                  onValueChange={(nombre) => {
+                    const region = regions.find((r) => r.nombre === nombre);
+                    setRegionId(region ? region.id : null);
+                    form.setValue("comunaId", null);
+                  }}
+                  disabled={regionsLoading}
+                >
+                  <ComboboxInput
+                    placeholder="Select a region"
+                    className="w-full border-0 h-10"
+                  />
+                  <ComboboxContent>
+                    <ComboboxEmpty>No region found.</ComboboxEmpty>
+                    <ComboboxList>
+                      {(item: string) => (
+                        <ComboboxItem key={item} value={item}>
+                          {item}
+                        </ComboboxItem>
+                      )}
+                    </ComboboxList>
+                  </ComboboxContent>
+                </Combobox>
+                <p className="min-h-5 text-sm" aria-hidden="true">
+                  {"\u00A0"}
+                </p>
+              </FormItem>
               <FormField
                 control={form.control}
-                name="region"
-                render={({ field }) => {
-                  const selectedLabel =
-                    REGION_OPTIONS.find((option) => option.key === field.value)
-                      ?.label ?? null;
-                  return (
-                    <FormItem>
-                      <FormLabel>Region</FormLabel>
-                      <Combobox
-                        items={REGION_OPTIONS.map((option) => option.label)}
-                        value={selectedLabel}
-                        onValueChange={(label) => {
-                          const option = REGION_OPTIONS.find(
-                            (o) => o.label === label,
-                          );
-                          field.onChange(option ? option.key : "");
-                          form.setValue("comuna", "");
-                        }}
-                      >
-                        <FormControl>
-                          <ComboboxInput
-                            placeholder="Select a region"
-                            className="w-full border-0 h-10"
-                          />
-                        </FormControl>
-                        <ComboboxContent>
-                          <ComboboxEmpty>No region found.</ComboboxEmpty>
-                          <ComboboxList>
-                            {(item: string) => (
-                              <ComboboxItem key={item} value={item}>
-                                {item}
-                              </ComboboxItem>
-                            )}
-                          </ComboboxList>
-                        </ComboboxContent>
-                      </Combobox>
-                      <FormMessage className="text-left" />
-                    </FormItem>
-                  );
-                }}
-              />
-              <FormField
-                control={form.control}
-                name="comuna"
+                name="comunaId"
                 render={({ field }) => (
                   <FormItem className="min-w-0">
                     <FormLabel>Municipality</FormLabel>
                     <Combobox
-                      items={comunas}
-                      value={field.value}
-                      onValueChange={field.onChange}
-                      disabled={!regionValue}
+                      items={comunas.map((comuna) => comuna.nombre)}
+                      value={selectedComuna}
+                      onValueChange={(nombre) => {
+                        const comuna = comunas.find((c) => c.nombre === nombre);
+                        field.onChange(comuna ? comuna.id : null);
+                      }}
+                      disabled={!regionId}
                     >
                       <FormControl>
                         <ComboboxInput
                           placeholder="Select a municipality"
-                          className="w-full min-w-0 border-0 h-10"
+                          className="w-full min-w-0 border-0 h-10 py-1"
                         />
                       </FormControl>
                       <ComboboxContent>
@@ -357,9 +377,14 @@ export function UserEditForm({ user }: Props) {
                 name="address"
                 render={({ field }) => (
                   <FormItem className="sm:col-span-2">
-                    <FormLabel>Address</FormLabel>
+                    <FormLabel required>Address</FormLabel>
                     <FormControl>
-                      <Input {...field} type="text" maxLength={300} />
+                      <Input
+                        {...field}
+                        type="text"
+                        maxLength={300}
+                        className="border-0"
+                      />
                     </FormControl>
                     <FormMessage className="text-left" />
                   </FormItem>
@@ -373,7 +398,12 @@ export function UserEditForm({ user }: Props) {
                 <FormItem>
                   <FormLabel>Bio</FormLabel>
                   <FormControl>
-                    <Textarea {...field} value={field.value ?? ""} rows={3} />
+                    <Textarea
+                      {...field}
+                      value={field.value ?? ""}
+                      rows={3}
+                      className="border-0"
+                    />
                   </FormControl>
                   <FormMessage className="text-left" />
                 </FormItem>
@@ -384,7 +414,7 @@ export function UserEditForm({ user }: Props) {
               name="visibility"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Visibility</FormLabel>
+                  <FormLabel required>Visibility</FormLabel>
                   <Select value={field.value} onValueChange={field.onChange}>
                     <FormControl>
                       <SelectTrigger className="w-full" size="lg">

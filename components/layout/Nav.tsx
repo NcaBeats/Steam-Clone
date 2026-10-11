@@ -78,7 +78,7 @@ export const Nav = async () => {
         {wallet && <WalletBalance initialBalance={wallet.balance} />}
         <Link
           href="/cart"
-          className="hover:bg-[#28282C] active:bg-[#28282C] rounded-full p-2.5 transition-colors ease-in-out duration-200"
+          className="hover:text-[#1ea4ff] active:text-[#1ea4ff] rounded-full p-2.5 transition-colors ease-in-out duration-200"
           aria-label="Cart"
         >
           <ShoppingCart size={20} />
@@ -98,7 +98,7 @@ export const Nav = async () => {
           <>
             <Link
               href={"/sign-up"}
-              className="bg-[#28282C] hover:bg-[#404044] text-[#EDEDED] px-4 py-1.5 font-medium text-sm text-center rounded-full cursor-pointer transition-colors duration-200 ease-out"
+              className="bg-[#007AFF] hover:bg-[#1ea4ff] text-[#EDEDED] px-4 py-1.5 font-medium text-sm text-center rounded-full cursor-pointer transition-colors duration-200 ease-out"
             >
               Sign Up
             </Link>
