@@ -4,12 +4,12 @@ import Link from "next/link";
 import * as React from "react";
 import { Erica_One } from "next/font/google";
 import {
+  Gamepad2,
   HouseIcon,
   LayoutDashboardIcon,
   LogOutIcon,
   Newspaper,
   Receipt,
-  ShoppingBag,
   Users,
 } from "lucide-react";
 import { logoutAction } from "@/actions/logout";
@@ -35,14 +35,14 @@ const ericaOne = Erica_One({
 
 const ADMIN_ITEMS: DashboardNavItem[] = [
   { title: "Dashboard", url: "/admin", icon: LayoutDashboardIcon },
-  { title: "Games", url: "/admin/games", icon: ShoppingBag },
+  { title: "Games", url: "/admin/games", icon: Gamepad2 },
   { title: "Blogs", url: "/admin/blogs", icon: Newspaper },
   { title: "Orders", url: "/admin/orders", icon: Receipt },
   { title: "Users", url: "/admin/users", icon: Users },
 ];
 
 const STUDIO_ITEMS: DashboardNavItem[] = [
-  { title: "Games", url: "/studio/games", icon: ShoppingBag },
+  { title: "Games", url: "/studio/games", icon: Gamepad2 },
   { title: "Orders", url: "/studio/orders", icon: Receipt },
 ];
 
