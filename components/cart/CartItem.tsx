@@ -2,7 +2,7 @@ import Link from "next/link";
 import { X } from "lucide-react";
 import { formatPrice } from "@/lib";
 import { GameImage } from "@/components/games/GameImage";
-import type { CartItem as CartItemType } from "@/lib/cart";
+import type { CartItem as CartItemType } from "@/stores/cart-store";
 
 type Props = Readonly<{
   item: CartItemType;

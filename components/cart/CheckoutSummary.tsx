@@ -1,18 +1,11 @@
 "use client";
 
-import { useEffect, useSyncExternalStore, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { GameImage } from "@/components/games/GameImage";
 import { Loader2, CheckCircle2, XCircle } from "lucide-react";
-import {
-  clearCart,
-  getCartServerSnapshot,
-  getCartSnapshot,
-  getCartTotal,
-  removeFromCart,
-  subscribeCart,
-} from "@/lib/cart";
+import { useCartStore, selectCartTotal } from "@/stores/cart-store";
 import { getMyWalletAction } from "@/actions/wallet";
 import { createPurchaseAction } from "@/actions/purchase";
 import { DepositFundsSheet } from "./DepositFundsSheet";
@@ -32,13 +25,11 @@ export const CheckoutSummary = () => {
   const [wallet, setWallet] = useState<Wallet | null>(null);
   const [walletUnavailable, setWalletUnavailable] = useState(false);
 
-  const items = useSyncExternalStore(
-    subscribeCart,
-    getCartSnapshot,
-    getCartServerSnapshot,
-  );
+  const items = useCartStore((s) => s.items);
+  const total = useCartStore(selectCartTotal);
+  const removeFromCart = useCartStore((s) => s.removeFromCart);
+  const clearCart = useCartStore((s) => s.clearCart);
 
-  const total = getCartTotal(items);
   const insufficient = wallet !== null && wallet.balance < total;
 
   const refreshWallet = async () => {

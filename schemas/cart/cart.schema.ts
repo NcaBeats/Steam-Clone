@@ -1,5 +1,5 @@
 import * as z from "zod";
-import type { CartItem } from "@/lib/cart";
+import type { CartItem } from "@/stores/cart-store";
 
 export const CartItemSchema = z.object({
   id: z.number().int().positive(),

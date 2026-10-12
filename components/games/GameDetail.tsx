@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { useEffect, useSyncExternalStore, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { X } from "lucide-react";
 import { GameImage } from "@/components/games/GameImage";
@@ -12,13 +12,7 @@ import {
   CarouselPrevious,
 } from "@/components/media/carousel";
 import { formatPrice } from "@/lib";
-import {
-  addToCart,
-  getCartServerSnapshot,
-  getCartSnapshot,
-  subscribeCart,
-} from "@/lib/cart";
-import { useHydrated } from "@/hooks/use-hydrated";
+import { selectIsInCart, useCartStore } from "@/stores/cart-store";
 import { useAlert } from "@/components/feedback";
 import { GameVideo } from "@/components/games/GameVideo";
 import type { Game } from "@/types";
@@ -147,17 +141,12 @@ function GalleryLightbox({
 
 export const GameDetail = ({ game, initialInLibrary }: Props) => {
   const { showAlert } = useAlert();
-  const hydrated = useHydrated();
+  const hydrated = useCartStore((s) => s._hasHydrated);
+  const addToCart = useCartStore((s) => s.addToCart);
+  const alreadyInCart = useCartStore(selectIsInCart(game.id));
   const [alreadyInLibrary] = useState(initialInLibrary);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const gallery = game.galleryUrls ?? [];
-
-  const cart = useSyncExternalStore(
-    subscribeCart,
-    getCartSnapshot,
-    getCartServerSnapshot,
-  );
-  const alreadyInCart = cart.some((item) => item.id === game.id);
 
   const handleAddToCart = () => {
     const result = addToCart({

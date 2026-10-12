@@ -1,17 +1,10 @@
 "use client";
 
-import { useState, useSyncExternalStore } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {
-  getCartSnapshot,
-  getCartServerSnapshot,
-  getCartTotal,
-  removeFromCart,
-  subscribeCart,
-} from "@/lib/cart";
+import { selectCartTotal, useCartStore } from "@/stores/cart-store";
 import { formatPrice } from "@/lib";
-import { useHydrated } from "@/hooks/use-hydrated";
 import { CartItem } from "./CartItem";
 import { AuthOverlay } from "./AuthOverlay";
 
@@ -19,13 +12,11 @@ type Props = Readonly<{ isLoggedIn: boolean }>;
 
 export const CartList = ({ isLoggedIn }: Props) => {
   const router = useRouter();
-  const hydrated = useHydrated();
+  const hydrated = useCartStore((s) => s._hasHydrated);
   const [authOpen, setAuthOpen] = useState(false);
-  const items = useSyncExternalStore(
-    subscribeCart,
-    getCartSnapshot,
-    getCartServerSnapshot,
-  );
+  const items = useCartStore((s) => s.items);
+  const total = useCartStore(selectCartTotal);
+  const removeFromCart = useCartStore((s) => s.removeFromCart);
 
   const handleRemove = (id: number) => {
     removeFromCart(id);
@@ -77,12 +68,12 @@ export const CartList = ({ isLoggedIn }: Props) => {
           <h2 className="text-lg font-bold text-[#FAFAFA]">Order Summary</h2>
           <div className="flex justify-between text-sm text-[#C0C0C0]">
             <span>Subtotal ({items.length} items)</span>
-            <span>{formatPrice(getCartTotal(items))}</span>
+            <span>{formatPrice(total)}</span>
           </div>
           <hr className="border-[#2A2A2A]" />
           <div className="flex justify-between text-base font-bold text-[#FAFAFA]">
             <span>Total</span>
-            <span>{formatPrice(getCartTotal(items))}</span>
+            <span>{formatPrice(total)}</span>
           </div>
           <button
             type="button"
