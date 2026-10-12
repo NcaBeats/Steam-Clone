@@ -17,19 +17,20 @@ Tienda de videojuegos — frontend **Next.js** que consume el backend Spring Boo
 
 - **Node.js 20+**
 - **pnpm**
-- El **backend corriendo** en `http://localhost:9090` (ver README de Proyecto-Juegos-Monolito)
+- El **backend corriendo** en `http://127.0.0.1:9090` (ver README de Proyecto-Juegos-Monolito)
 
 ## Configuración
 
-Creá un `.env` con:
+Un `.env` con una sola variable:
 
 ```bash
-# Base de la API (una sola: server y client). Evaluada en build time.
-NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:9090/api/v1
+API_BASE_URL=http://127.0.0.1:9090/api/v1
 ```
 
-Solo hace falta esa variable: el backend ya devuelve URLs absolutas de R2 en
-todas las columnas de media, así que el frontend no necesita saber el bucket.
+El navegador no usa variables: llama siempre a la ruta relativa `/api/v1`,
+que Next.js reescribe al backend (`next.config.ts` → `rewrites`). En el
+servidor (Server Actions, SSR) se usa `API_BASE_URL` porque `fetch` necesita
+URL absoluta.
 
 ## Comandos
 
@@ -48,9 +49,102 @@ pnpm lint       # eslint
 - `app/(auth)/` — login/signup
 - `app/(admin)/` y `app/(studio)/` — paneles de administración y estudios (vendedores)
 - `actions/` — Server Actions (muta datos, define revalidaciones)
-- `lib/api/` — `fetchAPI` (maneja JWT, caché, paginación) + tipos por dominio
+- `lib/api/` — `fetchAPI` (server, JWT, `API_BASE_URL`) + clientes de navegador
+  (`search.ts`, `regions.ts`, ruta `/api/v1` vía rewrite)
+- `hooks/use-location.ts` — `useRegions` / `useComunas` para selects de ubicación
 - `schemas/` — validación Zod
-- `components/` — UI compartida (games, cart, blog, admin)
+- `components/` — UI compartida (games, cart, blog, admin, studio)
+
+## Arquitectura API
+
+Todas las llamadas del navegador van a `/api/v1/*` (mismo origen, sin CORS).
+Next.js las reescribe al backend según entorno:
+
+| Entorno | Destino del rewrite |
+|---------|---------------------|
+| Local | `http://127.0.0.1:9090/api/v1/:path*` |
+| Vercel | `${API_BASE_URL}/:path*` (backend en Render) |
+
+`lib/api/config.ts` resuelve la base según contexto: `API_BASE_URL` en el
+servidor, `/api/v1` en el navegador.
+
+## Regiones y comunas
+
+El backend expone el catálogo geográfico como tablas con FK:
+
+- `GET /regions` → `[{ id, nombre }]` (texto listo para UI)
+- `GET /regions/{regionId}/comunas` → `[{ id, nombre, regionId }]`
+
+Los formularios envían solo `comunaId`; la región se deriva en el servidor.
+El perfil (`GET /profile/{userId}`) devuelve `regionId`, `region`, `comunaId`,
+`comuna` (strings en español, son nombres propios).
+
+## Roles y permisos
+
+| Rol | Alcance |
+|-----|---------|
+| `ADMIN` | Ve todo el catálogo, gestiona usuarios/blogs/órdenes, edita y borra cualquier juego. No crea juegos. |
+| `VENDEDOR` | CRUD solo sobre sus juegos (`sellerId` del token). Panel en `/studio`. |
+| `CLIENTE` | Compra, biblioteca, wallet. |
+
+Guards: `requireAdmin()` y `requireRole([...], redirectTo)` en layouts y páginas.
+El layout principal no redirige a vendedores: pueden navegar la tienda como
+clientes.
+
+## Wallet
+
+- `getMyWalletAction` / `depositToWalletAction` en `actions/wallet.ts`.
+- `DepositFundsSheet` (`components/cart/`): sheet lateral en checkout para
+  agregar fondos. Al confirmar dispara el evento `wallet:updated`.
+- `WalletBalance` (header) escucha `wallet:updated` y se refresca al instante,
+  igual que el balance del checkout vía callback `onSuccess`.
+
+## Formularios
+
+- React Hook Form + Zod en formularios de usuario (`mode: "onBlur"`,
+  `reValidateMode: "onChange"`).
+- `FormLabel required` renderiza el icono `Asterisk` de lucide.
+- `DatePickerField` (Popover + Calendar shadcn): prop `disableFuture`
+  (default `true`). Los formularios de juego la desactivan con
+  `COMING_SOON` para permitir fechas de lanzamiento futuras.
+- Campos de ubicación: región como estado local (filtra comunas), `comunaId`
+  como campo del formulario.
+
+## Sidebar admin/studio
+
+`AppSidebar` (`components/admin/dashboard/`) con variante `admin` | `studio`:
+
+- `collapsible="icon"` + `SidebarRail`: al colapsar queda rail de iconos con
+  tooltips. El `SidebarTrigger` está en `SiteHeader`.
+- Admin: Dashboard, Products, Blogs, Orders, Users + "Back to site".
+- Studio: Games, Orders + "Back to site" (sin dashboard propio).
+- Tablas con `RowActions` (dropdown de 3 puntos): admin con Edit/Delete,
+  studio games con Edit/Delete, studio orders solo View.
+
+## Deploy
+
+### Vercel (frontend)
+
+| Variable | Valor |
+|----------|-------|
+| `API_BASE_URL` | `https://<backend>.onrender.com/api/v1` |
+
+Solo esa. Redploy tras cambiarla (el rewrite se resuelve al arrancar).
+
+### Render (backend)
+
+| Variable | Valor |
+|----------|-------|
+| `APP_CORS_ALLOWED_ORIGINS` | `http://localhost:3000,http://127.0.0.1:3000,http://<ip-lan>:3000,https://<frontend>.vercel.app,https://<frontend>-*.vercel.app` |
+
+## Desarrollo en red local
+
+Para probar desde otros dispositivos (móvil en la misma red):
+
+- `allowedDevOrigins` en `next.config.ts` con las IPs explícitas
+  (Next.js no acepta rangos CIDR).
+- El rewrite hace que el navegador llame al mismo origen: no hay CORS ni
+  IPs hardcodeadas en el frontend.
 
 ## Notas y decisiones
 
@@ -63,4 +157,5 @@ pnpm lint       # eslint
   el navegador. El backend guarda la URL pública absoluta que devuelve R2, así que
   el frontend la usa tal cual (imágenes vía `next/image`). `lib/media.ts` solo
   valida que sea absoluta y falla en voz alta si aparece una ruta.
-- La API completa (server y client) usa una sola variable, `NEXT_PUBLIC_API_BASE_URL`, evaluada en build time.
+- **Idioma**: UI en inglés. Nombres de regiones/comunas en español (nombres
+  propios). Fechas y moneda en formato `en-US`.

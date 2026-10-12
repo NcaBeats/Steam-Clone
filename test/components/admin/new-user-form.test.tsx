@@ -1,5 +1,11 @@
 import { describe, test, expect, vi, afterEach } from "vitest";
-import { cleanup, render, screen, fireEvent } from "@testing-library/react";
+import {
+  cleanup,
+  render,
+  screen,
+  fireEvent,
+  waitForElementToBeRemoved,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 import { NewUserForm } from "@/app/(admin)/admin/users/new/NewUserForm";
@@ -123,5 +129,17 @@ describe("NewUserForm", () => {
     expect(formData.get("run")).toBe("111111111");
     expect(formData.get("comunaId")).toBe("2");
     expect(push).toHaveBeenCalledWith("/admin/users");
+  });
+
+  test("el error de email aparece al enviar y desaparece al corregirlo", async () => {
+    render(<NewUserForm />);
+    fillText("user@gmail.com", "not-an-email");
+    await submit();
+    expect(await screen.findByText("Invalid email format")).toBeInTheDocument();
+    expect(mockedCreate).not.toHaveBeenCalled();
+    fillText("user@gmail.com", "user@gmail.com");
+    await waitForElementToBeRemoved(() =>
+      screen.queryByText("Invalid email format"),
+    );
   });
 });

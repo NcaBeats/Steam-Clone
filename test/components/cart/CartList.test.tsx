@@ -14,7 +14,7 @@ vi.mock("@/lib/cart", () => ({
 }));
 
 // Mock de use-hydrated
-vi.mock("@/lib/use-hydrated", () => ({
+vi.mock("@/hooks/use-hydrated", () => ({
   useHydrated: vi.fn(),
 }));
 
@@ -49,7 +49,7 @@ import {
   removeFromCart,
   subscribeCart,
 } from "@/lib/cart";
-import { useHydrated } from "@/lib/use-hydrated";
+import { useHydrated } from "@/hooks/use-hydrated";
 
 describe("CartList", () => {
   beforeEach(() => {

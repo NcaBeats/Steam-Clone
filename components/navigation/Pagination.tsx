@@ -28,6 +28,7 @@ export const Pagination = ({ page, totalPages, basePath, query }: Props) => {
       <Link
         href={hrefFor(Math.max(0, page - 1))}
         data-slot="button"
+        aria-label="Previous page"
         aria-disabled={page === 0}
         className={pageLinkCls(page === 0)}
       >
@@ -50,6 +51,7 @@ export const Pagination = ({ page, totalPages, basePath, query }: Props) => {
       <Link
         href={hrefFor(Math.min(totalPages - 1, page + 1))}
         data-slot="button"
+        aria-label="Next page"
         aria-disabled={page === totalPages - 1}
         className={pageLinkCls(page === totalPages - 1)}
       >

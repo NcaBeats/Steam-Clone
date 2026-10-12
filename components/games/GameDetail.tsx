@@ -18,7 +18,7 @@ import {
   getCartSnapshot,
   subscribeCart,
 } from "@/lib/cart";
-import { useHydrated } from "@/lib/use-hydrated";
+import { useHydrated } from "@/hooks/use-hydrated";
 import { useAlert } from "@/components/feedback";
 import { GameVideo } from "@/components/games/GameVideo";
 import type { Game } from "@/types";

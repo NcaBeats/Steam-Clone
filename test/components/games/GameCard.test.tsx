@@ -41,4 +41,10 @@ describe("GameCard Test", () => {
     const link = screen.getByRole("link");
     expect(link.getAttribute("href")).toBe("/games/7");
   });
+
+  test("Usa el id recibido por props para nombre y href", () => {
+    render(<GameCard {...props} id={99} name="Stardew Valley" />);
+    expect(screen.getByText("Stardew Valley")).toBeDefined();
+    expect(screen.getByRole("link").getAttribute("href")).toBe("/games/99");
+  });
 });

@@ -11,7 +11,7 @@ import {
   subscribeCart,
 } from "@/lib/cart";
 import { formatPrice } from "@/lib";
-import { useHydrated } from "@/lib/use-hydrated";
+import { useHydrated } from "@/hooks/use-hydrated";
 import { CartItem } from "./CartItem";
 import { AuthOverlay } from "./AuthOverlay";
 
