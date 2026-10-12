@@ -43,7 +43,7 @@ const BlogsPage = async ({
       <header className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-col gap-1">
           <p className="text-xs font-bold uppercase tracking-[0.5px] text-muted-foreground">
-            Content
+            Admin
           </p>
           <h1 className="text-xl font-bold tracking-[0.4px] text-foreground">
             Blogs
