@@ -2,10 +2,14 @@
 const nextConfig: Record<string, unknown> = {
   allowedDevOrigins: ["192.168.100.40", "192.168.100.64", "localhost:3000"],
   async rewrites() {
+    // En prod apunta al backend de Render vía API_BASE_URL; en local al
+    // backend de desarrollo. Sin esto, /api/v1/* en Vercel cae al propio
+    // server (localhost) y devuelve 404.
+    const backend = process.env.API_BASE_URL ?? "http://127.0.0.1:9090/api/v1";
     return [
       {
         source: "/api/v1/:path*",
-        destination: "http://127.0.0.1:9090/api/v1/:path*",
+        destination: `${backend}/:path*`,
       },
     ];
   },
