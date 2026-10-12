@@ -73,9 +73,8 @@ afterEach(() => {
 
 describe("UserEditForm", () => {
   test("email inválido muestra error de campo", async () => {
-    const { container } = renderForm();
-    const input = container.querySelector('input[name="email"]');
-    if (!input) throw new Error("Missing email input");
+    renderForm();
+    const input = screen.getByLabelText(/email/i);
     fireEvent.change(input, { target: { value: "not-an-email" } });
     fireEvent.click(screen.getByRole("button", { name: "Save changes" }));
     expect(await screen.findByText("Invalid email format")).toBeInTheDocument();

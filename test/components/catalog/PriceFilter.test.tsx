@@ -16,28 +16,28 @@ afterEach(() => {
   vi.clearAllMocks();
 });
 
-const getRangeInputs = (container: HTMLElement) =>
-  Array.from(container.querySelectorAll('input[type="range"]'));
+// Base UI oculta los inputs range nativos: se consultan por rol incluyendo ocultos.
+const getSliders = () => screen.getAllByRole("slider", { hidden: true });
 
 describe("PriceFilter", () => {
   test("muestra el rango inicial y el slider", () => {
-    const { container } = render(<PriceFilter min={25} max={50} />);
+    render(<PriceFilter min={25} max={50} />);
     expect(screen.getByText("Filters")).toBeInTheDocument();
     expect(screen.getByText("$25.00 – $50.00")).toBeInTheDocument();
-    expect(getRangeInputs(container)).toHaveLength(2);
+    expect(getSliders()).toHaveLength(2);
   });
 
   test("arrastrar actualiza el display y navega con el rango", () => {
-    const { container } = render(<PriceFilter min={25} max={50} />);
-    const [minThumb] = getRangeInputs(container);
+    render(<PriceFilter min={25} max={50} />);
+    const [minThumb] = getSliders();
     fireEvent.change(minThumb, { target: { value: "30" } });
     expect(screen.getByText("$30.00 – $50.00")).toBeInTheDocument();
     expect(push).toHaveBeenCalledWith("/catalog?minPrice=30&maxPrice=50");
   });
 
   test("al soltar commitea el rango a la URL sin la página", () => {
-    const { container } = render(<PriceFilter min={25} max={50} />);
-    const [minThumb] = getRangeInputs(container);
+    render(<PriceFilter min={25} max={50} />);
+    const [minThumb] = getSliders();
     fireEvent.keyDown(minThumb, { key: "ArrowRight", code: "ArrowRight" });
     fireEvent.keyUp(minThumb, { key: "ArrowRight", code: "ArrowRight" });
     expect(push).toHaveBeenCalledWith("/catalog?minPrice=30&maxPrice=50");

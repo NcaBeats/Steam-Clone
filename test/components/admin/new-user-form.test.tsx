@@ -47,10 +47,8 @@ const submit = async () => {
   return await screen.findByText("Create user");
 };
 
-const fillByName = (container: HTMLElement, name: string, value: string) => {
-  const input = container.querySelector(`input[name="${name}"]`);
-  if (!input) throw new Error(`Missing input ${name}`);
-  fireEvent.change(input, { target: { value } });
+const fillByLabel = (label: RegExp, value: string) => {
+  fireEvent.change(screen.getByLabelText(label), { target: { value } });
 };
 
 afterEach(() => {
@@ -105,14 +103,14 @@ describe("NewUserForm", () => {
   test("región/comuna del catálogo guarda el comunaId", async () => {
     mockedCreate.mockResolvedValue({ ok: true });
     const user = userEvent.setup();
-    const { container } = render(<NewUserForm />);
+    render(<NewUserForm />);
     fillText("user@gmail.com", "user@gmail.com");
     fillText("4-10 characters", "abcd1234");
     fillText("Repeat password", "abcd1234");
     fillText("12.345.678-9", "11.111.111-1");
-    fillByName(container, "firstName", "Nico");
-    fillByName(container, "lastName", "Carvajal");
-    fillByName(container, "address", "Calle 123");
+    fillByLabel(/first name/i, "Nico");
+    fillByLabel(/last name/i, "Carvajal");
+    fillByLabel(/address/i, "Calle 123");
 
     const regionInput = screen.getByPlaceholderText("Select a region");
     await user.click(regionInput);

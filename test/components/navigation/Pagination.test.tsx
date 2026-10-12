@@ -6,6 +6,7 @@ afterEach(cleanup);
 
 describe("Pagination", () => {
   test("no renderiza nada con una sola página", () => {
+    // Excepción justificada: se afirma ausencia total de DOM, sin queries de screen.
     const { container } = render(
       <Pagination page={0} totalPages={1} basePath="/catalog" />,
     );

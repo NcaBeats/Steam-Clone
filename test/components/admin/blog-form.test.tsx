@@ -53,11 +53,10 @@ describe("BlogForm", () => {
   test("elegir categoría por select la envía en el payload", async () => {
     mockedCreate.mockResolvedValue({ ok: true });
     const user = userEvent.setup();
-    const { container } = renderForm();
-    const title = container.querySelector('input[name="title"]');
-    const excerpt = container.querySelector('textarea[name="excerpt"]');
-    const content = container.querySelector('textarea[name="content"]');
-    if (!title || !excerpt || !content) throw new Error("Missing fields");
+    renderForm();
+    const title = screen.getByPlaceholderText("Blog title");
+    const excerpt = screen.getByPlaceholderText("Short summary...");
+    const content = screen.getByPlaceholderText("Full article...");
     fireEvent.change(title, { target: { value: "New release" } });
     fireEvent.change(excerpt, { target: { value: "Short summary" } });
     fireEvent.change(content, { target: { value: "Full article body" } });
