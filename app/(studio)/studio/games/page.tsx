@@ -86,7 +86,7 @@ const StudioGamesPage = async ({
           sort={sort}
           columns={[
             { label: "ID", className: "w-16 hidden md:table-cell" },
-            { className: "w-12 hidden sm:table-cell" },
+            { label: "Cover", className: "w-12 hidden sm:table-cell" },
             { label: "Name", sortKey: "name" },
             { label: "State", className: "w-36 hidden sm:table-cell" },
             { label: "Price", className: "w-20 sm:w-24", sortKey: "price" },
