@@ -30,7 +30,7 @@ type CartState = {
 };
 
 export const useCartStore = create<CartState>()(
-  persist(
+  persist<CartState, [], [], Pick<CartState, "items">>(
     (set, get) => ({
       items: [],
       _hasHydrated: false,
@@ -65,7 +65,7 @@ export const useCartStore = create<CartState>()(
     {
       name: "cart",
       storage: createJSONStorage(() => localStorage),
-      partialize: (state) => ({ items: state.items }) as CartState,
+      partialize: (state) => ({ items: state.items }),
       onRehydrateStorage: () => (state) => {
         state?.setHasHydrated(true);
       },
