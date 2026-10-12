@@ -1,10 +1,10 @@
 import Link from "next/link";
-import { TicketIcon } from "lucide-react";
 import { requireRole } from "@/actions/admin/guard";
 import { getManageGames } from "@/lib/api/games";
 import { SearchInput } from "@/components/admin/SearchInput";
 import { RowActions } from "@/components/admin/dashboard/row-actions";
 import { GameImage } from "@/components/games/GameImage";
+import { DiscountBadge, GameStateBadge } from "@/components/games/GameBadges";
 import {
   AdminTable,
   AdminTableActions,
@@ -16,7 +16,6 @@ import {
   TableRow,
   parseSortParam,
 } from "@/components/admin/dashboard/admin-table";
-import { Badge } from "@/components/ui/badge";
 import { cn } from "cn";
 import type { GameState } from "@/types";
 
@@ -201,18 +200,7 @@ const GamesPage = async ({
                   </Link>
                 </TableCell>
                 <TableCell className="px-3 py-3 hidden sm:table-cell">
-                  <Badge
-                    className={
-                      g.state === "AVAILABLE"
-                        ? "bg-[#A1CD44]/15 text-[#A1CD44] border-transparent"
-                        : g.state === "COMING_SOON"
-                          ? "bg-[#FCAF17]/15 text-[#FCAF17] border-transparent"
-                          : "bg-[#FF6B6B]/15 text-[#FF6B6B] border-transparent"
-                    }
-                  >
-                    <TicketIcon />
-                    {g.state}
-                  </Badge>
+                  <GameStateBadge state={g.state} />
                 </TableCell>
                 <TableCell className="px-3 py-3 hidden sm:table-cell whitespace-nowrap">
                   {g.discountPercent > 0 ? (
@@ -230,9 +218,7 @@ const GamesPage = async ({
                 </TableCell>
                 <TableCell className="px-3 py-3 hidden sm:table-cell">
                   {g.discountPercent > 0 ? (
-                    <span className="text-[#26BBFF] font-semibold whitespace-nowrap">
-                      -{g.discountPercent}%
-                    </span>
+                    <DiscountBadge percent={g.discountPercent} />
                   ) : (
                     <span className="text-muted-foreground whitespace-nowrap">
                       —

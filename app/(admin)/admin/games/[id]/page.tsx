@@ -5,6 +5,7 @@ import { requireRole } from "@/actions/admin/guard";
 import { getManageGameById, getCategories } from "@/lib/api/games";
 import type { Game } from "@/types";
 import { GameImage } from "@/components/games/GameImage";
+import { GameStateBadge } from "@/components/games/GameBadges";
 import { GameEditForm } from "./GameEditForm";
 
 const GameDetailPage = async ({
@@ -56,15 +57,7 @@ const GameSummary = ({ game }: { game: Game }) => (
       <div className="flex flex-col gap-1">
         <h1 className="text-2xl font-bold text-foreground">Edit product</h1>
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <span
-            className={`px-2 py-0.5 rounded text-xs font-semibold ${
-              game.state === "AVAILABLE"
-                ? "bg-[#A1CD44] text-black"
-                : "bg-muted text-muted-foreground"
-            }`}
-          >
-            {game.state}
-          </span>
+          <GameStateBadge state={game.state} />
           <span>#{game.id}</span>
         </div>
       </div>

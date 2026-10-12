@@ -4,6 +4,7 @@ import { getManageGames } from "@/lib/api/games";
 import { SearchInput } from "@/components/admin/SearchInput";
 import { RowActions } from "@/components/admin/dashboard/row-actions";
 import { GameImage } from "@/components/games/GameImage";
+import { DiscountBadge, GameStateBadge } from "@/components/games/GameBadges";
 import {
   AdminTable,
   AdminTableActions,
@@ -146,15 +147,7 @@ const StudioGamesPage = async ({
                   </Link>
                 </TableCell>
                 <TableCell className="px-3 py-3 hidden sm:table-cell whitespace-nowrap">
-                  <span
-                    className={`px-2.5 py-1 rounded text-xs font-semibold inline-block ${
-                      g.state === "AVAILABLE"
-                        ? "bg-muted text-foreground"
-                        : "bg-muted text-muted-foreground"
-                    }`}
-                  >
-                    {g.state}
-                  </span>
+                  <GameStateBadge state={g.state} />
                 </TableCell>
                 <TableCell className="px-3 py-3 hidden sm:table-cell whitespace-nowrap">
                   {g.discountPercent > 0 ? (
@@ -172,9 +165,7 @@ const StudioGamesPage = async ({
                 </TableCell>
                 <TableCell className="px-3 py-3 hidden sm:table-cell">
                   {g.discountPercent > 0 ? (
-                    <span className="text-[#26BBFF] font-semibold whitespace-nowrap">
-                      -{g.discountPercent}%
-                    </span>
+                    <DiscountBadge percent={g.discountPercent} />
                   ) : (
                     <span className="text-muted-foreground whitespace-nowrap">
                       —

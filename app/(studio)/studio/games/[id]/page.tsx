@@ -4,6 +4,7 @@ import { ArrowLeft, Calendar, DollarSign, Tag } from "lucide-react";
 import { requireRole } from "@/actions/admin/guard";
 import { getManageGameById } from "@/lib/api/games";
 import { GameImage } from "@/components/games/GameImage";
+import { GameStateBadge } from "@/components/games/GameBadges";
 
 const StudioGameDetailPage = async ({
   params,
@@ -52,15 +53,7 @@ const StudioGameDetailPage = async ({
             {game.name}
           </h1>
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <span
-              className={`px-2.5 py-1 rounded text-xs font-semibold inline-block ${
-                game.state === "AVAILABLE"
-                  ? "bg-muted text-foreground"
-                  : "bg-muted text-muted-foreground"
-              }`}
-            >
-              {game.state}
-            </span>
+            <GameStateBadge state={game.state} />
             <span>#{game.id}</span>
             <Link
               href={`/studio/games/${game.id}/edit`}
