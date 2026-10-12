@@ -14,6 +14,7 @@ import {
   TableBody,
   TableCell,
   TableRow,
+  parseSortParam,
 } from "@/components/admin/dashboard/admin-table";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "cn";
@@ -32,6 +33,8 @@ const STATE_LABELS: Record<GameState, string> = {
 const parseState = (raw: string | undefined): GameState | undefined =>
   GAME_STATES.includes(raw as GameState) ? (raw as GameState) : undefined;
 
+const ALLOWED_SORTS = ["name", "price"] as const;
+
 const GamesPage = async ({
   searchParams,
 }: {
@@ -39,15 +42,22 @@ const GamesPage = async ({
     page?: string;
     q?: string;
     state?: string;
+    sort?: string;
   }>;
 }) => {
   await requireRole(["ADMIN"], "/studio/games");
-  const { page: pageParam, q, state: stateParam } = await searchParams;
+  const {
+    page: pageParam,
+    q,
+    state: stateParam,
+    sort: sortParam,
+  } = await searchParams;
   const page = Math.max(0, Number(pageParam ?? 0));
   const searchName = q?.trim() || undefined;
   const state = parseState(stateParam?.trim());
+  const sort = parseSortParam(sortParam?.trim(), ALLOWED_SORTS);
 
-  const data = await getManageGames(page, PAGE_SIZE, searchName, state);
+  const data = await getManageGames(page, PAGE_SIZE, searchName, state, sort);
   const { content: games, page: pageInfo } = data;
 
   const tabs: { value: GameState | undefined; label: string }[] = [
@@ -58,11 +68,13 @@ const GamesPage = async ({
   const pageQuery: Record<string, string> = {};
   if (searchName) pageQuery.q = searchName;
   if (state) pageQuery.state = state;
+  if (sort) pageQuery.sort = sort;
 
   const tabHref = (value?: GameState) => {
     const params = new URLSearchParams();
     if (searchName) params.set("q", searchName);
     if (value) params.set("state", value);
+    if (sort) params.set("sort", sort);
     const qs = params.toString();
     return qs ? `/admin/games?${qs}` : "/admin/games";
   };
@@ -122,12 +134,15 @@ const GamesPage = async ({
 
       <AdminTable>
         <AdminTableHeader
+          basePath="/admin/games"
+          query={pageQuery}
+          sort={sort}
           columns={[
             { label: "ID", className: "w-16 hidden md:table-cell" },
             { label: "Cover", className: "w-12 hidden sm:table-cell" },
-            { label: "Name" },
+            { label: "Name", sortKey: "name" },
             { label: "State", className: "w-36 hidden sm:table-cell" },
-            { label: "Price", className: "w-20 sm:w-24" },
+            { label: "Price", className: "w-20 sm:w-24", sortKey: "price" },
             { label: "Discount", className: "w-24 hidden sm:table-cell" },
             { label: "Actions", className: "w-24 text-right" },
           ]}

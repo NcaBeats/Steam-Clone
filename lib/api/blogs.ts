@@ -13,11 +13,13 @@ export const getAdminBlogs = (
   page = 0,
   size = 20,
   q?: string,
+  sort?: string,
 ): Promise<Paginated<Blog>> =>
   fetchAPI<Paginated<Blog>>(
     "/blogs?page=" +
       page +
       "&size=" +
       size +
-      (q ? "&q=" + encodeURIComponent(q) : ""),
+      (q ? "&q=" + encodeURIComponent(q) : "") +
+      (sort ? "&sort=" + encodeURIComponent(sort) : ""),
   );

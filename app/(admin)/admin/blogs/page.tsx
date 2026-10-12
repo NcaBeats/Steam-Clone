@@ -13,22 +13,30 @@ import {
   TableBody,
   TableCell,
   TableRow,
+  parseSortParam,
 } from "@/components/admin/dashboard/admin-table";
 
 const PAGE_SIZE = 10;
 
+const ALLOWED_SORTS = ["title", "publishedAt"] as const;
+
 const BlogsPage = async ({
   searchParams,
 }: {
-  readonly searchParams: Promise<{ page?: string; q?: string }>;
+  readonly searchParams: Promise<{ page?: string; q?: string; sort?: string }>;
 }) => {
   await requireRole(["ADMIN"], "/studio/games");
-  const { page: pageParam, q } = await searchParams;
+  const { page: pageParam, q, sort: sortParam } = await searchParams;
   const page = Math.max(0, Number(pageParam ?? 0));
   const searchQuery = q?.trim() || undefined;
+  const sort = parseSortParam(sortParam?.trim(), ALLOWED_SORTS);
 
-  const data = await getAdminBlogs(page, PAGE_SIZE, searchQuery);
+  const data = await getAdminBlogs(page, PAGE_SIZE, searchQuery, sort);
   const { content: blogs, page: pageInfo } = data;
+
+  const pageQuery: Record<string, string> = {};
+  if (searchQuery) pageQuery.q = searchQuery;
+  if (sort) pageQuery.sort = sort;
 
   return (
     <div className="flex flex-col gap-6">
@@ -68,11 +76,18 @@ const BlogsPage = async ({
 
       <AdminTable>
         <AdminTableHeader
+          basePath="/admin/blogs"
+          query={pageQuery}
+          sort={sort}
           columns={[
             { label: "ID", className: "w-16 hidden md:table-cell" },
-            { label: "Title" },
+            { label: "Title", sortKey: "title" },
             { label: "Category", className: "w-28 hidden sm:table-cell" },
-            { label: "Published", className: "w-32 hidden sm:table-cell" },
+            {
+              label: "Published",
+              className: "w-32 hidden sm:table-cell",
+              sortKey: "publishedAt",
+            },
             { label: "Actions", className: "w-24 text-right" },
           ]}
         />
@@ -129,7 +144,7 @@ const BlogsPage = async ({
         totalElements={pageInfo.totalElements}
         pageSize={PAGE_SIZE}
         basePath="/admin/blogs"
-        query={searchQuery ? { q: searchQuery } : undefined}
+        query={Object.keys(pageQuery).length > 0 ? pageQuery : undefined}
       />
     </div>
   );

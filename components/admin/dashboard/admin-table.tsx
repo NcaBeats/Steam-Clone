@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -12,7 +13,24 @@ import { cn } from "cn";
 export type AdminTableColumn = {
   label: string;
   className?: string;
+  /** Backend field name: makes the column sortable via ?sort=field,dir. */
+  sortKey?: string;
 };
+
+/**
+ * Validates a raw `?sort=field,dir` param against an allowlist.
+ * Returns the normalized value or undefined when absent/invalid.
+ */
+export function parseSortParam(
+  raw: string | undefined,
+  allowed: readonly string[],
+): string | undefined {
+  if (!raw) return undefined;
+  const [field, dir] = raw.split(",");
+  if (!field || (dir !== "asc" && dir !== "desc")) return undefined;
+  if (!allowed.includes(field)) return undefined;
+  return `${field},${dir}`;
+}
 
 export { TableBody, TableCell, TableRow };
 
@@ -24,21 +42,84 @@ export function AdminTable({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function AdminTableHeader({ columns }: { columns: AdminTableColumn[] }) {
+export function AdminTableHeader({
+  columns,
+  basePath,
+  query,
+  sort,
+}: {
+  columns: AdminTableColumn[];
+  basePath?: string;
+  query?: Readonly<Record<string, string>>;
+  sort?: string;
+}) {
+  const [sortField, sortDir] = sort?.split(",") ?? [];
   return (
     <TableHeader>
       <TableRow className="hover:bg-transparent">
-        {columns.map((column) => (
-          <TableHead
-            key={column.label}
-            className={cn(
-              "px-3 py-3 text-muted-foreground text-xs font-bold uppercase tracking-wide",
-              column.className,
-            )}
-          >
-            {column.label}
-          </TableHead>
-        ))}
+        {columns.map((column) => {
+          const isActive =
+            column.sortKey !== undefined && column.sortKey === sortField;
+          const next =
+            column.sortKey === undefined
+              ? undefined
+              : !isActive
+                ? `${column.sortKey},asc`
+                : sortDir === "asc"
+                  ? `${column.sortKey},desc`
+                  : undefined;
+          const params = new URLSearchParams();
+          if (query) {
+            for (const [key, value] of Object.entries(query)) {
+              if (key !== "sort" && key !== "page") params.set(key, value);
+            }
+          }
+          if (next) params.set("sort", next);
+          const qs = params.toString();
+          const href = `${basePath}?${qs}`;
+          return (
+            <TableHead
+              key={column.label}
+              aria-sort={
+                column.sortKey === undefined
+                  ? undefined
+                  : isActive
+                    ? sortDir === "asc"
+                      ? "ascending"
+                      : "descending"
+                    : "none"
+              }
+              className={cn(
+                "px-3 py-3 text-muted-foreground text-xs font-bold uppercase tracking-wide",
+                column.className,
+              )}
+            >
+              {column.sortKey !== undefined && basePath !== undefined ? (
+                <Link
+                  href={href}
+                  className="inline-flex items-center gap-1 hover:text-foreground"
+                >
+                  {column.label}
+                  {isActive ? (
+                    sortDir === "asc" ? (
+                      <ArrowUp size={12} aria-hidden="true" />
+                    ) : (
+                      <ArrowDown size={12} aria-hidden="true" />
+                    )
+                  ) : (
+                    <ArrowUpDown
+                      size={12}
+                      aria-hidden="true"
+                      className="opacity-50"
+                    />
+                  )}
+                </Link>
+              ) : (
+                column.label
+              )}
+            </TableHead>
+          );
+        })}
       </TableRow>
     </TableHeader>
   );

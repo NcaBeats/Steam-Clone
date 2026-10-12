@@ -100,13 +100,15 @@ export const getAdminUsers = (
   page = 0,
   size = 10,
   email?: string,
+  sort?: string,
 ): Promise<Paginated<User>> =>
   fetchAPI<Paginated<User>>(
     "/users?page=" +
       page +
       "&size=" +
       size +
-      (email ? "&email=" + encodeURIComponent(email) : ""),
+      (email ? "&email=" + encodeURIComponent(email) : "") +
+      (sort ? "&sort=" + encodeURIComponent(sort) : ""),
     { auth: true },
   );
 
@@ -162,6 +164,7 @@ export const getManageGames = (
   size = 10,
   name?: string,
   state?: string,
+  sort?: string,
 ): Promise<Paginated<Game>> =>
   fetchAPI<Paginated<Game>>(
     "/manage/games?page=" +
@@ -169,7 +172,8 @@ export const getManageGames = (
       "&size=" +
       size +
       (name ? "&name=" + encodeURIComponent(name) : "") +
-      (state ? "&state=" + encodeURIComponent(state) : ""),
+      (state ? "&state=" + encodeURIComponent(state) : "") +
+      (sort ? "&sort=" + encodeURIComponent(sort) : ""),
     { auth: true },
   );
 
@@ -179,9 +183,14 @@ export const getManageGameById = (id: number): Promise<Game> =>
 export const getManageOrders = (
   page = 0,
   size = 10,
+  sort?: string,
 ): Promise<Paginated<Purchase>> =>
   fetchAPI<Paginated<Purchase>>(
-    "/manage/orders?page=" + page + "&size=" + size,
+    "/manage/orders?page=" +
+      page +
+      "&size=" +
+      size +
+      (sort ? "&sort=" + encodeURIComponent(sort) : ""),
     {
       auth: true,
     },

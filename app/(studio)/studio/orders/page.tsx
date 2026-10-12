@@ -11,9 +11,12 @@ import {
   TableBody,
   TableCell,
   TableRow,
+  parseSortParam,
 } from "@/components/admin/dashboard/admin-table";
 
 const PAGE_SIZE = 10;
+
+const ALLOWED_SORTS = ["purchasedAt", "totalAmount"] as const;
 
 const statusClasses: Record<string, string> = {
   COMPLETED: "bg-muted text-foreground",
@@ -25,14 +28,18 @@ const statusClasses: Record<string, string> = {
 const StudioOrdersPage = async ({
   searchParams,
 }: {
-  readonly searchParams: Promise<{ page?: string }>;
+  readonly searchParams: Promise<{ page?: string; sort?: string }>;
 }) => {
   await requireRole(["VENDEDOR"], "/admin");
-  const { page: pageParam } = await searchParams;
+  const { page: pageParam, sort: sortParam } = await searchParams;
   const page = Math.max(0, Number(pageParam ?? 0));
+  const sort = parseSortParam(sortParam?.trim(), ALLOWED_SORTS);
 
-  const data = await getManageOrders(page, PAGE_SIZE);
+  const data = await getManageOrders(page, PAGE_SIZE, sort);
   const { content: orders, page: pageInfo } = data;
+
+  const pageQuery: Record<string, string> = {};
+  if (sort) pageQuery.sort = sort;
 
   return (
     <div className="flex flex-col gap-6">
@@ -51,12 +58,23 @@ const StudioOrdersPage = async ({
 
       <AdminTable>
         <AdminTableHeader
+          basePath="/studio/orders"
+          query={pageQuery}
+          sort={sort}
           columns={[
             { label: "ID", className: "w-20 hidden sm:table-cell" },
             { label: "Buyer" },
-            { label: "Date", className: "text-right w-24" },
+            {
+              label: "Date",
+              className: "text-right w-24",
+              sortKey: "purchasedAt",
+            },
             { label: "Items", className: "text-center w-16" },
-            { label: "Total", className: "text-right w-24" },
+            {
+              label: "Total",
+              className: "text-right w-24",
+              sortKey: "totalAmount",
+            },
             { label: "Status", className: "w-28 hidden md:table-cell" },
             { label: "Actions", className: "w-24 text-right" },
           ]}
@@ -117,6 +135,7 @@ const StudioOrdersPage = async ({
         totalElements={pageInfo.totalElements}
         pageSize={PAGE_SIZE}
         basePath="/studio/orders"
+        query={Object.keys(pageQuery).length > 0 ? pageQuery : undefined}
       />
     </div>
   );

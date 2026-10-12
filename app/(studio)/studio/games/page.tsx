@@ -13,22 +13,36 @@ import {
   TableBody,
   TableCell,
   TableRow,
+  parseSortParam,
 } from "@/components/admin/dashboard/admin-table";
 
 const PAGE_SIZE = 10;
 
+const ALLOWED_SORTS = ["name", "price"] as const;
+
 const StudioGamesPage = async ({
   searchParams,
 }: {
-  readonly searchParams: Promise<{ page?: string; q?: string }>;
+  readonly searchParams: Promise<{ page?: string; q?: string; sort?: string }>;
 }) => {
   await requireRole(["VENDEDOR"], "/admin");
-  const { page: pageParam, q } = await searchParams;
+  const { page: pageParam, q, sort: sortParam } = await searchParams;
   const page = Math.max(0, Number(pageParam ?? 0));
   const searchName = q?.trim() || undefined;
+  const sort = parseSortParam(sortParam?.trim(), ALLOWED_SORTS);
 
-  const data = await getManageGames(page, PAGE_SIZE, searchName);
+  const data = await getManageGames(
+    page,
+    PAGE_SIZE,
+    searchName,
+    undefined,
+    sort,
+  );
   const { content: games, page: pageInfo } = data;
+
+  const pageQuery: Record<string, string> = {};
+  if (searchName) pageQuery.q = searchName;
+  if (sort) pageQuery.sort = sort;
 
   return (
     <div className="flex flex-col gap-6">
@@ -67,12 +81,15 @@ const StudioGamesPage = async ({
 
       <AdminTable>
         <AdminTableHeader
+          basePath="/studio/games"
+          query={pageQuery}
+          sort={sort}
           columns={[
             { label: "ID", className: "w-16 hidden md:table-cell" },
             { label: "Cover", className: "w-12 hidden sm:table-cell" },
-            { label: "Name" },
+            { label: "Name", sortKey: "name" },
             { label: "State", className: "w-36 hidden sm:table-cell" },
-            { label: "Price", className: "w-20 sm:w-24" },
+            { label: "Price", className: "w-20 sm:w-24", sortKey: "price" },
             { label: "Discount", className: "w-24 hidden sm:table-cell" },
             { label: "Actions", className: "w-36 text-right" },
           ]}
@@ -149,7 +166,7 @@ const StudioGamesPage = async ({
         totalElements={pageInfo.totalElements}
         pageSize={PAGE_SIZE}
         basePath="/studio/games"
-        query={searchName ? { q: searchName } : undefined}
+        query={Object.keys(pageQuery).length > 0 ? pageQuery : undefined}
       />
     </div>
   );

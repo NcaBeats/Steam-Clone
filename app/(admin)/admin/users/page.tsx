@@ -13,21 +13,29 @@ import {
   TableBody,
   TableCell,
   TableRow,
+  parseSortParam,
 } from "@/components/admin/dashboard/admin-table";
 const PAGE_SIZE = 10;
+
+const ALLOWED_SORTS = ["email", "createdAt"] as const;
 
 const UsersPage = async ({
   searchParams,
 }: {
-  readonly searchParams: Promise<{ page?: string; q?: string }>;
+  readonly searchParams: Promise<{ page?: string; q?: string; sort?: string }>;
 }) => {
   await requireAdmin();
-  const { page: pageParam, q } = await searchParams;
+  const { page: pageParam, q, sort: sortParam } = await searchParams;
   const page = Math.max(0, Number(pageParam ?? 0));
   const searchEmail = q?.trim() || undefined;
+  const sort = parseSortParam(sortParam?.trim(), ALLOWED_SORTS);
 
-  const data = await getAdminUsers(page, PAGE_SIZE, searchEmail);
+  const data = await getAdminUsers(page, PAGE_SIZE, searchEmail, sort);
   const { content: users, page: pageInfo } = data;
+
+  const pageQuery: Record<string, string> = {};
+  if (searchEmail) pageQuery.q = searchEmail;
+  if (sort) pageQuery.sort = sort;
 
   return (
     <div className="flex flex-col gap-6">
@@ -67,11 +75,18 @@ const UsersPage = async ({
 
       <AdminTable>
         <AdminTableHeader
+          basePath="/admin/users"
+          query={pageQuery}
+          sort={sort}
           columns={[
             { label: "ID", className: "w-16 hidden md:table-cell" },
-            { label: "Email" },
+            { label: "Email", sortKey: "email" },
             { label: "Role", className: "w-28" },
-            { label: "Created", className: "w-28 hidden sm:table-cell" },
+            {
+              label: "Created",
+              className: "w-28 hidden sm:table-cell",
+              sortKey: "createdAt",
+            },
             { label: "Actions", className: "w-24 text-right" },
           ]}
         />
@@ -130,7 +145,7 @@ const UsersPage = async ({
         totalElements={pageInfo.totalElements}
         pageSize={PAGE_SIZE}
         basePath="/admin/users"
-        query={searchEmail ? { q: searchEmail } : undefined}
+        query={Object.keys(pageQuery).length > 0 ? pageQuery : undefined}
       />
     </div>
   );
