@@ -48,7 +48,7 @@ export const GameCard = ({
           {hasDiscount ? (
             <span
               className="
-              font-semibold bg-[#fcaf17] text-black px-1.5 sm:px-2 py-0.5 rounded-md text-[11px] sm:text-xs"
+              font-semibold bg-[#fcaf17] text-black px-1.5 sm:px-2 py-0.5 rounded-md text-xs"
             >
               -{discountPercent}%
             </span>

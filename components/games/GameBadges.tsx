@@ -28,7 +28,7 @@ export function DiscountBadge({
   return (
     <span
       className={cn(
-        "bg-[#FCAF17] text-black font-semibold px-1.5 py-0.5 rounded-md text-[11px] whitespace-nowrap",
+        "bg-[#FCAF17] text-black font-semibold px-1.5 py-0.5 rounded-md text-xs whitespace-nowrap",
         className,
       )}
     >

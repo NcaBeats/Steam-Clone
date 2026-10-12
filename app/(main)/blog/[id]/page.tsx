@@ -58,7 +58,7 @@ const BlogDetailPage = async ({ params }: Props) => {
       <header className="flex flex-col gap-3">
         <div className="flex items-center gap-3 text-xs text-[#8A8A8A]">
           {blog.category && (
-            <span className="bg-[#007AFF] text-white px-2 py-0.5 rounded text-[10px] uppercase font-semibold tracking-wide">
+            <span className="bg-[#007AFF] text-white px-2 py-0.5 rounded text-xs uppercase font-semibold tracking-wide">
               {blog.category}
             </span>
           )}

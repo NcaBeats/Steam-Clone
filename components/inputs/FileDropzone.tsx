@@ -198,7 +198,7 @@ export function FileDropzone({
               >
                 <X size={12} />
               </button>
-              <span className="absolute bottom-0 inset-x-0 bg-black/70 text-[10px] text-white truncate px-1">
+              <span className="absolute bottom-0 inset-x-0 bg-black/70 text-xs text-white truncate px-1">
                 {formatName(file.name)}
               </span>
             </div>
