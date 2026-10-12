@@ -45,7 +45,7 @@ const StudioOrdersPage = async ({
     <div className="flex flex-col gap-6">
       <header className="flex flex-col gap-1">
         <p className="text-xs font-bold uppercase tracking-[0.5px] text-muted-foreground">
-          Orders
+          Studio
         </p>
         <h1 className="text-xl font-bold tracking-[0.4px] text-foreground">
           Orders
