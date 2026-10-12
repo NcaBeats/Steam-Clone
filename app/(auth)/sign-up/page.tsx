@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { format } from "date-fns";
-import { es } from "date-fns/locale";
 import { Asterisk, CalendarIcon } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -197,9 +196,7 @@ export default function SignUp() {
                             <CalendarIcon className="mr-2 size-4" />
 
                             {field.value ? (
-                              format(field.value, "PPP", {
-                                locale: es,
-                              })
+                              format(field.value, "PPP")
                             ) : (
                               <span>Select date</span>
                             )}

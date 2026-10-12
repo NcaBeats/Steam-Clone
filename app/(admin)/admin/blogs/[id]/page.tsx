@@ -44,7 +44,7 @@ const BlogSummary = ({ blog }: { blog: Blog }) => (
       <h1 className="text-2xl font-bold text-foreground">Edit blog</h1>
       <div className="flex items-center gap-2 text-sm text-muted-foreground">
         {blog.category && (
-          <span className="px-2 py-0.5 rounded text-xs font-semibold bg-[#A1CD44] text-black">
+          <span className="px-2 py-0.5 rounded text-xs font-semibold bg-[#FCAF17] text-black">
             {blog.category}
           </span>
         )}

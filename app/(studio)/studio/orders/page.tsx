@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { requireRole } from "@/actions/admin/guard";
 import { getManageOrders } from "@/lib/api/games";
+import { RowActions } from "@/components/admin/dashboard/row-actions";
 import {
   AdminTable,
+  AdminTableActions,
   AdminTableEmpty,
   AdminTableHeader,
   AdminTablePagination,
@@ -56,6 +58,7 @@ const StudioOrdersPage = async ({
             { label: "Items", className: "text-center w-16" },
             { label: "Total", className: "text-right w-24" },
             { label: "Status", className: "w-28 hidden md:table-cell" },
+            { label: "Actions", className: "w-24 text-right" },
           ]}
         />
         <TableBody>
@@ -94,6 +97,14 @@ const StudioOrdersPage = async ({
                     {o.status}
                   </span>
                 </TableCell>
+                <AdminTableActions>
+                  <RowActions
+                    kind="studio-order"
+                    id={o.id}
+                    label={`Order #${o.id}`}
+                    allowDelete={false}
+                  />
+                </AdminTableActions>
               </TableRow>
             ))
           )}

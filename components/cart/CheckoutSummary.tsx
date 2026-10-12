@@ -4,12 +4,7 @@ import { useEffect, useSyncExternalStore, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { GameImage } from "@/components/games/GameImage";
-import {
-  Wallet as WalletIcon,
-  Loader2,
-  CheckCircle2,
-  XCircle,
-} from "lucide-react";
+import { Loader2, CheckCircle2, XCircle } from "lucide-react";
 import {
   clearCart,
   getCartServerSnapshot,
@@ -20,6 +15,7 @@ import {
 } from "@/lib/cart";
 import { getMyWalletAction } from "@/actions/wallet";
 import { createPurchaseAction } from "@/actions/purchase";
+import { DepositFundsSheet } from "./DepositFundsSheet";
 import { WALLET_UPDATE_EVENT } from "@/components/layout/WalletBalance";
 import type { Wallet } from "@/types";
 import { useAlert } from "@/components/feedback";
@@ -134,13 +130,16 @@ export const CheckoutSummary = () => {
   return (
     <div className="flex flex-col gap-6">
       <div className="rounded-lg p-4 flex items-center gap-3 w-fit">
-        <WalletIcon size={20} className="text-[#007AFF]" />
         <div className="flex-1">
-          <p className="text-xs text-[#8A8A8A]">Wallet balance</p>
-          <p className="text-lg font-bold text-[#FAFAFA]">
+          <p className="text-sm font-medium text-[#8A8A8A]">Wallet balance</p>
+          <p className="text-2xl font-bold text-[#FAFAFA]">
             {wallet ? formatPrice(wallet.balance, { zeroAsFree: false }) : "—"}
           </p>
         </div>
+        <DepositFundsSheet
+          currentBalance={wallet?.balance ?? null}
+          onSuccess={refreshWallet}
+        />
       </div>
 
       <div className="flex flex-col gap-3">

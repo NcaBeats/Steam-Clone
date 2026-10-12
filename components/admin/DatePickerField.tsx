@@ -15,9 +15,15 @@ type Props = Readonly<{
   label: string;
   value: Date | null | undefined;
   onChange: (date: Date | undefined) => void;
+  disableFuture?: boolean;
 }>;
 
-export function DatePickerField({ label, value, onChange }: Props) {
+export function DatePickerField({
+  label,
+  value,
+  onChange,
+  disableFuture = true,
+}: Props) {
   return (
     <Popover>
       <PopoverTrigger
@@ -42,7 +48,7 @@ export function DatePickerField({ label, value, onChange }: Props) {
           selected={value ?? undefined}
           onSelect={onChange}
           captionLayout="dropdown"
-          disabled={(date) => date > new Date()}
+          disabled={disableFuture ? (date) => date > new Date() : undefined}
         />
       </PopoverContent>
     </Popover>

@@ -20,10 +20,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-type RowKind = "game" | "user" | "blog";
+type RowKind = "game" | "user" | "blog" | "studio-game" | "studio-order";
 
 type RowConfig = {
   editBase: string;
+  editSuffix?: string;
+  editLabel?: string;
   deleteTitle: string;
   runDelete: (id: number) => Promise<{ ok: boolean; error?: string }>;
 };
@@ -43,6 +45,18 @@ const CONFIG: Record<RowKind, RowConfig> = {
     editBase: "/admin/blogs",
     deleteTitle: "Delete blog",
     runDelete: deleteBlogByIdAction,
+  },
+  "studio-game": {
+    editBase: "/studio/games",
+    editSuffix: "/edit",
+    deleteTitle: "Delete game",
+    runDelete: deleteGameAction,
+  },
+  "studio-order": {
+    editBase: "/studio/orders",
+    editLabel: "View",
+    deleteTitle: "Delete order",
+    runDelete: async () => ({ ok: false, error: "Not supported" }),
   },
 };
 
@@ -83,9 +97,15 @@ export const RowActions = ({ kind, id, label, allowDelete = true }: Props) => {
           <DropdownMenuGroup>
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
           </DropdownMenuGroup>
-          <DropdownMenuItem render={<Link href={`${config.editBase}/${id}`} />}>
+          <DropdownMenuItem
+            render={
+              <Link
+                href={`${config.editBase}/${id}${config.editSuffix ?? ""}`}
+              />
+            }
+          >
             <PencilIcon />
-            Edit
+            {config.editLabel ?? "Edit"}
           </DropdownMenuItem>
           {allowDelete && <DropdownMenuSeparator />}
           {allowDelete && (

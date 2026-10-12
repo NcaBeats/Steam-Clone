@@ -42,7 +42,7 @@ const ADMIN_ITEMS: DashboardNavItem[] = [
 ];
 
 const STUDIO_ITEMS: DashboardNavItem[] = [
-  { title: "Products", url: "/studio/games", icon: ShoppingBag },
+  { title: "Games", url: "/studio/games", icon: ShoppingBag },
   { title: "Orders", url: "/studio/orders", icon: Receipt },
 ];
 

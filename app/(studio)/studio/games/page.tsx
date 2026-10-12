@@ -2,9 +2,11 @@ import Link from "next/link";
 import { requireRole } from "@/actions/admin/guard";
 import { getManageGames } from "@/lib/api/games";
 import { SearchInput } from "@/components/admin/SearchInput";
+import { RowActions } from "@/components/admin/dashboard/row-actions";
 import { GameImage } from "@/components/games/GameImage";
 import {
   AdminTable,
+  AdminTableActions,
   AdminTableEmpty,
   AdminTableHeader,
   AdminTablePagination,
@@ -132,22 +134,9 @@ const StudioGamesPage = async ({
                     </span>
                   )}
                 </TableCell>
-                <TableCell className="px-3 py-3 text-right whitespace-nowrap">
-                  <div className="flex items-center justify-end gap-3">
-                    <Link
-                      href={`/studio/games/${g.id}`}
-                      className="text-muted-foreground hover:text-foreground text-sm font-medium"
-                    >
-                      View
-                    </Link>
-                    <Link
-                      href={`/studio/games/${g.id}/edit`}
-                      className="text-muted-foreground hover:text-foreground text-sm font-medium"
-                    >
-                      Edit
-                    </Link>
-                  </div>
-                </TableCell>
+                <AdminTableActions>
+                  <RowActions kind="studio-game" id={g.id} label={g.name} />
+                </AdminTableActions>
               </TableRow>
             ))
           )}

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Plus, TicketIcon } from "lucide-react";
+import { TicketIcon } from "lucide-react";
 import { requireRole } from "@/actions/admin/guard";
 import { getManageGames } from "@/lib/api/games";
 import { SearchInput } from "@/components/admin/SearchInput";
@@ -82,13 +82,6 @@ const GamesPage = async ({
             {pageInfo.totalElements !== 1 ? "s" : ""} in catalog
           </p>
         </div>
-        <Link
-          href="/admin/games/new"
-          className="inline-flex items-center gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-semibold px-4 py-2 rounded-full transition-colors"
-        >
-          <Plus size={16} />
-          Nuevo producto
-        </Link>
       </header>
 
       <div className="flex flex-wrap items-center justify-between gap-4">

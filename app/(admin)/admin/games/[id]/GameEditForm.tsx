@@ -246,6 +246,7 @@ export function GameEditForm({
             onChange={(date) =>
               setLaunchDate(date ? format(date, "yyyy-MM-dd") : "")
             }
+            disableFuture={state !== "COMING_SOON"}
           />
         </div>
         <div className="flex flex-col gap-1">

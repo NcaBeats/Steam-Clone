@@ -1,5 +1,4 @@
 import { Nav, Header, Footer } from "@/components/layout";
-import { redirect } from "next/navigation";
 import { getCurrentUserAction } from "@/actions/admin/auth";
 
 export default async function MainLayout({
@@ -7,11 +6,7 @@ export default async function MainLayout({
 }: {
   readonly children: React.ReactNode;
 }) {
-  const user = await getCurrentUserAction();
-
-  if (user?.role === "VENDEDOR") {
-    redirect("/studio/games");
-  }
+  await getCurrentUserAction();
 
   return (
     <>

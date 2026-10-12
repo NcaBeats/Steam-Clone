@@ -1,6 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig: Record<string, unknown> = {
-  allowedDevOrigins: ["192.168.100.40", "localhost:3000"],
+  allowedDevOrigins: ["192.168.100.40", "192.168.100.64", "localhost:3000"],
+  async rewrites() {
+    return [
+      {
+        source: "/api/v1/:path*",
+        destination: "http://127.0.0.1:9090/api/v1/:path*",
+      },
+    ];
+  },
   images: {
     // El backend local corre en 9090 (ver server.port en application.yaml del
     // backend), no en 8080: con el puerto viejo las imagenes servidas por la
