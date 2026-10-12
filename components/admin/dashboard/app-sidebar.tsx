@@ -35,7 +35,7 @@ const ericaOne = Erica_One({
 
 const ADMIN_ITEMS: DashboardNavItem[] = [
   { title: "Dashboard", url: "/admin", icon: LayoutDashboardIcon },
-  { title: "Products", url: "/admin/games", icon: ShoppingBag },
+  { title: "Games", url: "/admin/games", icon: ShoppingBag },
   { title: "Blogs", url: "/admin/blogs", icon: Newspaper },
   { title: "Orders", url: "/admin/orders", icon: Receipt },
   { title: "Users", url: "/admin/users", icon: Users },
