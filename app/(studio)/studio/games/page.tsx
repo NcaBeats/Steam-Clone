@@ -18,7 +18,13 @@ import {
 
 const PAGE_SIZE = 10;
 
-const ALLOWED_SORTS = ["name", "price"] as const;
+const ALLOWED_SORTS = [
+  "id",
+  "name",
+  "price",
+  "originalPrice",
+  "discountPercent",
+] as const;
 
 const StudioGamesPage = async ({
   searchParams,
@@ -85,18 +91,31 @@ const StudioGamesPage = async ({
           query={pageQuery}
           sort={sort}
           columns={[
-            { label: "ID", className: "w-16 hidden md:table-cell" },
+            {
+              label: "ID",
+              className: "w-16 hidden md:table-cell",
+              sortKey: "id",
+            },
             { label: "Cover", className: "w-12 hidden sm:table-cell" },
             { label: "Name", sortKey: "name" },
             { label: "State", className: "w-36 hidden sm:table-cell" },
+            {
+              label: "Original",
+              className: "w-24 hidden sm:table-cell",
+              sortKey: "originalPrice",
+            },
             { label: "Price", className: "w-20 sm:w-24", sortKey: "price" },
-            { label: "Discount", className: "w-24 hidden sm:table-cell" },
+            {
+              label: "Discount",
+              className: "w-24 hidden sm:table-cell",
+              sortKey: "discountPercent",
+            },
             { label: "Actions", className: "w-36 text-right" },
           ]}
         />
         <TableBody>
           {games.length === 0 ? (
-            <AdminTableEmpty colSpan={7}>
+            <AdminTableEmpty colSpan={8}>
               {searchName
                 ? `No games found matching "${searchName}"`
                 : "No games found"}
@@ -136,6 +155,17 @@ const StudioGamesPage = async ({
                   >
                     {g.state}
                   </span>
+                </TableCell>
+                <TableCell className="px-3 py-3 hidden sm:table-cell whitespace-nowrap">
+                  {g.discountPercent > 0 ? (
+                    <s className="text-muted-foreground line-through">
+                      ${g.originalPrice.toFixed(2)}
+                    </s>
+                  ) : (
+                    <span className="text-muted-foreground">
+                      ${g.originalPrice.toFixed(2)}
+                    </span>
+                  )}
                 </TableCell>
                 <TableCell className="px-3 py-3 text-foreground whitespace-nowrap">
                   ${g.price.toFixed(2)}
