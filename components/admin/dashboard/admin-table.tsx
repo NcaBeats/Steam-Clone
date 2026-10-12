@@ -11,7 +11,8 @@ import {
 import { cn } from "cn";
 
 export type AdminTableColumn = {
-  label: string;
+  /** Omitted for image-only columns: renders sr-only text instead. */
+  label?: string;
   className?: string;
   /** Backend field name: makes the column sortable via ?sort=field,dir. */
   sortKey?: string;
@@ -57,7 +58,7 @@ export function AdminTableHeader({
   return (
     <TableHeader>
       <TableRow className="hover:bg-transparent">
-        {columns.map((column) => {
+        {columns.map((column, index) => {
           const isActive =
             column.sortKey !== undefined && column.sortKey === sortField;
           const next =
@@ -79,7 +80,7 @@ export function AdminTableHeader({
           const href = `${basePath}?${qs}`;
           return (
             <TableHead
-              key={column.label}
+              key={`${column.label ?? "col"}-${index}`}
               aria-sort={
                 column.sortKey === undefined
                   ? undefined
@@ -115,7 +116,7 @@ export function AdminTableHeader({
                   )}
                 </Link>
               ) : (
-                column.label
+                (column.label ?? <span className="sr-only">Cover</span>)
               )}
             </TableHead>
           );
