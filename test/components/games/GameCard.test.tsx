@@ -9,8 +9,8 @@ vi.mock("@/components/games/GameImage", () => ({
 const props = {
   id: 7,
   name: "Hollow Knight",
-  price: 8000,
-  originalPrice: 10000,
+  price: 47.99,
+  originalPrice: 59.99,
   discountPercent: 20,
   imageUrl: "/hk.jpg",
 };
@@ -20,21 +20,21 @@ afterEach(cleanup);
 describe("GameCard Test", () => {
   test("El juego muestra el precio final", () => {
     render(<GameCard {...props} />);
-    expect(screen.getByText("$8,000.00")).toBeDefined();
+    expect(screen.getByText("$47.99")).toBeDefined();
   });
 
   test("El juego con descuento muestra el porcentaje y su valor original tachado", () => {
     render(<GameCard {...props} />);
     expect(screen.getByText(/-20%/)).toBeDefined();
-    expect(screen.getByText("$10,000.00", { selector: "s" }).textContent).toBe(
-      "$10,000.00",
+    expect(screen.getByText("$59.99", { selector: "s" }).textContent).toBe(
+      "$59.99",
     );
   });
 
   test("El juego sin descuento no debe mostrar porcentaje ni valor tachado", () => {
-    render(<GameCard {...props} discountPercent={0} price={10000} />);
+    render(<GameCard {...props} discountPercent={0} price={59.99} />);
     expect(screen.queryByText(/%/)).toBeNull();
-    expect(screen.getByText("$10,000.00")).toBeDefined();
+    expect(screen.getByText("$59.99")).toBeDefined();
   });
 
   test("Debe redirigir al juego con el endpoint construido", () => {

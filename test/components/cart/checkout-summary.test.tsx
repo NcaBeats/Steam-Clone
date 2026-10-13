@@ -34,7 +34,7 @@ vi.mock("@/components/cart/DepositFundsSheet", () => ({
 const mockedWallet = vi.mocked(getMyWalletAction);
 const mockedPurchase = vi.mocked(createPurchaseAction);
 
-const wallet = { userId: 1, balance: 50000, updatedAt: "2026-01-01T00:00:00Z" };
+const wallet = { userId: 1, balance: 100, updatedAt: "2026-01-01T00:00:00Z" };
 
 function seedCart() {
   useCartStore.setState({
@@ -42,7 +42,7 @@ function seedCart() {
       {
         id: 7,
         name: "Hollow Knight",
-        price: 8000,
+        price: 47.99,
         imageUrl: "/hk.jpg",
         discountPercent: 20,
       },
@@ -85,7 +85,7 @@ describe("CheckoutSummary", () => {
   });
 
   test("saldo insuficiente bloquea la confirmación", async () => {
-    mockedWallet.mockResolvedValue({ ...wallet, balance: 100 });
+    mockedWallet.mockResolvedValue({ ...wallet, balance: 10 });
     seedCart();
     render(<CheckoutSummary />);
     expect(await screen.findByText(/Insufficient balance/)).toBeInTheDocument();

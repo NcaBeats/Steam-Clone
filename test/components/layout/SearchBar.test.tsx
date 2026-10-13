@@ -24,8 +24,8 @@ const mockedSearch = vi.mocked(searchGamesClient);
 const game = {
   id: 7,
   name: "Hollow Knight",
-  price: 8000,
-  originalPrice: 10000,
+  price: 47.99,
+  originalPrice: 59.99,
   discountPercent: 20,
   imageUrl: "/hk.jpg",
 } as Game;
@@ -49,7 +49,7 @@ describe("SearchBar", () => {
     typeQuery("hollow");
     expect(await screen.findByText("Hollow Knight")).toBeInTheDocument();
     expect(mockedSearch).toHaveBeenCalledWith("hollow");
-    expect(screen.getByText("$8,000.00")).toBeInTheDocument();
+    expect(screen.getByText("$47.99")).toBeInTheDocument();
   });
 
   test("sin resultados muestra el estado vacío", async () => {

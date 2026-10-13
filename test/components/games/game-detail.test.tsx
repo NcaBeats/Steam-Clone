@@ -18,8 +18,8 @@ vi.mock("@/components/feedback", () => ({
 const game: Game = {
   id: 7,
   name: "Hollow Knight",
-  originalPrice: 10000,
-  price: 8000,
+  originalPrice: 59.99,
+  price: 47.99,
   discountPercent: 20,
   description: "A tiny knight explores a fallen kingdom.",
   state: "AVAILABLE",
@@ -77,7 +77,7 @@ describe("GameDetail", () => {
         {
           id: 7,
           name: "Hollow Knight",
-          price: 8000,
+          price: 47.99,
           imageUrl: "https://cdn.example.com/hk.jpg",
           discountPercent: 20,
         },

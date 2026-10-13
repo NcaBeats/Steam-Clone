@@ -55,7 +55,7 @@ const GAME_B: CartItem = {
 const SINGLE_GAME: CartItem = {
   id: 1,
   name: "Game",
-  price: 1000,
+  price: 49.99,
   imageUrl: null,
   discountPercent: 0,
 };
