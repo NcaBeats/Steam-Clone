@@ -88,7 +88,7 @@ describe("SearchBar", () => {
     expect(screen.queryByText("Hollow Knight")).toBeNull();
   });
 
-  test("click en una opción navega al juego sin dejar JSON en el input", async () => {
+  test("click en una opción navega al juego y limpia el input", async () => {
     mockedSearch.mockResolvedValue([game]);
     render(<SearchBar />);
     typeQuery("hollow");
