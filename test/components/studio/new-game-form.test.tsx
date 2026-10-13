@@ -80,7 +80,7 @@ describe("NewGameForm", () => {
     expect(name).toHaveValue("Hollow Knight");
   });
 
-  test("marcar categoría actualiza su checkbox", async () => {
+  test("marcar categoría actualiza su checkbox", () => {
     render(<NewGameForm categories={categories} />);
     const checkbox = screen.getByRole("checkbox", { name: "Action" });
     expect(checkbox).not.toBeChecked();
