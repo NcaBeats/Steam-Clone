@@ -1,9 +1,5 @@
 import * as z from "zod";
 
-/**
- * Categorias de blog que acepta el backend (`BlogRequest.category`).
- * Enum en mayusculas, case-sensitive: cualquier otro valor -> 400.
- */
 export const BlogCategorySchema = z.enum([
   "EVENTS",
   "INDUSTRY",
@@ -15,16 +11,6 @@ export const BlogCategorySchema = z.enum([
 
 export type BlogCategory = z.infer<typeof BlogCategorySchema>;
 
-/**
- * Refleja `BlogRequest` del backend:
- * - title requerido, max 200
- * - excerpt requerido, max 500
- * - content requerido, sin limite
- * - coverImage opcional, URL absoluta http(s), max 500
- * - category opcional (enum o null/omitido)
- *
- * El front no envia publishedAt/createdAt: los fija el servidor al crear.
- */
 export const BlogSchema = z.object({
   title: z
     .string()

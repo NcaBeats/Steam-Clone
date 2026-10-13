@@ -45,11 +45,6 @@ async function runMutation<T>(
   }
 }
 
-/**
- * Descarta los campos de media que no se subieron para que el backend conserve
- * lo que ya habia. Una galeria vacia tampoco se envia: el backend solo reemplaza
- * cuando recibe al menos una URL.
- */
 function compactMedia(media: GameMediaUrls): Record<string, unknown> {
   const compact: Record<string, unknown> = {};
   if (media.videoUrl) compact.videoUrl = media.videoUrl;
@@ -310,11 +305,6 @@ export async function updateUserProfileAction(
   return result.ok ? { ok: true, user: result.data } : result;
 }
 
-/**
- * Firma para subir la portada de un blog (flujo presignado: el archivo no
- * pasa por el server de Next). El Content-Type queda firmado, asi que el PUT
- * a R2 debe enviarlo verbatim.
- */
 export async function presignBlogCoverAction(
   title: string,
   contentType: string,
@@ -338,10 +328,6 @@ export async function presignBlogCoverAction(
 
 const BLOG_REVALIDATE_PATHS = ["/admin/blogs", "/blog", "/"];
 
-/**
- * Crea un blog (`POST /blogs`, 201). `coverImage` y `category` son
- * opcionales: si no vienen, se omiten y el backend los deja sin portada.
- */
 export async function createBlogAction(
   input: unknown,
 ): Promise<{ ok: boolean; error?: string }> {
@@ -366,11 +352,6 @@ export async function createBlogAction(
   );
 }
 
-/**
- * Actualiza un blog (`PUT /blogs/{id}`, 200). El PUT es completo salvo el
- * cover: si no hay portada nueva se omite `coverImage` para que el backend
- * conserve la actual.
- */
 export async function updateBlogAction(
   id: number,
   input: unknown,

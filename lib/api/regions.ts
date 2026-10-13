@@ -2,11 +2,6 @@ import type { Comuna, Region } from "@/types";
 import { ApiError } from "./errors";
 import { API_BASE } from "./config";
 
-/**
- * Catálogo público de regiones/comunas (tablas con FK en el backend).
- * Los nombres ya vienen en texto bonito ("Metropolitana de Santiago"),
- * listos para mostrar directo en UI sin mapeo en el front.
- */
 export async function getRegionsClient(): Promise<Region[]> {
   const res = await fetch(`${API_BASE}/regions`);
   if (!res.ok) {

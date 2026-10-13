@@ -13,14 +13,9 @@ import { cn } from "cn";
 export type AdminTableColumn = {
   label: string;
   className?: string;
-  /** Backend field name: makes the column sortable via ?sort=field,dir. */
   sortKey?: string;
 };
 
-/**
- * Validates a raw `?sort=field,dir` param against an allowlist.
- * Returns the normalized value or undefined when absent/invalid.
- */
 export function parseSortParam(
   raw: string | undefined,
   allowed: readonly string[],

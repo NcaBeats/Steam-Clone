@@ -5,13 +5,11 @@ import { cn } from "@/lib/utils";
 type Props = {
   src: string | null | undefined;
   alt?: string;
-  /** next/image con `fill`: el contenedor padre necesita ser `relative`. */
   fill?: boolean;
   width?: number;
   height?: number;
   sizes?: string;
   className?: string;
-  /** Carga la imagen antes del resto: para la portada del detalle de juego. */
   priority?: boolean;
 };
 export function GameImage({

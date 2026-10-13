@@ -4,11 +4,6 @@ import type {
   PresignedUploadResponse,
 } from "@/types";
 
-/**
- * Solo estos tipos llega el backend (allowlist de R2StorageService). Se deriva
- * de la extension y no de file.type porque algunos navegadores reportan
- * application/octet-stream para .mov, que el backend rechazaria.
- */
 const VIDEO_CONTENT_TYPES: Record<string, string> = {
   mp4: "video/mp4",
   m4v: "video/x-m4v",
@@ -17,11 +12,6 @@ const VIDEO_CONTENT_TYPES: Record<string, string> = {
   qt: "video/quicktime",
 };
 
-/**
- * Allowlist de imagenes del backend (R2StorageService). El Content-Type queda
- * firmado en la URL de presign, asi que este valor se reutiliza tanto en la
- * peticion de firma como en el header del PUT.
- */
 const IMAGE_CONTENT_TYPES: Record<string, string> = {
   png: "image/png",
   jpg: "image/jpeg",
@@ -54,11 +44,6 @@ export function resolveVideoContentType(file: File): string {
   return resolved;
 }
 
-/**
- * PUT a R2 con la URL prefirmada. El Content-Type tiene que ser exactamente el
- * que el backend firmo (viene en la respuesta), porque la firma cubre la
- * cabecera content-type: cualquier diferencia produce SignatureDoesNotMatch.
- */
 export async function uploadVideoToR2(
   file: File,
   presign: PresignedUploadResponse,
@@ -121,11 +106,6 @@ function unwrap<T>(result: PresignResult<T>): T {
   return result.data;
 }
 
-/**
- * Sube la media elegida y devuelve las URLs. Solo se pide firma para lo que hay
- * que subir: si el usuario no toca un campo, ese campo no viaja y el backend
- * conserva el valor anterior.
- */
 export async function uploadGameMedia({
   name,
   image,

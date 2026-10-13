@@ -17,14 +17,6 @@ type UploadBlogCoverParams = {
   onProgress?: (message: string) => void;
 };
 
-/**
- * Sube la portada del blog por flujo presignado (el archivo no pasa por el
- * server de Next): pide la firma, hace PUT a R2 con el Content-Type firmado
- * y devuelve el publicPath para mandarlo como `coverImage`.
- *
- * Si no hay archivo nuevo devuelve null y el llamador debe omitir
- * `coverImage`: en POST significa "sin portada" y en PUT "no cambiar".
- */
 export async function uploadBlogCover({
   title,
   cover,
