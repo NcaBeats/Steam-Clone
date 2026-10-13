@@ -10,7 +10,7 @@ export default async function AdminLayout({
 }: {
   readonly children: React.ReactNode;
 }) {
-  await requireRole(["ADMIN"], "/studio/games");
+  await requireRole(["ADMIN"], "/");
   const user = await getCurrentUserAction();
 
   return (

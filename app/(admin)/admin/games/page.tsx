@@ -50,7 +50,7 @@ const GamesPage = async ({
     sort?: string;
   }>;
 }) => {
-  await requireRole(["ADMIN"], "/studio/games");
+  await requireRole(["ADMIN"], "/");
   const {
     page: pageParam,
     q,

@@ -10,7 +10,7 @@ import Link from "next/link";
 import { requireRole } from "@/actions/admin/guard";
 
 const AdminHomePage = async () => {
-  await requireRole(["ADMIN"], "/studio/games");
+  await requireRole(["ADMIN"], "/");
 
   const [usersPage, gameStats] = await Promise.all([
     getAdminUsers(0, 1),

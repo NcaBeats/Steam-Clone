@@ -28,7 +28,7 @@ const OrdersPage = async ({
 }: {
   readonly searchParams: Promise<{ page?: string; sort?: string }>;
 }) => {
-  await requireRole(["ADMIN"], "/studio/games");
+  await requireRole(["ADMIN"], "/");
   const { page: pageParam, sort: sortParam } = await searchParams;
   const page = Math.max(0, Number(pageParam ?? 0));
   const sort = parseSortParam(sortParam?.trim(), ALLOWED_SORTS);

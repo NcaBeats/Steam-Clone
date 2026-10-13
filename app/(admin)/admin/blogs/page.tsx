@@ -25,7 +25,7 @@ const BlogsPage = async ({
 }: {
   readonly searchParams: Promise<{ page?: string; q?: string; sort?: string }>;
 }) => {
-  await requireRole(["ADMIN"], "/studio/games");
+  await requireRole(["ADMIN"], "/");
   const { page: pageParam, q, sort: sortParam } = await searchParams;
   const page = Math.max(0, Number(pageParam ?? 0));
   const searchQuery = q?.trim() || undefined;

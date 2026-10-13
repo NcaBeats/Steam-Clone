@@ -32,7 +32,7 @@ type Props = Readonly<{
 
 export function NewGameForm({
   categories,
-  redirectTo = "/admin/games",
+  redirectTo = "/studio/games",
 }: Props) {
   const router = useRouter();
   const { showAlert } = useAlert();

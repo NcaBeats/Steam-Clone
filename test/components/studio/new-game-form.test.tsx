@@ -67,6 +67,10 @@ describe("NewGameForm", () => {
     expect(
       screen.getByRole("button", { name: "Create product" }),
     ).toBeDisabled();
+    expect(screen.getByRole("link", { name: "Cancel" })).toHaveAttribute(
+      "href",
+      "/studio/games",
+    );
   });
 
   test("el estado del nombre cambia al escribir", () => {

@@ -10,7 +10,7 @@ export default async function StudioLayout({
 }: {
   readonly children: React.ReactNode;
 }) {
-  await requireRole(["VENDEDOR"], "/admin");
+  await requireRole(["VENDEDOR"], "/");
   const user = await getCurrentUserAction();
 
   return (

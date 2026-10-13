@@ -30,7 +30,7 @@ const StudioOrdersPage = async ({
 }: {
   readonly searchParams: Promise<{ page?: string; sort?: string }>;
 }) => {
-  await requireRole(["VENDEDOR"], "/admin");
+  await requireRole(["VENDEDOR"], "/");
   const { page: pageParam, sort: sortParam } = await searchParams;
   const page = Math.max(0, Number(pageParam ?? 0));
   const sort = parseSortParam(sortParam?.trim(), ALLOWED_SORTS);

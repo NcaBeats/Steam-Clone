@@ -32,7 +32,7 @@ const StudioGamesPage = async ({
 }: {
   readonly searchParams: Promise<{ page?: string; q?: string; sort?: string }>;
 }) => {
-  await requireRole(["VENDEDOR"], "/admin");
+  await requireRole(["VENDEDOR"], "/");
   const { page: pageParam, q, sort: sortParam } = await searchParams;
   const page = Math.max(0, Number(pageParam ?? 0));
   const searchName = q?.trim() || undefined;
