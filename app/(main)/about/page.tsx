@@ -85,7 +85,7 @@ To become the digital meeting point where any player, regardless of location or 
         <div className="flex flex-col items-center text-center gap-1">
           <h2 className={titleCls}>We work with the best studios</h2>
           <p className="text-sm text-[#8A8A8A]">
-            To offer you 100% original and secure codes.
+            To offer you 100% original games and secure purchases.
           </p>
         </div>
         <div className="py-5">
