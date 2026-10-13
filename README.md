@@ -40,20 +40,25 @@ pnpm dev        # desarrollo (Turbopack, http://localhost:3000)
 pnpm build      # build de producción
 pnpm start      # servir el build de producción
 pnpm lint       # eslint
+pnpm vitest run # suite de tests
+pnpm coverage   # suite + reporte HTML en coverage/ (ignorado por git)
 ```
 
 ## Estructura
 
-- `app/(main)/` — rutas públicas: home, `catalog`, `games/[id]`, `blog`, `cart`,
-  `checkout`, `library`, `search`, `contact`, `about`
+- `app/(main)/` — rutas públicas: home, `catalog`, `games/[id]`, `blog`,
+  `cart`, `checkout`, `library`, `contact`, `about`
 - `app/(auth)/` — login/signup
 - `app/(admin)/` y `app/(studio)/` — paneles de administración y estudios (vendedores)
 - `actions/` — Server Actions (muta datos, define revalidaciones)
 - `lib/api/` — `fetchAPI` (server, JWT, `API_BASE_URL`) + clientes de navegador
   (`search.ts`, `regions.ts`, ruta `/api/v1` vía rewrite)
+- `stores/` — store del carrito (Zustand + `persist`, solo cliente)
 - `hooks/use-location.ts` — `useRegions` / `useComunas` para selects de ubicación
 - `schemas/` — validación Zod
 - `components/` — UI compartida (games, cart, blog, admin, studio)
+- `test/` — suite Vitest (23 archivos); `docs/tests.md` — qué cubre cada test
+- `vitest.config.mts` — entorno jsdom + reporte de cobertura (texto y HTML)
 
 ## Arquitectura API
 
@@ -99,6 +104,23 @@ clientes.
 - `WalletBalance` (header) escucha `wallet:updated` y se refresca al instante,
   igual que el balance del checkout vía callback `onSuccess`.
 
+## Carrito
+
+- `useCartStore` (`stores/cart-store.ts`): estado global cliente, sin Context.
+  Persiste solo `items` en `localStorage` (`persist` + `partialize`).
+- `_hasHydrated` (vía `onRehydrateStorage`) evita el mismatch SSR: los
+  componentes muestran skeleton hasta hidratar.
+- Selectores (`s.items`, `selectCartTotal`, `selectIsInCart(id)`): cada
+  componente re-renderiza solo si cambia lo que selecciona.
+- El total es derivado, no se persiste. El backend valida precios al comprar.
+
+## Tests
+
+Detalle por archivo en `docs/tests.md` (requisito → test, cobertura por
+vista y por componente). Convenciones: queries por `screen`, `fireEvent`
+para lo mecánico, `userEvent` donde se necesita comportamiento real,
+`async` solo donde hay `await`.
+
 ## Formularios
 
 - React Hook Form + Zod en formularios de usuario (`mode: "onBlur"`,
@@ -116,10 +138,14 @@ clientes.
 
 - `collapsible="icon"` + `SidebarRail`: al colapsar queda rail de iconos con
   tooltips. El `SidebarTrigger` está en `SiteHeader`.
-- Admin: Dashboard, Products, Blogs, Orders, Users + "Back to site".
+- Admin: Dashboard, Games, Blogs, Orders, Users + "Back to site".
 - Studio: Games, Orders + "Back to site" (sin dashboard propio).
 - Tablas con `RowActions` (dropdown de 3 puntos): admin con Edit/Delete,
   studio games con Edit/Delete, studio orders solo View.
+- Columnas ordenables vía `?sort=campo,dir` (`parseSortParam` con allowlist por
+  tabla; el header alterna asc → desc → sin orden y resetea la página).
+  Requiere soporte del backend (`Pageable`): `price` ordena por precio
+  efectivo en `/games` y `/manage/games`.
 
 ## Deploy
 
