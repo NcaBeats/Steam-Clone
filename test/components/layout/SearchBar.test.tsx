@@ -32,7 +32,7 @@ const game = {
 
 const getInput = () => screen.getByRole("combobox", { name: "Search games" });
 
-async function typeQuery(value: string) {
+function typeQuery(value: string) {
   fireEvent.focus(getInput());
   fireEvent.change(getInput(), { target: { value } });
 }
@@ -46,7 +46,7 @@ describe("SearchBar", () => {
   test("mientras escribe muestra los juegos que devuelve el servidor", async () => {
     mockedSearch.mockResolvedValue([game]);
     render(<SearchBar />);
-    await typeQuery("hollow");
+    typeQuery("hollow");
     expect(await screen.findByText("Hollow Knight")).toBeInTheDocument();
     expect(mockedSearch).toHaveBeenCalledWith("hollow");
     expect(screen.getByText("$8,000.00")).toBeInTheDocument();
@@ -55,14 +55,14 @@ describe("SearchBar", () => {
   test("sin resultados muestra el estado vacío", async () => {
     mockedSearch.mockResolvedValue([]);
     render(<SearchBar />);
-    await typeQuery("zzz");
+    typeQuery("zzz");
     expect(await screen.findByText('No results for "zzz"')).toBeInTheDocument();
   });
 
   test("Enter sin resaltado navega a la página de búsqueda", async () => {
     mockedSearch.mockResolvedValue([game]);
     render(<SearchBar />);
-    await typeQuery("hollow");
+    typeQuery("hollow");
     await screen.findByText("Hollow Knight");
     fireEvent.keyDown(getInput(), { key: "Enter", code: "Enter" });
     expect(push).toHaveBeenCalledWith("/catalog?q=hollow");
@@ -71,7 +71,7 @@ describe("SearchBar", () => {
   test("flecha + Enter navega al detalle del juego resaltado", async () => {
     mockedSearch.mockResolvedValue([game]);
     render(<SearchBar />);
-    await typeQuery("hollow");
+    typeQuery("hollow");
     await screen.findByText("Hollow Knight");
     fireEvent.keyDown(getInput(), { key: "ArrowDown", code: "ArrowDown" });
     fireEvent.keyDown(getInput(), { key: "Enter", code: "Enter" });
@@ -82,7 +82,7 @@ describe("SearchBar", () => {
   test("borrar el texto cierra el panel", async () => {
     mockedSearch.mockResolvedValue([game]);
     render(<SearchBar />);
-    await typeQuery("hollow");
+    typeQuery("hollow");
     await screen.findByText("Hollow Knight");
     fireEvent.change(getInput(), { target: { value: "" } });
     expect(screen.queryByText("Hollow Knight")).toBeNull();
@@ -91,7 +91,7 @@ describe("SearchBar", () => {
   test("click en una opción navega al juego sin dejar JSON en el input", async () => {
     mockedSearch.mockResolvedValue([game]);
     render(<SearchBar />);
-    await typeQuery("hollow");
+    typeQuery("hollow");
     fireEvent.click(await screen.findByText("Hollow Knight"));
     expect(push).toHaveBeenCalledWith("/games/7");
     expect(getInput()).toHaveValue("");
