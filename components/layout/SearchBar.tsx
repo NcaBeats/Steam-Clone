@@ -96,7 +96,7 @@ export const SearchBar = () => {
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key !== "Enter") return;
-    // Con item resaltado el Autocomplete resuelve el commit (navega al juego).
+    // Con resaltado, el commit lo resuelve el Autocomplete.
     if (highlightedRef.current) return;
     e.preventDefault();
     const trimmed = query.trim();

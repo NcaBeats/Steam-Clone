@@ -26,8 +26,7 @@ export function NavMain({ items }: { items: DashboardNavItem[] }) {
         <SidebarMenu>
           {items.map((item) => {
             const Icon = item.icon;
-            // "/admin" solo matchea exacto: si no, quedaría activo en todas
-            // las páginas hijas (empiezan con "/admin/").
+            // "/admin" solo matchea exacto para no activarse en las hijas.
             const isActive =
               pathname === item.url ||
               (item.url !== "/admin" && pathname.startsWith(item.url + "/"));

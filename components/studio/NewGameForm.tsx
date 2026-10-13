@@ -91,8 +91,7 @@ export function NewGameForm({
       return;
     }
 
-    // El nombre determina la key en R2 ({slug}/{kind}/...), asi que se
-    // valida antes de pedir ninguna firma.
+    // El nombre define la key en R2: se valida antes de pedir firmas.
     const name = parsed.data.name;
 
     try {

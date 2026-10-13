@@ -65,7 +65,6 @@ function parseRecord(value: string): Record<string, string> {
       return record;
     }
   } catch {
-    // Ignore malformed JSON and start empty
   }
   return {};
 }

@@ -114,8 +114,7 @@ export const getAdminUsers = (
 
 export const getAdminUser = async (id: number): Promise<AdminUser> => {
   const user = await fetchAPI<User>(`/users/${id}`, { auth: true });
-  // El perfil puede no existir (usuarios creados antes de la migración a
-  // tablas region/comuna): en ese caso se edita desde un perfil vacío.
+  // Sin perfil se edita desde uno vacío (usuarios previos a region/comuna).
   const profile = await fetchAPI<Profile>(`/profile/${id}`, {
     auth: true,
   }).catch((): Profile => ({

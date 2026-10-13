@@ -20,7 +20,7 @@ type Props = Readonly<{
 }>;
 
 export const AuthOverlay = ({ open, onClose }: Props) => {
-  // AlertDialog no cierra con click fuera por diseño: se habilita acá.
+  // AlertDialog ignora el click fuera: se habilita manualmente.
   useEffect(() => {
     if (!open) return;
     const handlePointerDown = (e: PointerEvent) => {

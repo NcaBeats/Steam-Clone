@@ -31,7 +31,7 @@ type Props = Readonly<{
   redirectTo?: string;
 }>;
 
-// Parsea "yyyy-MM-dd" en hora local (evita el desfase UTC de `new Date(str)`).
+// "yyyy-MM-dd" en hora local: evita el desfase UTC de new Date(str).
 const parseLocalDate = (raw: string): Date | null => {
   const [y, m, d] = raw.split("-").map(Number);
   if (!y || !m || !d) return null;
@@ -65,19 +65,16 @@ export function GameEditForm({
   const [video, setVideo] = useState<File | null>(null);
   const [gallery, setGallery] = useState<File[]>([]);
 
-  // Clamped numeric discount for calculation/submission
   const discountValue = Math.max(
     0,
     Math.min(100, Number(discountPercent) || 0),
   );
 
-  // Compute price from originalPrice and discountValue
   const price =
     originalPrice > 0
       ? Math.round(originalPrice * (1 - discountValue / 100) * 100) / 100
       : 0;
 
-  // Specs states
   const [minimumSpecs, setMinimumSpecs] = useState(game.minimumSpecs ?? "");
   const [recommendedSpecs, setRecommendedSpecs] = useState(
     game.recommendedSpecs ?? "",
@@ -115,8 +112,7 @@ export function GameEditForm({
 
     try {
       setUploading("Uploading files...");
-      // Solo viajan los campos con archivo nuevo; el resto conserva lo que ya
-      // habia en el backend.
+      // Solo se suben archivos nuevos; lo demás conserva el valor del backend.
       const media = await uploadGameMedia({
         name: parsed.data.name,
         image,

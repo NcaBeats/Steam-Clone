@@ -284,7 +284,6 @@ export const GameDetail = ({ game, initialInLibrary }: Props) => {
             </div>
             <p className="text-[#8A8A8A] font-medium text-sm">{`Launch date: ${game.launchDate}`}</p>
 
-            {/* PRECIO, DESCUENTO Y BOTÓN EN FLEX ROW */}
             <div className="flex justify-between items-end gap-2">
               <div className="flex flex-col gap-2">
                 {game.discountPercent > 0 && (
@@ -306,7 +305,6 @@ export const GameDetail = ({ game, initialInLibrary }: Props) => {
                 </div>
               </div>
 
-              {/* Check if user already owns the game */}
               {alreadyInLibrary ? (
                 <div className="bg-[#2A2A2A] text-[#8A8A8A] py-3 px-5 rounded-lg text-center font-semibold">
                   In your library

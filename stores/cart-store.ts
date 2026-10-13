@@ -6,10 +6,6 @@ export type CartItem = {
   id: number;
   name: string;
   price: number;
-  /**
-   * Nullable: un juego creado sin portada tiene `imageUrl: null` y aun asi
-   * debe poder comprarse. La imagen es para mostrar, no para cobrar.
-   */
   imageUrl: string | null;
   discountPercent: number;
 };

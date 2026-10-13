@@ -15,8 +15,7 @@ export function WalletBalance({ initialBalance }: { initialBalance: number }) {
         const wallet = await getMyWalletAction();
         if (wallet) setBalance(wallet.balance);
       } catch {
-        // El saldo del nav es decorativo: si la API falla seguimos mostrando
-        // el ultimo valor conocido en vez de dejar el saldo en cero.
+        // Saldo decorativo: ante un fallo se conserva el último valor.
       }
     };
     window.addEventListener(WALLET_UPDATE_EVENT, refresh);

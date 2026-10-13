@@ -154,8 +154,7 @@ export async function uploadGameMedia({
 
   if (video) {
     onProgress?.("Uploading trailer...");
-    // El contentType se resuelve antes de firmar y se reutiliza en el PUT, de
-    // modo que la cabecera que viaja siempre es la que quedo firmada.
+    // El contentType firmado debe coincidir con el del PUT.
     const contentType = resolveVideoContentType(video);
     const presign = unwrap(await presignVideo(name, contentType));
     media.videoUrl = await uploadVideoToR2(video, presign);
@@ -165,9 +164,7 @@ export async function uploadGameMedia({
     onProgress?.(`Uploading ${gallery.length} gallery images...`);
     const urls: string[] = [];
     for (const file of gallery) {
-      // Cada imagen de la galeria lleva su propia firma: la key
-      // {slug}/gallery/{uuid}.{ext} forma parte de la URL firmada, asi que no
-      // se puede reutilizar una firma para mas de un archivo.
+      // Cada imagen lleva firma propia: la key forma parte de la URL firmada.
       const contentType = resolveImageContentType(file);
       const signed = unwrap(await presignImage(name, "gallery", contentType));
       urls.push(await uploadImageToR2(file, signed));

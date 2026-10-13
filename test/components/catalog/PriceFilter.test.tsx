@@ -42,14 +42,14 @@ describe("PriceFilter", () => {
     expect(push).toHaveBeenCalledWith("/catalog?minPrice=30&maxPrice=50");
   });
 
-  test("con rango angosto muestra link para limpiar", () => {
+  test("con rango modificado muestra link para limpiar", () => {
     render(<PriceFilter min={30} max={50} />);
     expect(
       screen.getByRole("link", { name: "Clear price filter" }),
     ).toHaveAttribute("href", "/catalog");
   });
 
-  test("sin rango angosto no muestra link para limpiar", () => {
+  test("sin rango modificado no muestra link para limpiar", () => {
     render(<PriceFilter min={0} max={100} />);
     expect(
       screen.queryByRole("link", { name: "Clear price filter" }),

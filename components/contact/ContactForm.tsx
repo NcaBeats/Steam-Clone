@@ -23,7 +23,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { FieldGroup } from "@/components/ui/field"; // Se añade el FieldGroup de tus componentes
+import { FieldGroup } from "@/components/ui/field";
 
 export const ContactForm = () => {
   const [success, setSuccess] = useState(false);
@@ -82,9 +82,8 @@ export const ContactForm = () => {
           <form
             onSubmit={form.handleSubmit(onSubmit)}
             noValidate
-            className="flex flex-col gap-6" // Se cambia gap-4 a gap-6 para igualar el ritmo visual de SignUp
+            className="flex flex-col gap-6"
           >
-            {/* Se envuelven los campos dentro de FieldGroup para unificar el espaciado */}
             <FieldGroup>
               <FormField
                 control={form.control}

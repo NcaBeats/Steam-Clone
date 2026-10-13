@@ -4,10 +4,6 @@ import { useEffect, useState } from "react";
 import { getComunasClient, getRegionsClient } from "@/lib/api/regions";
 import type { Comuna, Region } from "@/types";
 
-/**
- * Catálogo de regiones del backend (texto bonito, listo para UI).
- * Carga una vez al montar.
- */
 export function useRegions() {
   const [regions, setRegions] = useState<Region[]>([]);
   const [loading, setLoading] = useState(true);
@@ -33,10 +29,6 @@ export function useRegions() {
   return { regions, loading, error };
 }
 
-/**
- * Comunas de una región. Se recarga cada vez que cambia `regionId`;
- * con `null` devuelve lista vacía.
- */
 export function useComunas(regionId: number | null) {
   const [comunas, setComunas] = useState<Comuna[]>([]);
   const [loadedFor, setLoadedFor] = useState<number | null>(null);
@@ -60,8 +52,6 @@ export function useComunas(regionId: number | null) {
     };
   }, [regionId]);
 
-  // Sin setState síncrono en el efecto: loading y lista se derivan de qué
-  // región ya resolvió.
   const settled = loadedFor === regionId;
   return {
     comunas: regionId && settled ? comunas : [],

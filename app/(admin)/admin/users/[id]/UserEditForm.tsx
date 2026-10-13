@@ -82,8 +82,7 @@ export function UserEditForm({ user }: Props) {
   );
   const { regions, loading: regionsLoading } = useRegions();
   const { comunas, loading: comunasLoading } = useComunas(regionId);
-  // Mientras carga el catálogo se muestra el texto bonito que ya trae el
-  // perfil; después se resuelve por id contra lo fetched.
+  // Muestra el texto del perfil hasta resolver ids contra el catálogo.
   const selectedRegion =
     regions.find((region) => region.id === regionId)?.nombre ??
     (regionsLoading ? (user.profile.region ?? null) : null);
