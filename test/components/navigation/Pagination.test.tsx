@@ -6,6 +6,7 @@ afterEach(cleanup);
 
 describe("Pagination", () => {
   test("no renderiza nada con una sola página", () => {
+    // NOTE: container is required here to assert an entirely empty render.
     const { container } = render(
       <Pagination page={0} totalPages={1} basePath="/catalog" />,
     );
