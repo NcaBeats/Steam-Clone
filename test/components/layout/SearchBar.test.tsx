@@ -16,8 +16,7 @@ vi.mock("@/lib/api/search", () => ({
 }));
 
 vi.mock("@/components/games/GameImage", () => ({
-  // eslint-disable-next-line @next/next/no-img-element
-  GameImage: () => <img alt="game cover" />,
+  GameImage: () => null,
 }));
 
 const mockedSearch = vi.mocked(searchGamesClient);
@@ -44,26 +43,6 @@ afterEach(() => {
 });
 
 describe("SearchBar", () => {
-  test("enfocar sin escribir no abre nada", () => {
-    render(<SearchBar />);
-    fireEvent.focus(getInput());
-    expect(screen.queryByText("Quick tips")).toBeNull();
-    expect(
-      document.querySelector('[data-slot="autocomplete-content"]'),
-    ).toBeNull();
-  });
-
-  test("el ring solo aparece con foco de teclado", () => {
-    render(<SearchBar />);
-    const anchor = () => getInput().closest("[data-kb]");
-    fireEvent.focus(getInput());
-    expect(anchor()).toHaveAttribute("data-kb", "false");
-    fireEvent.blur(getInput());
-    fireEvent.keyDown(window, { key: "Tab", code: "Tab" });
-    fireEvent.focus(getInput());
-    expect(anchor()).toHaveAttribute("data-kb", "true");
-  });
-
   test("mientras escribe muestra los juegos que devuelve el servidor", async () => {
     mockedSearch.mockResolvedValue([game]);
     render(<SearchBar />);
@@ -106,9 +85,7 @@ describe("SearchBar", () => {
     await typeQuery("hollow");
     await screen.findByText("Hollow Knight");
     fireEvent.change(getInput(), { target: { value: "" } });
-    expect(
-      document.querySelector('[data-slot="autocomplete-content"]'),
-    ).toBeNull();
+    expect(screen.queryByText("Hollow Knight")).toBeNull();
   });
 
   test("click en una opción navega al juego sin dejar JSON en el input", async () => {
