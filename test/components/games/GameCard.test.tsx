@@ -32,10 +32,9 @@ describe("GameCard Test", () => {
   });
 
   test("El juego sin descuento no debe mostrar porcentaje ni valor tachado", () => {
-    render(<GameCard {...props} discountPercent={0} />);
+    render(<GameCard {...props} discountPercent={0} price={10000} />);
     expect(screen.queryByText(/%/)).toBeNull();
-    expect(screen.queryByText("$10,000.00")).toBeNull();
-    expect(screen.getByText(/\$8,000\.00/)).toBeDefined();
+    expect(screen.getByText("$10,000.00")).toBeDefined();
   });
 
   test("Debe redirigir al juego con el endpoint construido", () => {
