@@ -1,5 +1,5 @@
 import { describe, test, expect, vi, afterEach } from "vitest";
-import { cleanup, render, screen, fireEvent } from "@testing-library/react";
+import { cleanup, render, screen, fireEvent, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 import { BlogForm } from "@/components/admin/BlogForm";
@@ -63,7 +63,7 @@ describe("BlogForm", () => {
     await user.click(screen.getByLabelText("Category (optional)"));
     await user.click(await screen.findByRole("option", { name: "NEWS" }));
     fireEvent.click(screen.getByRole("button", { name: "Create blog" }));
-    expect(await screen.findByText("Create blog")).toBeInTheDocument();
+    await waitFor(() => expect(mockedCreate).toHaveBeenCalled());
     expect(mockedCreate).toHaveBeenCalledWith(
       expect.objectContaining({ category: "NEWS" }),
     );

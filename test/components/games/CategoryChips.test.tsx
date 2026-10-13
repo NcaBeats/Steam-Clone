@@ -6,7 +6,6 @@ afterEach(cleanup);
 
 describe("CategoryChips", () => {
   test("no renderiza nada sin categorías", () => {
-    // Excepción justificada: se afirma ausencia total de DOM, sin queries de screen.
     const { container } = render(<CategoryChips categories={[]} />);
     expect(container).toBeEmptyDOMElement();
   });

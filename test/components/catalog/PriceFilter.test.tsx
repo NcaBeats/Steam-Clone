@@ -16,7 +16,6 @@ afterEach(() => {
   vi.clearAllMocks();
 });
 
-// Base UI oculta los inputs range nativos: se consultan por rol incluyendo ocultos.
 const getSliders = () => screen.getAllByRole("slider", { hidden: true });
 
 describe("PriceFilter", () => {
