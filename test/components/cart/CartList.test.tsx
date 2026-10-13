@@ -36,11 +36,39 @@ vi.mock("@/components/cart/CartItem", () => ({
   ),
 }));
 
+const GAME_A: CartItem = {
+  id: 1,
+  name: "Minecraft",
+  price: 29.99,
+  imageUrl: "/img.png",
+  discountPercent: 0,
+};
+
+const GAME_B: CartItem = {
+  id: 2,
+  name: "Celeste",
+  price: 19.99,
+  imageUrl: "/img2.png",
+  discountPercent: 0,
+};
+
+const SINGLE_GAME: CartItem = {
+  id: 1,
+  name: "Game",
+  price: 1000,
+  imageUrl: null,
+  discountPercent: 0,
+};
+
+const seedCart = (items: CartItem[] = []) => {
+  useCartStore.setState({ items, _hasHydrated: true });
+};
+
 describe("CartList", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     localStorage.clear();
-    useCartStore.setState({ items: [], _hasHydrated: true });
+    seedCart();
   });
 
   afterEach(() => {
@@ -53,8 +81,10 @@ describe("CartList", () => {
 
     render(<CartList isLoggedIn={true} />);
 
-    const pulseElements = document.querySelectorAll(".animate-pulse");
-    expect(pulseElements.length).toBeGreaterThan(0);
+    expect(screen.queryByText("Your cart is empty")).toBeNull();
+    expect(
+      screen.queryByRole("button", { name: "Checkout" }),
+    ).toBeNull();
   });
 
   test("muestra carrito vacío cuando no hay items y está hidratado", () => {
@@ -67,24 +97,7 @@ describe("CartList", () => {
   });
 
   test("renderiza items del carrito y resumen de orden", () => {
-    useCartStore.setState({
-      items: [
-        {
-          id: 1,
-          name: "Minecraft",
-          price: 29.99,
-          imageUrl: "/img.png",
-          discountPercent: 0,
-        },
-        {
-          id: 2,
-          name: "Celeste",
-          price: 19.99,
-          imageUrl: "/img2.png",
-          discountPercent: 0,
-        },
-      ],
-    });
+    seedCart([GAME_A, GAME_B]);
 
     render(<CartList isLoggedIn={true} />);
 
@@ -101,17 +114,7 @@ describe("CartList", () => {
   });
 
   test("abre AuthOverlay cuando el usuario no está logueado y hace clic en Checkout", () => {
-    useCartStore.setState({
-      items: [
-        {
-          id: 1,
-          name: "Game",
-          price: 1000,
-          imageUrl: null,
-          discountPercent: 0,
-        },
-      ],
-    });
+    seedCart([SINGLE_GAME]);
 
     render(<CartList isLoggedIn={false} />);
 
@@ -125,17 +128,7 @@ describe("CartList", () => {
   });
 
   test("navega a /checkout cuando el usuario está logueado y hace clic en Checkout", () => {
-    useCartStore.setState({
-      items: [
-        {
-          id: 1,
-          name: "Game",
-          price: 1000,
-          imageUrl: null,
-          discountPercent: 0,
-        },
-      ],
-    });
+    seedCart([SINGLE_GAME]);
 
     render(<CartList isLoggedIn={true} />);
 
@@ -146,17 +139,7 @@ describe("CartList", () => {
   });
 
   test("elimina el item del store cuando se quita uno", () => {
-    useCartStore.setState({
-      items: [
-        {
-          id: 5,
-          name: "Game",
-          price: 1000,
-          imageUrl: null,
-          discountPercent: 0,
-        },
-      ],
-    });
+    seedCart([{ ...SINGLE_GAME, id: 5 }]);
 
     render(<CartList isLoggedIn={true} />);
 

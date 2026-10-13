@@ -51,6 +51,13 @@ const fillByLabel = (label: RegExp, value: string) => {
   fireEvent.change(screen.getByLabelText(label), { target: { value } });
 };
 
+const fillValidBase = () => {
+  fillText("user@gmail.com", "user@gmail.com");
+  fillText("4-10 characters", "abcd1234");
+  fillText("Repeat password", "abcd1234");
+  fillText("12.345.678-9", "11.111.111-1");
+};
+
 afterEach(() => {
   cleanup();
   vi.clearAllMocks();
@@ -76,10 +83,8 @@ describe("NewUserForm", () => {
 
   test("passwords distintas muestran error en confirmación", async () => {
     render(<NewUserForm />);
-    fillText("user@gmail.com", "user@gmail.com");
-    fillText("4-10 characters", "abcd1234");
+    fillValidBase();
     fillText("Repeat password", "abcd9999");
-    fillText("12.345.678-9", "11.111.111-1");
     await submit();
     expect(
       await screen.findByText("Passwords do not match"),
@@ -89,9 +94,7 @@ describe("NewUserForm", () => {
 
   test("RUN inválido muestra error de campo", async () => {
     render(<NewUserForm />);
-    fillText("user@gmail.com", "user@gmail.com");
-    fillText("4-10 characters", "abcd1234");
-    fillText("Repeat password", "abcd1234");
+    fillValidBase();
     fillText("12.345.678-9", "123");
     await submit();
     expect(
@@ -104,10 +107,7 @@ describe("NewUserForm", () => {
     mockedCreate.mockResolvedValue({ ok: true });
     const user = userEvent.setup();
     render(<NewUserForm />);
-    fillText("user@gmail.com", "user@gmail.com");
-    fillText("4-10 characters", "abcd1234");
-    fillText("Repeat password", "abcd1234");
-    fillText("12.345.678-9", "11.111.111-1");
+    fillValidBase();
     fillByLabel(/first name/i, "Nico");
     fillByLabel(/last name/i, "Carvajal");
     fillByLabel(/address/i, "Calle 123");
